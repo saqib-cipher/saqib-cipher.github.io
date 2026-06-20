@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section with Animated Morph -->
+        <section class="hero" style="display: flex; align-items: center; justify-content: space-between; min-height: 80vh; gap: 4rem; flex-wrap: wrap;">
+            <div class="hero-content" style="flex: 1; min-width: 300px;">
+                <h1 class="display-large" style="margin-bottom: 1.5rem;">Hello, I'm <br><span style="color: var(--md-sys-color-primary);">A Developer</span></h1>
+                <p class="headline-medium" style="color: var(--md-sys-color-on-surface-variant); margin-bottom: 2rem;">Building expressive, beautiful, and accessible web experiences.</p>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="#projects" class="btn btn-primary">View Projects</a>
+                    <a href="#contact" class="btn btn-secondary">Contact Me</a>
+                </div>
+            </div>
+
+            <div class="hero-visual" style="flex: 1; min-width: 300px;">
+                <div class="morph-container">
+                    <div class="morph-blob"></div>
+                    <div class="morph-blob secondary"></div>
+                    <!-- Placeholder for an image or graphic inside the morph -->
+                    <div style="position: absolute; inset: 2rem; background-color: var(--md-sys-color-surface); border-radius: inherit; display: flex; align-items: center; justify-content: center; z-index: 1;">
+                        <span class="headline-medium" style="color: var(--md-sys-color-primary); text-align: center;">Creative<br>Space</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section (Material 3 Cards) -->
+        <section id="projects" style="padding: 6rem 0;">
+            <h2 class="display-large" style="font-size: 3rem; margin-bottom: 3rem; text-align: center;">Selected Projects</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+
+                <div class="card">
+                    <h3 class="headline-medium" style="margin-bottom: 1rem;">Project Alpha</h3>
+                    <p class="body-large" style="margin-bottom: 2rem;">A deep dive into expressive UI patterns using modern web technologies and dynamic color themes.</p>
+                    <a href="#" class="btn btn-secondary" style="width: 100%;">Read Case Study</a>
+                </div>
+
+                <div class="card">
+                    <h3 class="headline-medium" style="margin-bottom: 1rem;">Project Beta</h3>
+                    <p class="body-large" style="margin-bottom: 2rem;">An interactive data visualization dashboard with fluid animations and responsive layout.</p>
+                    <a href="#" class="btn btn-secondary" style="width: 100%;">View Live Demo</a>
+                </div>
+
+                <div class="card">
+                    <h3 class="headline-medium" style="margin-bottom: 1rem;">Project Gamma</h3>
+                    <p class="body-large" style="margin-bottom: 2rem;">An open-source component library focusing on accessibility and developer experience.</p>
+                    <a href="#" class="btn btn-secondary" style="width: 100%;">Explore Code</a>
+                </div>
+
+            </div>
+        </section>
+    </div>
+</body>
+</html>

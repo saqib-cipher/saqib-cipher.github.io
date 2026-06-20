@@ -1,0 +1,188 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,400;8..144,500;8..144,700&family=Roboto+Serif:opsz,wght@8..144,400;8..144,700&display=swap');
+
+:root {
+  /* Material 3 Color Palette - Expressive/Vibrant Scheme */
+  --md-sys-color-primary: #006874;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #97f0ff;
+  --md-sys-color-on-primary-container: #001f24;
+
+  --md-sys-color-secondary: #4a6267;
+  --md-sys-color-on-secondary: #ffffff;
+  --md-sys-color-secondary-container: #cde7ec;
+  --md-sys-color-on-secondary-container: #051f23;
+
+  --md-sys-color-tertiary: #525e7d;
+  --md-sys-color-on-tertiary: #ffffff;
+  --md-sys-color-tertiary-container: #dae2ff;
+  --md-sys-color-on-tertiary-container: #0e1b37;
+
+  --md-sys-color-background: #fbfdfd;
+  --md-sys-color-on-background: #191c1d;
+
+  --md-sys-color-surface: #fbfdfd;
+  --md-sys-color-on-surface: #191c1d;
+  --md-sys-color-surface-variant: #dbe4e6;
+  --md-sys-color-on-surface-variant: #3f484a;
+
+  /* Shapes */
+  --md-sys-shape-corner-extra-large: 32px;
+  --md-sys-shape-corner-large: 24px;
+  --md-sys-shape-corner-full: 9999px;
+
+  /* Typography */
+  --md-sys-typescale-display-large-font-family: 'Roboto Serif', serif;
+  --md-sys-typescale-body-font-family: 'Roboto Flex', sans-serif;
+}
+
+/* Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--md-sys-typescale-body-font-family);
+  background-color: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-background);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Typography Classes */
+.display-large {
+  font-family: var(--md-sys-typescale-display-large-font-family);
+  font-size: clamp(3.5rem, 8vw, 5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  margin: 0;
+}
+
+.headline-medium {
+  font-family: var(--md-sys-typescale-body-font-family);
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.body-large {
+  font-size: 1.125rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Components */
+.card {
+  background-color: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
+  border-radius: var(--md-sys-shape-corner-large);
+  padding: 2rem;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  background-color: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  border-radius: var(--md-sys-shape-corner-full);
+  font-family: var(--md-sys-typescale-body-font-family);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary {
+  background-color: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--md-sys-color-on-primary-container);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.btn-secondary {
+  background-color: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.btn-secondary:hover {
+  background-color: var(--md-sys-color-secondary);
+  color: var(--md-sys-color-on-secondary);
+}
+
+/* Animated Morph */
+.morph-container {
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.morph-blob {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    var(--md-sys-color-primary) 0%,
+    var(--md-sys-color-tertiary) 100%
+  );
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  animation: morph 8s ease-in-out infinite both alternate;
+  opacity: 0.8;
+  z-index: -1;
+  filter: blur(10px);
+}
+
+.morph-blob.secondary {
+  background: linear-gradient(
+    -45deg,
+    var(--md-sys-color-secondary) 0%,
+    var(--md-sys-color-primary-container) 100%
+  );
+  animation-delay: -4s;
+  animation-duration: 12s;
+  opacity: 0.6;
+}
+
+@keyframes morph {
+  0% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    transform: rotate(180deg) scale(1.05);
+  }
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: rotate(360deg) scale(1);
+  }
+}
