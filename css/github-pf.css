@@ -2,9 +2,9 @@
   --bg:        #080c10;
   --glass:     rgba(255,255,255,0.04);
   --glass-b:   rgba(255,255,255,0.09);
-  --border:    rgba(255,255,255,0.08);
-  --text:      #e2e8f0;
-  --muted:     #64748b;
+  --border:    var(--iatv-btn-border);
+  --text:      var(--body-text);
+  --muted:     var(--sec-text);
   --green-dim: rgba(22,163,74,0.18);
   --green-lo:  #14532d;
   --green-md:  #16a34a;
@@ -92,7 +92,7 @@
   inset: -2px;
   border-radius: 50%;
   background: conic-gradient(from 0deg, #16a34a, #4ade80, #f59e0b, #16a34a);
-  animation: spin 4s linear infinite;
+  animation: spin 2s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .avatar-ring::after {
@@ -115,15 +115,6 @@
   display: block;
 }
 .profile-text { flex: 1; min-width: 0; }
-.profile-name {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 .github-link {
   display: flex;
   align-items: center;
@@ -132,7 +123,7 @@
   color: var(--muted);
   text-decoration: none;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 16px;
   padding: .3rem .7rem;
   transition: border-color .15s, color .15s;
   flex-shrink: 0;
@@ -171,7 +162,7 @@
 }
 .stat-val {
   font-family: var(--font-display);
-  font-size: .7rem;
+  font-size: 1rem;
   font-weight: 700;
   line-height: 1;
   background: linear-gradient(135deg, #4ade80, #22c55e);
@@ -305,7 +296,6 @@
   display: flex;
   align-items: center;
   gap: .35rem;
-  margin-top: 1rem;
   justify-content: flex-end;
 }
 
@@ -355,11 +345,39 @@
 #tip .tip-count { color: var(--green-hi); font-weight: 600; }
 
 /* ─── Responsive ─────────────────────────────── */
+@media (max-width: 768px) {
+  #github {
+    width: 100%;
+  }
+
+  #github .container {
+    width: 100%;
+    padding-inline: 16px;
+  }
+
+  .card {
+    padding: .85rem;
+    width: 100%;
+  }
+   .github-link span {
+  display: none;
+}
+ .avatar-ring, .avatar-img {width: 35px; height: 35px;}
+ .github-link {
+  padding: .2rem .6rem;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+ }
+
+.stat-val{
+  font-size: .8rem !important;
+  font-weight: 700;
+}
+}
+
 @media (max-width: 520px) {
   :root { --cell: 10px; --gap: 2px; --radius-cell: 3px; }
-  .card { padding: 1.25rem; }
-  .stats { grid-template-columns: repeat(3,1fr); gap: .5rem; }
   .stat-val { font-size: 1.25rem; }
   .stat-lbl { font-size: .6rem; }
-  .stat-card { padding: .65rem .7rem; }
 }

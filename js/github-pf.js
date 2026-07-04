@@ -1,3 +1,5 @@
+let cachedDays = null;
+
 /* ── Tooltip ────────────────────────────────── */
 const tip = document.getElementById('tip');
 const tipN = document.getElementById('tip-n');
@@ -34,8 +36,9 @@ function getLevel(count, max) {
    Month labels are positioned absolutely by measuring column offsets.
 ──────────────────────────────────────────── */
 function buildGraph(days) {
-  const CELL = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell')) || 12;
-  const GAP  = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap'))  || 3;
+  const isMobile = window.innerWidth <= 520;
+  const CELL = isMobile ? 10 : 12;
+  const GAP  = isMobile ? 2 : 3;
   const COL_W = CELL + GAP;
 
   const max = Math.max(...days.map(d => d.count));
@@ -75,7 +78,7 @@ function buildGraph(days) {
 
   const titleEl = document.createElement('div');
   titleEl.className = 'graph-title';
-  titleEl.textContent = 'Contribution Activity';
+  titleEl.textContent = 'Github Contribution Activity';
   section.appendChild(titleEl);
 
   const scrollDiv = document.createElement('div');
@@ -207,6 +210,7 @@ async function load() {
   try {
     const [data, profile] = await Promise.all([fetchData(username), fetchProfile(username)]);
     const days = data.contributions;
+    cachedDays = days;
     const total = days.reduce((s,d) => s + d.count, 0);
     const best  = Math.max(...days.map(d => d.count));
     const s     = streak(days);
@@ -214,7 +218,6 @@ async function load() {
     // Profile
     if (profile) {
       document.getElementById('avImg').src = profile.avatar_url;
-      document.getElementById('pName').textContent = profile.name || username;
       document.getElementById('profileRow').style.display = 'flex';
     }
 
@@ -238,3 +241,14 @@ async function load() {
 
 // Auto-load a demo
 load();
+
+// Rebuild graph on window resize to ensure correct mobile/desktop alignment
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    if (cachedDays) {
+      buildGraph(cachedDays);
+    }
+  }, 100);
+});
