@@ -690,14 +690,9 @@ gap: 20px;
   flex: 0 0 85%;
   scroll-snap-align: center;
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 40px;
-  background: var(--nav-bg);
-  border: 1px solid var(--iatv-btn-border);
-  border-radius: 28px;
-  padding: 40px;
+  grid-template-columns: 1fr .6fr;
+  gap: 6px;
   align-items: center;
-  box-shadow: var(--box-shadow);
   transform: scale(0.92);
   opacity: 0.6;
   transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.6s ease, border-color 0.3s ease, box-shadow 0.3s ease;
@@ -717,6 +712,12 @@ gap: 20px;
   flex-direction: column;
   gap: 18px;
   text-align: left;
+  height: 100%;
+  padding: 35px;
+  border-radius: 24px 8px 8px 24px;
+   border: 1px solid var(--iatv-btn-border);
+   background: var(--nav-bg);
+   box-shadow: var(--box-shadow);
 }
 
 .project-title {
@@ -780,9 +781,9 @@ gap: 20px;
 
 .project-visual {
   position: relative;
-  border-radius: 20px;
+  border-radius: 8px 24px 24px 8px;
   overflow: hidden;
-  height: 300px;
+  height: 100%;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
   border: 1px solid var(--iatv-btn-border);
   background: #0b0f19;
@@ -814,7 +815,6 @@ gap: 20px;
   position: static;
   width: 50px;
   height: 50px;
-  border-radius: 50%;
   background: var(--iatv-btn);
   border: 1px solid var(--iatv-btn-border);
   color: var(--iatv-btn-text);
@@ -824,6 +824,14 @@ gap: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.slider-btn.prev {
+  border-radius: 24px 8px 8px 24px;
+}
+
+.slider-btn.next {
+  border-radius: 8px 24px 24px 8px;
 }
 
 .slider-btn:hover {
@@ -837,24 +845,29 @@ gap: 20px;
   display: flex;
   gap: 8px;
   align-items: center;
+  background-color: var(--nav-bg);
+  border-radius: 8px;
+  border: 1px solid var(--iatv-btn-border);
+  padding: 6px 12px;
+  height: 50px;
 }
 
 .indicator {
-  width: 8px;
+  width: 32px;
   height: 8px;
-  border-radius: 50%;
+  border-radius: 24px;
   background: var(--iatv-btn-border);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .indicator.active {
-  width: 24px;
-  height: 8px;
-  border-radius: 4px;
-  background: var(--primary);
+  width: 12px;
+  height: 18px;
+  background: var(--sec-text);
   box-shadow: 0 0 10px rgba(227, 181, 79, 0.4);
 }
+
 
 @media (max-width: 768px) {
   .projects-track {
@@ -866,13 +879,16 @@ gap: 20px;
     flex: 0 0 90%;
     transform: scale(0.95);
     grid-template-columns: 1fr;
-    padding: 25px;
-    gap: 25px;
   }
 
   .project-visual {
     height: 200px;
-    order: -1; /* Place image on top on mobile */
+    order: -1;
+    border-radius: 24px 24px 8px 8px;
+  }
+
+  .project-content {
+    border-radius: 8px 8px 24px 24px;
   }
 
   .slider-btn {

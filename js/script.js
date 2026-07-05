@@ -99,4 +99,29 @@ if (track && prevBtn && nextBtn) {
   }, observerOptions);
 
   slides.forEach(slide => observer.observe(slide));
+
+  // Hide prev/next buttons when boundaries are reached
+  const updateButtons = () => {
+    // If scrolled to the start, hide prev button
+    if (track.scrollLeft <= 5) {
+      prevBtn.style.opacity = '0';
+      prevBtn.style.pointerEvents = 'none';
+    } else {
+      prevBtn.style.opacity = '1';
+      prevBtn.style.pointerEvents = 'auto';
+    }
+
+    // If scrolled to the end, hide next button
+    if (Math.ceil(track.scrollLeft + track.clientWidth) >= track.scrollWidth - 5) {
+      nextBtn.style.opacity = '0';
+      nextBtn.style.pointerEvents = 'none';
+    } else {
+      nextBtn.style.opacity = '1';
+      nextBtn.style.pointerEvents = 'auto';
+    }
+  };
+
+  track.addEventListener('scroll', updateButtons);
+  window.addEventListener('resize', updateButtons);
+  updateButtons(); // Run on initial load
 }
