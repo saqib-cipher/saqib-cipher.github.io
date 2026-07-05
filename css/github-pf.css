@@ -359,7 +359,7 @@
     padding: .85rem;
     width: 100%;
   }
-   .github-link span {
+   .github-link span, .avatar-ring {
   display: none;
 }
  .avatar-ring, .avatar-img {width: 35px; height: 35px;}

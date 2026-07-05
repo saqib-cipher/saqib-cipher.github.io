@@ -170,12 +170,34 @@ function buildGraph(days) {
 
 /* ── Streak ─────────────────────────────────── */
 function streak(days) {
-  const today = new Date().toISOString().slice(0,10);
+  const today = new Date().toISOString().slice(0, 10);
+  
+  // Find the last index that is not in the future
+  let lastIndex = days.length - 1;
+  while (lastIndex >= 0 && days[lastIndex].date > today) {
+    lastIndex--;
+  }
+  
+  if (lastIndex < 0) return 0;
+  
+  // If the user hasn't contributed today, check if they contributed yesterday
+  let startIdx = lastIndex;
+  if (days[lastIndex].count === 0) {
+    // If they also didn't contribute yesterday, then streak is 0
+    if (lastIndex > 0 && days[lastIndex - 1].count === 0) {
+      return 0;
+    }
+    // Otherwise, start checking the streak from yesterday
+    startIdx = lastIndex - 1;
+  }
+  
   let s = 0;
-  for (let i = days.length - 1; i >= 0; i--) {
-    if (days[i].date > today) continue;
-    if (days[i].count > 0) s++;
-    else break;
+  for (let i = startIdx; i >= 0; i--) {
+    if (days[i].count > 0) {
+      s++;
+    } else {
+      break;
+    }
   }
   return s;
 }

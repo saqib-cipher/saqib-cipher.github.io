@@ -1,4 +1,4 @@
-const faders = document.querySelectorAll('.fade-in');
+const faders = document.querySelectorAll('.fade-up, .fade-in');
 
 window.addEventListener('scroll', () => {
   faders.forEach(fader => {
@@ -30,7 +30,7 @@ function toggleActive(clickedButton) {
 
     if (sections.length > 0) {
       window.addEventListener('scroll', function () {
-        var scrollPos = window.scrollY + 200;
+        var scrollPos = window.scrollY + window.innerHeight / 2;
 
         sections.forEach(function (s) {
           if (
@@ -43,4 +43,60 @@ function toggleActive(clickedButton) {
         });
       });
     }
-  
+
+// Horizontal Project Slider Navigation
+const track = document.querySelector('.projects-track');
+const prevBtn = document.querySelector('.slider-btn.prev');
+const nextBtn = document.querySelector('.slider-btn.next');
+
+if (track && prevBtn && nextBtn) {
+  const slides = document.querySelectorAll('.project-slide');
+  const indicators = document.querySelectorAll('.indicator');
+
+  prevBtn.addEventListener('click', () => {
+    const slide = track.querySelector('.project-slide');
+    const scrollAmount = slide ? (slide.clientWidth + 24) : track.clientWidth;
+    track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  });
+  nextBtn.addEventListener('click', () => {
+    const slide = track.querySelector('.project-slide');
+    const scrollAmount = slide ? (slide.clientWidth + 24) : track.clientWidth;
+    track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  });
+
+  // Indicator click navigation
+  indicators.forEach((ind, index) => {
+    ind.addEventListener('click', () => {
+      const slide = track.querySelector('.project-slide');
+      if (slide) {
+        const scrollAmount = slide.clientWidth + 24;
+        track.scrollTo({ left: index * scrollAmount, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Intersection Observer for Material 3 Carousel Active States and Indicator sync
+  const observerOptions = {
+    root: track,
+    threshold: 0.55
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active-slide');
+        
+        // Synchronize dots indicators
+        const index = Array.from(slides).indexOf(entry.target);
+        indicators.forEach((ind, i) => {
+          if (i === index) ind.classList.add('active');
+          else ind.classList.remove('active');
+        });
+      } else {
+        entry.target.classList.remove('active-slide');
+      }
+    });
+  }, observerOptions);
+
+  slides.forEach(slide => observer.observe(slide));
+}
