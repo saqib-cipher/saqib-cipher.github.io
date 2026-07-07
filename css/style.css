@@ -57,6 +57,10 @@ h2 {
   color: var(--body-text);
 }
 
+h3 {
+  font-family: 'Google Sans Flex', 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
 /* =========================
    HERO ANIMATED TEXT
 ========================= */
@@ -767,7 +771,7 @@ gap: 20px;
   transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.project-slide:hover .project-screenshot {
+.project-visual:hover .project-screenshot {
   transform: scale(1.05);
 }
 
