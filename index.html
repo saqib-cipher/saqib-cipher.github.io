@@ -1,340 +1,352 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Professional MEP Design Consultant delivering HVAC, Electrical, Plumbing & Fire Protection Engineering services.">
-<title>Saqib Cipher | Portfolio</title>
 
-<!-- Font Awesome Icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
-<link
-  href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
-  rel="stylesheet"
-/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wdth,wght,ROND@6..144,125,700,100&display=swap" rel="stylesheet">
-<!-- External CSS -->
- <link rel="stylesheet" href="css/github-pf.css">
-<link rel="stylesheet" href="css/style.css">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="Professional Portfolio of Saqib Cipher who passionate to deliver and bring new ideas, design web and apps.">
+  <title>Saqib Cipher | Portfolio</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,slnt,wdth,wght,GRAD,ROND@6..144,-5,112.5,600,0..100,36&display=swap" rel="stylesheet">
+  <!-- External CSS -->
+  <link rel="stylesheet" href="css/github-pf.css">
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-<div id="tip"><span class="tip-count" id="tip-n"></span> <span id="tip-d"></span></div>
+  <div id="tip"><span class="tip-count" id="tip-n"></span> <span id="tip-d"></span></div>
 
-<section id="home" class="hero">
+  <section id="home" class="hero">
 
-<div class="hero-bar">
-    <div class="hero-inner">
+    <div class="hero-bar">
+      <div class="hero-inner">
 
         <div class="hero-brand">
-            <div class="hero-img-cont">
-                <img class="hero-img" src="images/image.png" alt="Avatar">
-            </div>
+          <div class="hero-img-cont">
+            <img class="hero-img" src="images/image.png" alt="Avatar">
+          </div>
 
-            <div class="hero-text">
-                <span class="logo">
-                    <span class="hash">#</span>
-                    <span class="name">Saqib Cipher</span>
-                </span>
-            </div>
-            <a href="#contact" class="top-contact-btn">
-              <i class="ti ti-message-circle"></i><span class="label-text">Contact</span>
-            </a>
+          <div class="hero-text">
+            <span class="logo">
+              <span class="hash">#</span>
+              <span class="name">Saqib Cipher</span>
+            </span>
+          </div>
+          <a href="#contact" class="top-contact-btn">
+            <i class="ti ti-message-circle"></i><span class="label-text">Contact</span>
+          </a>
         </div>
 
         <p class="logo-sub">
-            Android developer — building tools, not just apps
+          Android & Web developer — building tools, not just apps
         </p>
 
-          <div class="hero-socials">
-          <a href="https://github.com/saqib-cipher" target="_blank" rel="noopener" class="social-btn" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
-          <a href="https://linkedin.com/in/saqib-cipher" target="_blank" rel="noopener" class="social-btn" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-          <a href="https://twitter.com/saqib_cipher" target="_blank" rel="noopener" class="social-btn" aria-label="Twitter"><i class="fa-brands fa-twitter"></i></a>
+        <div class="hero-socials">
+          <a href="https://github.com/saqib-cipher" target="_blank" rel="noopener" class="social-btn"
+            aria-label="GitHub"><i class="ti ti-brand-github"></i></a>
+          <a href="mailto:saqib.cipher@gmail.com" target="_blank" rel="noopener" class="social-btn"
+            aria-label="Gmail"><i class="ti ti-mail"></i></a>
+          <a href="https://www.instagram.com/saqib_cipher" target="_blank" rel="noopener" class="social-btn"
+            aria-label="Instagram"><i class="ti ti-brand-instagram"></i></a>
+            <a href="https://t.me/saqib_cipher" target="_blank" rel="noopener" class="social-btn"
+            aria-label="Telegram"><i class="ti ti-brand-telegram"></i></a>
+            <a href="https://www.youtube.com/@grafix_lab" target="_blank" rel="noopener" class="social-btn"
+            aria-label="Youtube"><i class="ti ti-brand-youtube"></i></a>
+            <a href="https://web.sketchub.in/u/Grafix_Lab" target="_blank" rel="noopener" class="social-btn"
+            aria-label="Sketchub"><i class="ti ti-external-link"></i></a>
         </div>
 
+      </div>
+
+      <!--GitHub profile-->
+      <div id="github" class="section fade-up">
+        <div class="container">
+
+          <div class="card">
+            <!-- Profile (hidden until loaded) -->
+            <div class="profile" id="profileRow" style="display:none">
+              <div class="avatar-ring">
+                <img class="avatar-img" id="avImg" src="" alt="" />
+              </div>
+              <div class="profile-text">
+                <!-- Stats -->
+                <div class="stats" id="statsRow" style="display:none">
+                  <div class="stat-card">
+                    <div class="stat-val" id="sTotal">—</div>
+                    <div class="stat-lbl">Contributions</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-val" id="sStreak">—</div>
+                    <div class="stat-lbl">Day Streak</div>
+                  </div>
+                  <div class="stat-card">
+                    <div class="stat-val gold" id="sBest">—</div>
+                    <div class="stat-lbl">Best Day</div>
+                  </div>
+                </div>
+              </div>
+              <a class="github-link" id="ghLink" href="#" target="_blank" rel="noopener">
+             <i class="ti ti-brand-github"></i>
+              <span>GitHub</span>
+              </a>
+            </div>
+
+            <!-- Graph Section -->
+            <div class="divider" id="dividerLine" style="display:none"></div>
+            <div class="graph-section" id="graphSection"></div>
+            <div class="legend" id="legendRow" style="display:none">
+              <span class="leg-cell" data-l="0"></span>
+              <span class="leg-cell" data-l="1"></span>
+              <span class="leg-cell" data-l="2"></span>
+              <span class="leg-cell" data-l="3"></span>
+              <span class="leg-cell" data-l="4"></span>
+              <span class="leg-cell" data-l="5"></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-<!--GitHub profile-->
-<div id="github" class="section fade-up">
-  <div class="container">
-
-    <div class="card">
-      <!-- Profile (hidden until loaded) -->
-      <div class="profile" id="profileRow" style="display:none">
-        <div class="avatar-ring">
-          <img class="avatar-img" id="avImg" src="" alt=""/>
-        </div>
-        <div class="profile-text">
-          <!-- Stats -->
-      <div class="stats" id="statsRow" style="display:none">
-        <div class="stat-card">
-          <div class="stat-val" id="sTotal">—</div>
-          <div class="stat-lbl">Contributions</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val" id="sStreak">—</div>
-          <div class="stat-lbl">Day Streak</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val gold" id="sBest">—</div>
-          <div class="stat-lbl">Best Day</div>
-        </div>
-      </div>
-        </div>
-        <a class="github-link" id="ghLink" href="#" target="_blank" rel="noopener">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.1 3.3 9.42 7.88 10.95.58.1.79-.25.79-.56v-2.01c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.27-1.68-1.27-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.75 1.18 1.75 1.18 1.02 1.74 2.68 1.24 3.33.95.1-.74.4-1.24.72-1.53-2.55-.29-5.23-1.28-5.23-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.15 1.18a10.93 10.93 0 012.87-.39c.97 0 1.95.13 2.87.39 2.18-1.49 3.14-1.18 3.14-1.18.63 1.58.23 2.75.11 3.04.74.8 1.18 1.83 1.18 3.08 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.2.67.8.56A10.51 10.51 0 0023.5 12C23.5 5.65 18.35.5 12 .5z"/>
-          </svg>
-          <span>GitHub</span>
-        </a>
-      </div>
-
-      <!-- Graph Section -->
-      <div class="divider" id="dividerLine" style="display:none"></div>
-      <div class="graph-section" id="graphSection"></div>
-      <div class="legend" id="legendRow" style="display:none">
-        <span class="leg-cell" data-l="0"></span>
-        <span class="leg-cell" data-l="1"></span>
-        <span class="leg-cell" data-l="2"></span>
-        <span class="leg-cell" data-l="3"></span>
-        <span class="leg-cell" data-l="4"></span>
-        <span class="leg-cell" data-l="5"></span>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-
-  <div class="scroll-cue" id="scrollCue" aria-label="Scroll down">
+    <div class="scroll-cue" id="scrollCue" aria-label="Scroll down">
       <span class="scroll-cue-track"><span class="scroll-cue-dot"></span></span>
       <span class="scroll-cue-text">Scroll</span>
-  </div>
-</section>
+    </div>
+  </section>
 
-<!-- ABOUT -->
-<section id="about" class="section fade-up">
-  <div class="container">
+  <!-- ABOUT -->
+  <section id="about" class="section fade-up">
+    <div class="container">
       <div class="section-header">
-  <h2>About Me</h2>
-</div> 
-<div class="contains">
-<p>
-    Hi, I'm Md Saqib, a Ⅱ Year B-tech CSE student Studying in Hydrabad India, I love working on Android App Development and building modern, user-friendly apps and web projects. I love learning new technologies, improving my coding skills and building tools that solve real world problems. I want to be a good software developer. I will do this by always learning new things and building projects that are useful.  .
-    </p>
-
-  <div class="list-container">
-    <div class="list-card"><i class="ti ti-user"></i><span class="label-text">Md Saqib</span></div>
-    <div class="list-card"><i class="ti ti-cake"></i><span class="label-text">23</span></div>
-    <div class="list-card"><i class="ti ti-location"></i><span class="label-text">Hydrabad, India</span></div>
-    <div class="list-card"><i class="ti ti-book"></i><span class="label-text">SCET Hydrabad</span></div>
-  </div>
-  <div class="list-container">
-    <div class="list-card"><i class="ti ti-code"></i><span class="label-text">Languages</span></div>
-    <div class="list-card">
-      <div class="list-item">
-        <img src="images/java-4-logo-svgrepo-com.svg" alt="lang-icon">
-        <img src="images/html-5-svgrepo-com.svg" alt="lang-icon">
-        <img src="images/css-3-svgrepo-com.svg" alt="lang-icon">
-        <img src="images/js-svgrepo-com.svg" alt="lang-icon">
-        <img src="images/csharp-svgrepo-com.svg" alt="lang-icon">
-        <img src="images/python-svgrepo-com.svg" alt="lang-icon">
+        <h2>About Me</h2>
       </div>
-    </div>
-  </div>
-    <div class="list-container">
-    <div class="list-card"><i class="ti ti-user-bolt"></i><span class="label-text">Other skills</span></div>
-    <div class="list-card">
-      <div class="list-item">
-        <img src="images/photoshop-svgrepo-com.svg" alt="lang-icon">
-        <img src="images/adobe-illustrator-svgrepo-com.svg" alt="lang-icon">
-        <img src="images/premiere-svgrepo-com.svg" alt="lang-icon">
-      </div>
-    </div>
-  </div>
-  </div>
-  </div>
-</section>
+      <div class="contains">
+        <p>
+          Hi, I'm Md Saqib, a Ⅱ Year B-tech CSE student Studying in Hydrabad India, I love working on Android App
+          Development and building modern, user-friendly apps and web projects. I love learning new technologies,
+          improving my coding skills and building tools that solve real world problems. I want to be a good software
+          developer. I will do this by always learning new things and building projects that are useful. .
+        </p>
 
-<!-- PROJECTS -->
-<section id="projects" class="section fade-up">
-  <div class="container">
-    <div class="section-header">
-      <h2>My Projects</h2>
-    </div>
-    <div class="contains">
-    <div class="projects-slider-wrapper">
-      <div class="projects-track">
-        <!-- Project 1 -->
-        <div class="project-slide">
-          <div class="project-content">
-            <h3 class="project-title">The Mep Co</h3>
-            <p class="project-desc">A website for MEP company which delivers mechanical, electrical, and plumbing engineering consultancy delivering integrated, high-performance building systems across complex and demanding project environments.</p>
-            <div class="project-tech">
-              <span class="tech-badge"><i class="ri-html5-fill"></i> HTML</span>
-              <span class="tech-badge"><i class="ri-css3-fill"></i></i> CSS</span>
-              <span class="tech-badge"><i class="ri-javascript-fill"></i> JavaScript</span>
+        <div class="list-container">
+          <div class="list-card"><i class="ti ti-user"></i><span class="label-text">Md Saqib</span></div>
+          <div class="list-card"><i class="ti ti-cake"></i><span class="label-text">23</span></div>
+          <div class="list-card"><i class="ti ti-map-pin"></i><span class="label-text">Hydrabad, India</span></div>
+          <div class="list-card"><i class="ti ti-book"></i><span class="label-text">SCET Hydrabad</span></div>
+        </div>
+        <div class="list-container">
+          <div class="list-card"><i class="ti ti-code"></i><span class="label-text">Languages</span></div>
+          <div class="list-card">
+            <div class="list-item">
+              <img src="images/java-4-logo-svgrepo-com.svg" alt="lang-icon">
+              <img src="images/html-5-svgrepo-com.svg" alt="lang-icon">
+              <img src="images/css-3-svgrepo-com.svg" alt="lang-icon">
+              <img src="images/js-svgrepo-com.svg" alt="lang-icon">
+              <img src="images/csharp-svgrepo-com.svg" alt="lang-icon">
+              <img src="images/python-svgrepo-com.svg" alt="lang-icon">
             </div>
-            <a href="https://github.com/saqib-cipher" target="_blank" rel="noopener" class="project-link">
-              View on GitHub <i class="fa-brands fa-github"></i>
-            </a>
-          </div>
-          <div class="project-visual">
-            <img class="project-screenshot" src="images/cipher_notes.png" alt="CipherNotes Screenshot">
           </div>
         </div>
-
-        <!-- Project 2 -->
-        <div class="project-slide">
-          <div class="project-content">
-            <h3 class="project-title">DevSpace</h3>
-            <p class="project-desc">A modern developer portfolio builder dashboard where developers can customize, compile, and publish responsive landing pages.</p>
-            <div class="project-tech">
-              <span class="tech-badge"><img src="images/html-5-svgrepo-com.svg" alt="HTML"> HTML5</span>
-              <span class="tech-badge"><img src="images/css-3-svgrepo-com.svg" alt="CSS"> CSS3</span>
-              <span class="tech-badge"><img src="images/js-svgrepo-com.svg" alt="JS"> JS (ES6)</span>
+        <div class="list-container">
+          <div class="list-card"><i class="ti ti-user-bolt"></i><span class="label-text">Other skills</span></div>
+          <div class="list-card">
+            <div class="list-item">
+              <img src="images/photoshop-svgrepo-com.svg" alt="lang-icon">
+              <img src="images/adobe-illustrator-svgrepo-com.svg" alt="lang-icon">
+              <img src="images/premiere-svgrepo-com.svg" alt="lang-icon">
             </div>
-            <a href="https://github.com/saqib-cipher" target="_blank" rel="noopener" class="project-link">
-              View on GitHub <i class="fa-brands fa-github"></i>
-            </a>
-          </div>
-          <div class="project-visual">
-            <img class="project-screenshot" src="images/dev_space.png" alt="DevSpace Screenshot">
-          </div>
-        </div>
-
-        <!-- Project 3 -->
-        <div class="project-slide">
-          <div class="project-content">
-            <h3 class="project-title">QuickRoute</h3>
-            <p class="project-desc">Offline routing and public transport finder for Hyderabad transit, using vector maps and cached route directions.</p>
-            <div class="project-tech">
-              <span class="tech-badge"><img src="images/java-4-logo-svgrepo-com.svg" alt="Java"> Java</span>
-              <span class="tech-badge"><i class="fa-solid fa-map-location-dot"></i> OSM API</span>
-              <span class="tech-badge"><i class="fa-solid fa-mobile-screen-button"></i> Android</span>
-            </div>
-            <a href="https://github.com/saqib-cipher" target="_blank" rel="noopener" class="project-link">
-              View on GitHub <i class="fa-brands fa-github"></i>
-            </a>
-          </div>
-          <div class="project-visual">
-            <img class="project-screenshot" src="images/quick_route.png" alt="QuickRoute Screenshot">
           </div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <!-- Carousel Controls Row -->
-      <div class="carousel-controls">
-        <button class="slider-btn prev" aria-label="Previous Project">
-          <i class="fa-solid fa-chevron-left"></i>
-        </button>
-        
-        <div class="carousel-indicators">
-          <span class="indicator active" data-slide="0"></span>
-          <span class="indicator" data-slide="1"></span>
-          <span class="indicator" data-slide="2"></span>
-        </div>
-        
-        <button class="slider-btn next" aria-label="Next Project">
-          <i class="fa-solid fa-chevron-right"></i>
-        </button>
+  <!-- PROJECTS -->
+  <section id="projects" class="section fade-up">
+    <div class="container">
+      <div class="section-header">
+        <h2>My Projects</h2>
       </div>
-    </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact" class="section fade-up">
-  <div class="container">
-    <div class="section-header">
-      <h2>Contact Me</h2>
-    </div>
-    
-    <div class="contact-layout">
-      <!-- Contact Details Card -->
-      <div class="contact-details-col">
-        <div class="contact-info-card">
-          <h3 class="card-title">Get in Touch</h3>
-          <p class="card-desc">I am open to Android app development roles, open-source projects, or web dashboard collaborations. Let's build something together!</p>
-          
-          <div class="info-list">
-            <a href="mailto:saqib.cipher@gmail.com" class="info-item">
-              <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
-              <div class="info-text">
-                <span class="info-lbl">Email Me</span>
-                <span class="info-val">saqib.cipher@gmail.com</span>
+      <div class="contains">
+        <div class="projects-slider-wrapper">
+          <div class="projects-track">
+            <!-- Project 1 -->
+            <div class="project-slide">
+              <div class="project-content">
+                <h3 class="project-title">The Mep Co</h3>
+                <p class="project-desc">A website for MEP company which delivers mechanical, electrical, and plumbing
+                  engineering consultancy delivering integrated, high-performance building systems across complex and
+                  demanding project environments.</p>
+                <div class="project-tech">
+                  <span class="tech-badge"><span class="tech-dot html"></span>HTML</span>
+                  <span class="tech-badge"><span class="tech-dot css"></span>CSS</span>
+                  <span class="tech-badge"><span class="tech-dot js"></span>JavaScript</span>
+                </div>
+               <a href="https://themepcompany.com" target="_blank" rel="noopener" class="project-link">
+                  View Website <i class="ti ti-external-link"></i>
+                </a>
               </div>
-            </a>
-            
-            <div class="info-item">
-              <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
-              <div class="info-text">
-                <span class="info-lbl">Location</span>
-                <span class="info-val">Hyderabad, India</span>
+              <div class="project-visual">
+                <img class="project-screenshot" src="images/mepco.png" alt="CipherNotes Screenshot">
               </div>
             </div>
-            
-            <a href="https://github.com/saqib-cipher" target="_blank" rel="noopener" class="info-item">
-              <div class="info-icon"><i class="fa-brands fa-github"></i></div>
-              <div class="info-text">
-                <span class="info-lbl">GitHub</span>
-                <span class="info-val">github.com/saqib-cipher</span>
+
+            <!-- Project 2 -->
+            <div class="project-slide">
+              <div class="project-content">
+                <h3 class="project-title">DragWeb</h3>
+                <p class="project-desc">A visual drag-and-drop website builder for Android, inspired by Sketchware. Create websites by dragging UI components onto a canvas, editing their properties in real-time, previewing results, and exporting clean HTML/CSS/JS code.</p>
+                <div class="project-tech">
+                  <span class="tech-badge"><span class="tech-dot java"></span>Java</span>
+                  <span class="tech-badge"><span class="tech-dot html"></span>Html</span>
+                  <span class="tech-badge"><span class="tech-dot android"></span>Android</span>
+                </div>
+                <a href="https://github.com/saqib-cipher/DragWeb" target="_blank" rel="noopener" class="project-link">
+                  View Repository <i class="ti ti-brand-github"></i>
+                </a>
               </div>
-            </a>
+              <div class="project-visual">
+                <img class="project-screenshot" src="images/dragweb.jpg" alt="DevSpace Screenshot">
+              </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="project-slide">
+              <div class="project-content">
+                <h3 class="project-title">SketchX</h3>
+                <p class="project-desc">A useful tool for Sketchware developers which provide over 6100 icons and java codes so dev can import in their project by one click and save alot time, *new: Material 3 widget section</p>
+                <div class="project-tech">
+                  <span class="tech-badge"><span class="tech-dot java"></span>Java</span>
+                  <span class="tech-badge"><span class="tech-dot android"></span>Android</span>
+                </div>
+                 <a href="https://github.com/saqib-cipher/SketchX" target="_blank" rel="noopener" class="project-link">
+                  View Repository <i class="ti ti-brand-github"></i>
+                </a>
+              </div>
+              <div class="project-visual">
+                <img class="project-screenshot" src="images/sketchx.jpg" alt="QuickRoute Screenshot">
+              </div>
+            </div>
+          </div>
+
+          <!-- Carousel Controls Row -->
+          <div class="carousel-controls">
+            <button class="slider-btn prev" aria-label="Previous Project">
+              <i class="ti ti-arrow-narrow-left"></i>
+            </button>
+
+            <div class="carousel-indicators">
+              <span class="indicator active" data-slide="0"></span>
+              <span class="indicator" data-slide="1"></span>
+              <span class="indicator" data-slide="2"></span>
+            </div>
+
+            <button class="slider-btn next" aria-label="Next Project">
+              <i class="ti ti-arrow-narrow-right"></i>
+            </button>
           </div>
         </div>
       </div>
-      
-      <!-- Contact Form -->
-      <div class="contact-form-col">
-        <form class="m3-contact-form" action="#" method="POST">  
-          <div class="m3-field">
-            <input type="text" id="contactName" class="m3-input" placeholder=" " required autocomplete="name">
-            <label for="contactName" class="m3-label">Your Name</label>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section fade-up">
+    <div class="container">
+      <div class="section-header">
+        <h2>Contact Me</h2>
+      </div>
+
+      <div class="contact-layout">
+        <!-- Contact Details Card -->
+        <div class="contact-details-col">
+          <div class="contact-info-card">
+            <h3 class="card-title">Get in Touch</h3>
+            <p class="card-desc">I am open to Android app development roles, open-source projects, or web development.
+             Let's build something crazy!</p>
+
+            <div class="info-list">
+              <a href="mailto:saqib.cipher@gmail.com" class="info-item">
+                <div class="info-icon"><i class="ti ti-mail"></i></div>
+                <div class="info-text">
+                  <span class="info-lbl">Email Me</span>
+                  <span class="info-val">saqib.cipher@gmail.com</span>
+                </div>
+              </a>
+
+              <div class="info-item">
+                <div class="info-icon"><i class="ti ti-map-pin"></i></div>
+                <div class="info-text">
+                  <span class="info-lbl">Location</span>
+                  <span class="info-val">Hyderabad, India</span>
+                </div>
+              </div>
+
+              <a href="https://github.com/saqib-cipher" target="_blank" rel="noopener" class="info-item">
+                <div class="info-icon"><i class="ti ti-brand-github"></i></div>
+                <div class="info-text">
+                  <span class="info-lbl">GitHub</span>
+                  <span class="info-val">github.com/saqib-cipher</span>
+                </div>
+              </a>
+            </div>
           </div>
-          
-          <div class="m3-field">
-            <input type="email" id="contactEmail" class="m3-input" placeholder=" " required autocomplete="email">
-            <label for="contactEmail" class="m3-label">Your Email</label>
-          </div>
-          
-          <div class="m3-field">
-            <textarea id="contactMessage" class="m3-textarea" placeholder=" " required></textarea>
-            <label for="contactMessage" class="m3-label">Your Message</label>
-          </div>
-          
-          <button type="submit" class="m3-btn-submit">
-            Send Message <i class="fa-solid fa-paper-plane"></i>
-          </button>
-        </form>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form-col">
+          <form class="m3-contact-form" action="#" method="POST">
+            <div class="m3-field">
+              <input type="text" id="contactName" class="m3-input" placeholder=" " required autocomplete="name">
+              <label for="contactName" class="m3-label">Your Name</label>
+            </div>
+
+            <div class="m3-field">
+              <input type="email" id="contactEmail" class="m3-input" placeholder=" " required autocomplete="email">
+              <label for="contactEmail" class="m3-label">Your Email</label>
+            </div>
+
+            <div class="m3-field">
+              <textarea id="contactMessage" class="m3-textarea" placeholder=" " required></textarea>
+              <label for="contactMessage" class="m3-label">Your Message</label>
+            </div>
+
+            <button type="submit" class="m3-btn-submit">
+              Send Message <i class="ti ti-send-2"></i>
+            </button>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-</section>
-<!-- Bottom bar-->
-  
+  </section>
+  <!-- Bottom bar-->
+
   <nav class="expressive-button-group">
-    <a href="#home" class="expressive-btn active" onclick="toggleActive(this)"><i class="ti ti-home"></i><span class="label-text">Home</span></a>
-    <a href="#about" class="expressive-btn" onclick="toggleActive(this)"><i class="ti ti-user"></i><span class="label-text">About</span></a>
-    <a href="#projects" class="expressive-btn" onclick="toggleActive(this)"><i class="ti ti-box"></i><span class="label-text">Projects</span></a>
-    <a href="#contact" class="expressive-btn" onclick="toggleActive(this)"><i class="ti ti-message-circle"></i><span class="label-text">Contact</span></a>
+    <a href="#home" class="expressive-btn active" onclick="toggleActive(this)"><i class="ti ti-home"></i><span
+        class="label-text">Home</span></a>
+    <a href="#about" class="expressive-btn" onclick="toggleActive(this)"><i class="ti ti-user"></i><span
+        class="label-text">About</span></a>
+    <a href="#projects" class="expressive-btn" onclick="toggleActive(this)"><i class="ti ti-box"></i><span
+        class="label-text">Projects</span></a>
+    <a href="#contact" class="expressive-btn" onclick="toggleActive(this)"><i class="ti ti-message-circle"></i><span
+        class="label-text">Contact</span></a>
   </nav>
 
-<!-- FOOTER -->
-<footer>
-  <div class="container">
-    <p>Thank you -Saqib Cipher</p>
-  </div>
-</footer>
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <p>Thank you -Saqib Cipher</p>
+    </div>
+  </footer>
 
-<!-- External JS -->
-<script src="js/script.js"></script>
-<script src="js/github-pf.js"></script>
+  <!-- External JS -->
+  <script src="js/script.js"></script>
+  <script src="js/github-pf.js"></script>
 
 </body>
+
 </html>
