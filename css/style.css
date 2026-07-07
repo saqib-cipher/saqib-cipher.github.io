@@ -1225,10 +1225,17 @@ footer {
     right: 0;
     top: auto;
     bottom: 10px;
-    transform: none;
+    transform: translateY(0);
     justify-content: center;
     width: 100%;
     position: fixed;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+  }
+
+  .expressive-button-group.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(25px);
   }
 
   .expressive-button-group .expressive-btn:first-child {

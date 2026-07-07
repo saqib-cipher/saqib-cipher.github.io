@@ -1,18 +1,28 @@
 const faders = document.querySelectorAll('.fade-up, .fade-in');
+const navBar = document.querySelector('.expressive-button-group');
 
-const checkFade = () => {
+const checkScroll = () => {
   faders.forEach(fader => {
     const rect = fader.getBoundingClientRect();
     if (rect.top < window.innerHeight - 100) {
       fader.classList.add('active');
     }
   });
+
+  if (navBar) {
+    const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 20;
+    if (isAtBottom) {
+      navBar.classList.add('hidden');
+    } else {
+      navBar.classList.remove('hidden');
+    }
+  }
 };
 
-window.addEventListener('scroll', checkFade);
-window.addEventListener('resize', checkFade);
-window.addEventListener('DOMContentLoaded', checkFade);
-checkFade();
+window.addEventListener('scroll', checkScroll);
+window.addEventListener('resize', checkScroll);
+window.addEventListener('DOMContentLoaded', checkScroll);
+checkScroll();
 
 
 //nav bar
