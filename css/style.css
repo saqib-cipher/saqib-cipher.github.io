@@ -1259,7 +1259,7 @@ footer {
   }
 
   .scroll-cue {
-    bottom: 10%;
+    display: none;
   }
 
 }
