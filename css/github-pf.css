@@ -359,25 +359,66 @@
     padding: .85rem;
     width: 100%;
   }
-   .github-link span, .avatar-ring {
-  display: none;
-}
- .avatar-ring, .avatar-img {width: 35px; height: 35px;}
- .github-link {
-  padding: .2rem .6rem;
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
- }
 
-.stat-val{
-  font-size: .8rem !important;
-  font-weight: 700;
-}
+  .profile {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .github-link span {
+    display: none;
+  }
+
+  .avatar-ring {
+    display: block;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .avatar-ring, .avatar-img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .github-link {
+    padding: 0;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .profile-text {
+    grid-column: 1 / span 3;
+    grid-row: 2;
+    width: 100%;
+  }
+
+  .stat-val {
+    font-size: .95rem !important;
+    font-weight: 700;
+  }
 }
 
 @media (max-width: 520px) {
-  :root { --cell: 10px; --gap: 2px; --radius-cell: 3px; }
-  .stat-val { font-size: 1.25rem; }
-  .stat-lbl { font-size: .6rem; }
+  :root {
+    --cell: 10px;
+    --gap: 2px;
+    --radius-cell: 3px;
+  }
+  .stat-val {
+    font-size: .85rem !important;
+  }
+  .stat-lbl {
+    font-size: .6rem;
+  }
 }

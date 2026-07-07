@@ -1,13 +1,18 @@
 const faders = document.querySelectorAll('.fade-up, .fade-in');
 
-window.addEventListener('scroll', () => {
+const checkFade = () => {
   faders.forEach(fader => {
     const rect = fader.getBoundingClientRect();
     if (rect.top < window.innerHeight - 100) {
       fader.classList.add('active');
     }
   });
-});
+};
+
+window.addEventListener('scroll', checkFade);
+window.addEventListener('resize', checkFade);
+window.addEventListener('DOMContentLoaded', checkFade);
+checkFade();
 
 
 //nav bar

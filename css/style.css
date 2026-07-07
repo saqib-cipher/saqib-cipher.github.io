@@ -482,6 +482,7 @@ h3 {
   display: flex;
   align-items: self-start;
   flex-direction: column;
+  z-index: 99999;
   gap: 8px;
   /* Slight gap allowing the expressive morphing to stand out */
 }
@@ -872,6 +873,7 @@ h3 {
   width: 50px;
   height: 50px;
   font-size: 1.5rem;
+  font-weight: 700;
   background: var(--iatv-btn);
   border: 1px solid var(--iatv-btn-border);
   color: var(--iatv-btn-text);
@@ -1212,6 +1214,11 @@ footer {
 
 @media (max-width: 768px) {
 
+  .logo-sub {
+    max-height: 50px;
+    font-size: 0.85rem;
+  }
+
   .expressive-button-group {
     flex-direction: row;
     left: 0;
@@ -1247,5 +1254,7 @@ footer {
   .scroll-cue {
     bottom: 10%;
   }
+  
+  .
 
 }
