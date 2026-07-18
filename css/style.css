@@ -811,18 +811,27 @@ h3 {
   background-color: var(--lang-osm);
 }
 
+.project-links {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: auto;
+  width: 100%;
+}
+
 .project-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   width: max-content;
-  padding: 12px 24px;
+  padding: 8px 16px;
   background: var(--iatv-btn);
   border: 1px solid var(--iatv-btn-border);
   color: var(--iatv-btn-text);
   border-radius: 50px;
   text-decoration: none;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
@@ -938,6 +947,7 @@ h3 {
     flex: 0 0 90%;
     transform: scale(0.95);
     grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
   }
 
   .project-visual {
@@ -948,6 +958,17 @@ h3 {
 
   .project-content {
     border-radius: 8px 8px 24px 24px;
+    padding: 20px;
+  }
+
+  .project-links {
+    gap: 8px;
+  }
+
+  .project-link {
+    padding: 6px 6px;
+    font-size: 13px;
+    gap: 4px;
   }
 
   .slider-btn {

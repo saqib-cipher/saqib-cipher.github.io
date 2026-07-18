@@ -34,7 +34,7 @@
 
     <!-- ===== TAGS ===== -->
     <section class="doc-section" id="tags">
-      <p class="chip chip-html">HTML</p>
+      <p class="chip chip-html"><i class="ti ti-brand-html5"></i> HTML</p>
       <h3>Tags &amp; elements</h3>
       <p class="lede">HTML describes the <em>structure</em> of a page. You write it using <b>tags</b> — keywords wrapped in angle brackets. A tag usually comes in a pair: an opening tag and a closing tag, with content sitting in between. Together, an opening tag, its content, and its closing tag form one <b>element</b>.</p>
 
@@ -66,7 +66,7 @@
 
     <!-- ===== DOM TREE ===== -->
     <section class="doc-section" id="dom-tree">
-      <p class="chip chip-html">HTML</p>
+      <p class="chip chip-html"><i class="ti ti-git-fork"></i> HTML</p>
       <h3>Parent, child &amp; the DOM tree</h3>
       <p class="lede">Elements can sit inside other elements. Whatever tag an element is written between becomes its <b>parent</b>; the elements inside it are that parent's <b>children</b>. Elements that share the same direct parent are <b>siblings</b>. String enough of these nestings together and the whole page becomes a tree — the browser's internal copy of that tree is called the <b>DOM</b> (Document Object Model).</p>
 
@@ -94,7 +94,7 @@
 
     <!-- ===== CLASS VS ID ===== -->
     <section class="doc-section" id="class-id">
-      <p class="chip chip-html">HTML</p>
+      <p class="chip chip-html"><i class="ti ti-id"></i> HTML</p>
       <h3>class vs id</h3>
       <p class="lede">Tags describe <em>what</em> an element is. <code class="mono">class</code> and <code class="mono">id</code> are attributes that let you label a <em>specific</em> element, so CSS and JavaScript can find and style it.</p>
 
@@ -124,7 +124,7 @@ document.getElementById(<span class="str">'submitBtn'</span>)</pre>
 
     <!-- ===== CSS BASICS ===== -->
     <section class="doc-section" id="css-basics">
-      <p class="chip chip-css">CSS</p>
+      <p class="chip chip-css"><i class="ti ti-palette"></i> CSS</p>
       <h3>CSS basics</h3>
       <p class="lede">CSS answers "how should it look?" — you select an element (usually by tag, class, or id) and hand it a list of <code class="mono">property: value</code> pairs. Every visible box on a page follows the same layout rule, called the <b>box model</b>: content, wrapped in padding, wrapped in a border, wrapped in margin.</p>
 
@@ -182,7 +182,7 @@ document.getElementById(<span class="str">'submitBtn'</span>)</pre>
 
     <!-- ===== JS BASICS ===== -->
     <section class="doc-section" id="js-basics">
-      <p class="chip chip-js">JS</p>
+      <p class="chip chip-js"><i class="ti ti-braces"></i> JS</p>
       <h3>JavaScript basics</h3>
       <p class="lede">CSS makes a page look right; JavaScript makes it <em>do</em> things. Three ideas cover most of what you need to start:</p>
 
@@ -243,7 +243,7 @@ document.getElementById(<span class="str">'submitBtn'</span>)</pre>
 
     <!-- ===== INTERACTIVE SANDBOX ===== -->
     <section class="doc-section" id="sandbox">
-      <p class="chip chip-bridge">Interactive</p>
+      <p class="chip chip-bridge"><i class="ti ti-device-gamepad"></i> Interactive</p>
       <h3>Sketchware-to-Web Sandbox</h3>
       <p>Configure property blocks visually, just like in DragWeb's Style and Logic screens, and see the exact HTML, CSS, and JS generated in real time. Click the custom view to see animations and event listeners run!</p>
 
@@ -377,7 +377,7 @@ document.getElementById(<span class="str">'submitBtn'</span>)</pre>
 
     <!-- ===== BRIDGE ===== -->
     <section class="doc-section" id="bridge">
-      <p class="chip chip-bridge">Bridge</p>
+      <p class="chip chip-bridge"><i class="ti ti-vector"></i> Bridge</p>
       <h3>How it all becomes one export</h3>
       <p>Put HTML, CSS and JS together and you get DragWeb's export pipeline:</p>
       <div class="pipeline">
@@ -392,10 +392,10 @@ document.getElementById(<span class="str">'submitBtn'</span>)</pre>
     <section class="doc-section" id="cheatsheet">
       <h3>Cheatsheet</h3>
       <div class="grid-2">
-        <div class="mini-card"><p class="chip chip-html" style="margin-bottom:8px">HTML</p><ul><li>Nesting = the DOM tree</li><li><code>id</code> unique, <code>class</code> reusable</li><li>Self-closing: <code>img</code>, <code>input</code>, <code>br</code></li></ul></div>
-        <div class="mini-card"><p class="chip chip-css" style="margin-bottom:8px">CSS</p><ul><li>margin → border → padding → content</li><li>Select by tag, <code>.class</code>, <code>#id</code></li><li>Values need units: <code>px</code>, <code>%</code>, <code>em</code></li></ul></div>
-        <div class="mini-card"><p class="chip chip-js" style="margin-bottom:8px">JS</p><ul><li><code>let</code> / <code>const</code> store values</li><li><code>addEventListener('click', fn)</code></li><li><code>getElementById(id)</code> grabs one element</li></ul></div>
-        <div class="mini-card"><p class="chip chip-bridge" style="margin-bottom:8px">DragWeb</p><ul><li>Widget tag → HTML tag</li><li>Property Panel field → CSS property</li><li>Block stack → JS function body</li></ul></div>
+        <div class="mini-card"><p class="chip chip-html" style="margin-bottom:8px"><i class="ti ti-brand-html5"></i> HTML</p><ul><li>Nesting = the DOM tree</li><li><code>id</code> unique, <code>class</code> reusable</li><li>Self-closing: <code>img</code>, <code>input</code>, <code>br</code></li></ul></div>
+        <div class="mini-card"><p class="chip chip-css" style="margin-bottom:8px"><i class="ti ti-palette"></i> CSS</p><ul><li>margin → border → padding → content</li><li>Select by tag, <code>.class</code>, <code>#id</code></li><li>Values need units: <code>px</code>, <code>%</code>, <code>em</code></li></ul></div>
+        <div class="mini-card"><p class="chip chip-js" style="margin-bottom:8px"><i class="ti ti-braces"></i> JS</p><ul><li><code>let</code> / <code>const</code> store values</li><li><code>addEventListener('click', fn)</code></li><li><code>getElementById(id)</code> grabs one element</li></ul></div>
+        <div class="mini-card"><p class="chip chip-bridge" style="margin-bottom:8px"><i class="ti ti-vector"></i> DragWeb</p><ul><li>Widget tag → HTML tag</li><li>Property Panel field → CSS property</li><li>Block stack → JS function body</li></ul></div>
       </div>
     </section>
 
