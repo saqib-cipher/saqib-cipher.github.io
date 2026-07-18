@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From Blocks to Browser — a DragWeb field guide to HTML, CSS &amp; JS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#121016;
+  --surface:#1B1820;
+  --surface-container:#211E27;
+  --surface-container-high:#2A2631;
+  --surface-container-low:#18151C;
+  --outline:#4A4550;
+  --outline-variant:#332F3A;
+  --on-surface:#EAE3EE;
+  --on-surface-variant:#C9C1D4;
+  --on-surface-dim:#948C9E;
+
+  --html-color:#FF7A50;
+  --html-color-dim:#3A241E;
+  --css-color:#5CC8FF;
+  --css-color-dim:#182B36;
+  --js-color:#F7DF1E;
+  --js-color-dim:#3A3617;
+  --bridge-color:#B69DF8;
+  --bridge-color-dim:#2A2338;
+
+  --radius-xl:28px;
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:8px;
+
+  --ease:cubic-bezier(.2,0,0,1);
+  --dur-s:150ms;
+  --dur-m:280ms;
+  --dur-l:420ms;
+
+  --font-display:'Space Grotesk', sans-serif;
+  --font-body:'Inter', sans-serif;
+  --font-mono:'JetBrains Mono', monospace;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; }
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--on-surface);
+  font-family:var(--font-body);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--bridge-color); color:#1B1820; }
+
+h1,h2,h3,h4{ font-family:var(--font-display); font-weight:600; margin:0 0 .5em; letter-spacing:-0.01em; }
+p{ margin:0 0 1em; color:var(--on-surface-variant); }
+a{ color:inherit; }
+code, .mono{ font-family:var(--font-mono); }
+
+/* ============ LAYOUT ============ */
+.app{
+  display:grid;
+  grid-template-columns:264px 1fr;
+  min-height:100vh;
+}
+
+/* ---- Sidebar ---- */
+.sidebar{
+  position:sticky; top:0; height:100vh; overflow-y:auto;
+  padding:28px 18px;
+  background:var(--surface-container-low);
+  border-right:1px solid var(--outline-variant);
+  display:flex; flex-direction:column; gap:24px;
+}
+.brand{ display:flex; align-items:center; gap:12px; padding:0 8px; }
+.brand-mark{
+  width:38px; height:38px; border-radius:11px;
+  background:linear-gradient(135deg, var(--html-color), var(--css-color) 50%, var(--js-color));
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:700; color:#141018; font-size:15px;
+  flex:none;
+}
+.brand-text .name{ font-family:var(--font-display); font-weight:600; font-size:15px; }
+.brand-text .sub{ font-size:11px; color:var(--on-surface-dim); font-family:var(--font-mono); letter-spacing:.02em; }
+
+.navlist{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px; position:relative; }
+.navlist a{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 14px; border-radius:var(--radius-sm);
+  text-decoration:none; font-size:13.5px; color:var(--on-surface-variant);
+  position:relative; transition:background var(--dur-s) var(--ease), color var(--dur-s) var(--ease);
+}
+.navlist a::before{
+  content:""; width:7px; height:7px; border-radius:50%; flex:none;
+  background:var(--dot, var(--outline));
+  transition:transform var(--dur-s) var(--ease);
+}
+.navlist a:hover{ background:color-mix(in srgb, var(--on-surface) 8%, transparent); color:var(--on-surface); }
+.navlist a.active{ background:color-mix(in srgb, var(--on-surface) 10%, transparent); color:var(--on-surface); font-weight:600; }
+.navlist a.active::before{ transform:scale(1.35); }
+.navlist a[data-c="html"]{ --dot: var(--html-color); }
+.navlist a[data-c="css"]{ --dot: var(--css-color); }
+.navlist a[data-c="js"]{ --dot: var(--js-color); }
+.navlist a[data-c="bridge"]{ --dot: var(--bridge-color); }
+
+.sidebar-foot{
+  margin-top:auto; padding:12px; border-radius:var(--radius-md);
+  background:var(--surface-container); font-size:11.5px; color:var(--on-surface-dim);
+  font-family:var(--font-mono); line-height:1.5;
+}
+
+/* ---- Content ---- */
+.content{ padding:0; max-width:100%; }
+.section, .hero{ padding:64px clamp(24px,5vw,88px); max-width:920px; }
+.hero{ padding-top:88px; padding-bottom:56px; }
+
+/* eyebrow / language chip */
+.chip{
+  display:inline-flex; align-items:center; gap:7px;
+  padding:5px 12px 5px 9px; border-radius:100px;
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:.03em; font-weight:500;
+  text-transform:uppercase; margin-bottom:18px;
+}
+.chip::before{ content:""; width:8px; height:8px; border-radius:50%; background:currentColor; }
+.chip.html{ background:var(--html-color-dim); color:var(--html-color); }
+.chip.css{ background:var(--css-color-dim); color:var(--css-color); }
+.chip.js{ background:var(--js-color-dim); color:var(--js-color); }
+.chip.bridge{ background:var(--bridge-color-dim); color:var(--bridge-color); }
+
+.hero h1{ font-size:clamp(32px,4.4vw,52px); line-height:1.08; max-width:15ch; }
+.hero .lede{ font-size:17px; max-width:56ch; color:var(--on-surface-variant); }
+
+.section h2{ font-size:clamp(22px,3vw,30px); }
+.section > .lede{ max-width:60ch; }
+
+/* ---- Card / surface primitives ---- */
+.card{
+  background:var(--surface-container);
+  border:1px solid var(--outline-variant);
+  border-radius:var(--radius-lg);
+  padding:22px 24px;
+}
+.grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.grid-3{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+@media (max-width:760px){ .grid-2, .grid-3{ grid-template-columns:1fr; } .app{ grid-template-columns:1fr; } .sidebar{ position:relative; height:auto; } }
+
+/* ---- code blocks ---- */
+pre.code{
+  background:var(--surface-container-low);
+  border:1px solid var(--outline-variant);
+  border-radius:var(--radius-md);
+  padding:16px 18px; overflow-x:auto;
+  font-family:var(--font-mono); font-size:13px; line-height:1.65; color:var(--on-surface);
+  margin:0;
+}
+.code .tag{ color:var(--html-color); }
+.code .attr{ color:var(--js-color); }
+.code .str{ color:#8FE28A; }
+.code .prop{ color:var(--css-color); }
+.code .cmt{ color:var(--on-surface-dim); font-style:italic; }
+.code .kw{ color:var(--bridge-color); }
+
+/* ---- callout: sketchware bridge ---- */
+.bridge-note{
+  display:flex; gap:14px; align-items:flex-start;
+  border-radius:var(--radius-md);
+  border:1px solid color-mix(in srgb, var(--bridge-color) 35%, var(--outline-variant));
+  background:var(--bridge-color-dim);
+  padding:16px 18px; margin-top:18px;
+}
+.bridge-note .ico{
+  flex:none; width:26px; height:26px; border-radius:8px;
+  background:var(--bridge-color); color:#1B1425;
+  display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; font-family:var(--font-display);
+}
+.bridge-note p{ margin:0; color:var(--on-surface); font-size:13.8px; }
+.bridge-note b{ color:var(--bridge-color); font-weight:600; }
+
+/* ---- table ---- */
+table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+th{ text-align:left; color:var(--on-surface-dim); font-weight:500; font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.03em; padding:0 12px 10px; border-bottom:1px solid var(--outline-variant); }
+td{ padding:11px 12px; border-bottom:1px solid var(--outline-variant); vertical-align:top; }
+tr:last-child td{ border-bottom:none; }
+td code{ background:var(--surface-container-high); padding:2px 6px; border-radius:6px; font-size:12.3px; }
+
+/* ============ HERO SIGNATURE: block / code flip ============ */
+.flip-wrap{ margin-top:36px; display:flex; flex-direction:column; gap:14px; align-items:flex-start; }
+.flip-toggle{ display:flex; align-items:center; gap:10px; font-family:var(--font-mono); font-size:12.5px; color:var(--on-surface-dim); }
+.switch{ position:relative; width:46px; height:26px; }
+.switch input{ opacity:0; width:0; height:0; }
+.switch .track{
+  position:absolute; inset:0; background:var(--surface-container-high); border:1px solid var(--outline);
+  border-radius:100px; cursor:pointer; transition:background var(--dur-m) var(--ease);
+}
+.switch .track::before{
+  content:""; position:absolute; width:18px; height:18px; left:3px; top:2.5px;
+  background:var(--js-color); border-radius:50%;
+  transition:transform var(--dur-m) var(--ease), background var(--dur-m) var(--ease);
+}
+.switch input:checked + .track{ background:var(--html-color-dim); }
+.switch input:checked + .track::before{ transform:translateX(20px); background:var(--html-color); }
+
+.flip-stage{ perspective:1400px; width:100%; max-width:520px; }
+.flip-card{
+  position:relative; width:100%; height:168px;
+  transform-style:preserve-3d; transition:transform var(--dur-l) var(--ease);
+}
+.flip-card.flipped{ transform:rotateY(180deg); }
+.flip-face{
+  position:absolute; inset:0; backface-visibility:hidden;
+  border-radius:var(--radius-lg); padding:20px 22px;
+  display:flex; flex-direction:column; justify-content:center; gap:8px;
+}
+.face-block{
+  background:linear-gradient(155deg, #3A3020, #2E2818);
+  border:1px solid color-mix(in srgb, var(--js-color) 40%, var(--outline-variant));
+}
+.face-block::before{ /* puzzle notch */
+  content:""; position:absolute; top:-9px; left:28px; width:22px; height:16px;
+  background:inherit; border:inherit; border-bottom:none;
+  border-radius:9px 9px 0 0;
+}
+.face-block .bh{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--js-color); }
+.face-block .bb{ font-family:var(--font-mono); font-size:16px; color:var(--on-surface); }
+.face-block .bb .k{ color:var(--js-color); }
+.face-code{
+  background:var(--surface-container-low);
+  border:1px solid var(--outline-variant);
+  transform:rotateY(180deg);
+}
+.face-code pre{ margin:0; font-family:var(--font-mono); font-size:13px; color:var(--on-surface); line-height:1.7; }
+.flip-caption{ font-size:12.5px; color:var(--on-surface-dim); }
+
+/* ============ TAGS ANATOMY ============ */
+.anatomy{ margin:26px 0; }
+.anatomy-code{ font-family:var(--font-mono); font-size:18px; background:var(--surface-container-low); border:1px solid var(--outline-variant); border-radius:var(--radius-md); padding:20px 22px; }
+.anatomy-code .part{ position:relative; padding:2px 1px; border-radius:4px; cursor:default; transition:background var(--dur-s) var(--ease); }
+.anatomy-code .part:hover{ background:var(--surface-container-high); }
+.anatomy-legend{ display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; margin-top:16px; }
+.anatomy-legend .item{ display:flex; gap:9px; align-items:flex-start; font-size:12.6px; color:var(--on-surface-variant); }
+.anatomy-legend .sw{ width:10px; height:10px; border-radius:3px; margin-top:4px; flex:none; }
+.part.p-tag{ color:var(--html-color); } .sw.s-tag{ background:var(--html-color); }
+.part.p-attr{ color:var(--js-color); } .sw.s-attr{ background:var(--js-color); }
+.part.p-val{ color:#8FE28A; } .sw.s-val{ background:#8FE28A; }
+.part.p-content{ color:var(--on-surface); } .sw.s-content{ background:var(--on-surface); }
+
+/* ============ DOM TREE ============ */
+.tree{ font-family:var(--font-mono); font-size:13.5px; }
+.tree ul{ list-style:none; margin:0; padding-left:22px; border-left:1px dashed var(--outline); }
+.tree > ul{ padding-left:0; border-left:none; }
+.tree li{ padding:5px 0; position:relative; }
+.node{ display:inline-flex; align-items:center; gap:8px; padding:3px 10px; border-radius:7px; background:var(--surface-container-high); }
+.node .tagname{ color:var(--html-color); }
+.node .role{ font-size:10.5px; color:var(--on-surface-dim); font-family:var(--font-body); }
+
+/* ============ CLASS VS ID ============ */
+.duo{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+.duo .card h4{ font-size:14px; display:flex; align-items:center; gap:8px; }
+.duo .card h4 .tagchip{ font-family:var(--font-mono); font-size:11px; padding:2px 8px; border-radius:6px; }
+.tagchip.id{ background:var(--html-color-dim); color:var(--html-color); }
+.tagchip.class{ background:var(--css-color-dim); color:var(--css-color); }
+
+/* ============ CSS BOX MODEL ============ */
+.boxmodel-wrap{ display:grid; grid-template-columns:1.1fr .9fr; gap:26px; align-items:center; margin-top:22px; }
+@media (max-width:760px){ .boxmodel-wrap{ grid-template-columns:1fr; } }
+.bm-layer{ transition:background var(--dur-s) var(--ease), outline-color var(--dur-s) var(--ease); position:relative; }
+.bm-margin{ background:color-mix(in srgb, var(--css-color) 8%, transparent); border:1px dashed color-mix(in srgb, var(--css-color) 45%, var(--outline)); border-radius:14px; padding:var(--m,18px); }
+.bm-border{ background:color-mix(in srgb, var(--js-color) 14%, transparent); border-radius:10px; padding:6px; }
+.bm-padding{ background:color-mix(in srgb, var(--html-color) 16%, transparent); border-radius:6px; padding:var(--p,16px); }
+.bm-content{ background:var(--surface-container-high); border-radius:4px; padding:16px; text-align:center; font-family:var(--font-mono); font-size:12px; color:var(--on-surface); }
+.bm-tag{ position:absolute; top:4px; left:8px; font-size:10px; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.04em; opacity:.75; }
+.bm-margin .bm-tag{ color:var(--css-color); }
+.bm-border .bm-tag{ color:var(--js-color); top:auto; bottom:4px; right:8px; left:auto; }
+.bm-padding .bm-tag{ color:var(--html-color); }
+
+.sliders{ display:flex; flex-direction:column; gap:16px; }
+.slider-row label{ display:flex; justify-content:space-between; font-family:var(--font-mono); font-size:12px; color:var(--on-surface-variant); margin-bottom:8px; }
+.slider-row input[type=range]{ width:100%; accent-color:var(--css-color); }
+
+/* ============ property table + js blocks etc share .card/.grid ============ */
+.prop-badge{ display:inline-block; font-family:var(--font-mono); font-size:11px; padding:2px 8px; border-radius:6px; background:var(--surface-container-high); color:var(--on-surface-dim); }
+
+/* ============ JS BLOCK BUILDER ============ */
+.stack{ display:flex; flex-direction:column; gap:8px; margin-top:20px; max-width:420px; }
+.puzzle{
+  position:relative; padding:13px 16px 13px 24px; border-radius:10px;
+  font-family:var(--font-mono); font-size:13px; color:#1B1620;
+  display:flex; align-items:center; gap:8px;
+}
+.puzzle::before{ content:""; position:absolute; left:-1px; top:50%; transform:translateY(-50%); width:10px; height:16px; background:inherit; border-radius:0 5px 5px 0; }
+.puzzle.ev{ background:var(--js-color); }
+.puzzle.cond{ background:var(--css-color); margin-left:18px; }
+.puzzle.act{ background:var(--html-color); margin-left:36px; }
+.puzzle b{ font-weight:700; }
+
+.gen-btn{
+  margin-top:18px; border:none; cursor:pointer;
+  background:var(--bridge-color); color:#1B1425; font-family:var(--font-body); font-weight:600; font-size:13.5px;
+  padding:11px 20px; border-radius:100px;
+  display:inline-flex; align-items:center; gap:8px;
+  transition:transform var(--dur-s) var(--ease), filter var(--dur-s) var(--ease);
+}
+.gen-btn:hover{ filter:brightness(1.1); transform:translateY(-1px); }
+.gen-btn:active{ transform:translateY(0); }
+.gen-panel{
+  overflow:hidden; height:0; opacity:0; transition:height var(--dur-l) var(--ease), opacity var(--dur-m) var(--ease);
+  margin-top:0;
+}
+.gen-panel.open{ margin-top:16px; opacity:1; }
+.gen-panel pre{ margin:0; }
+
+/* ============ BRIDGE PIPELINE ============ */
+.pipeline{ display:flex; align-items:stretch; gap:0; margin-top:26px; overflow-x:auto; padding-bottom:8px; }
+.pipe-step{
+  flex:1; min-width:150px; background:var(--surface-container); border:1px solid var(--outline-variant);
+  border-radius:var(--radius-md); padding:16px; position:relative;
+}
+.pipe-step .n{ font-family:var(--font-mono); font-size:11px; color:var(--bridge-color); }
+.pipe-step h5{ margin:6px 0 4px; font-family:var(--font-display); font-size:14px; }
+.pipe-step p{ font-size:12px; margin:0; color:var(--on-surface-dim); }
+.pipe-arrow{ flex:none; width:34px; display:flex; align-items:center; justify-content:center; color:var(--outline); font-size:18px; }
+
+/* ============ CHEATSHEET ============ */
+.cheat-card h4{ font-size:13.5px; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.cheat-card ul{ margin:0; padding-left:18px; font-size:12.8px; color:var(--on-surface-variant); display:flex; flex-direction:column; gap:6px; }
+
+footer{ padding:40px clamp(24px,5vw,88px) 80px; color:var(--on-surface-dim); font-size:12.5px; border-top:1px solid var(--outline-variant); margin-top:40px; }
+
+/* reveal-on-scroll */
+.reveal{ opacity:0; transform:translateY(14px); transition:opacity var(--dur-l) var(--ease), transform var(--dur-l) var(--ease); }
+.reveal.in{ opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">&lt;/&gt;</div>
+      <div class="brand-text">
+        <div class="name">DragWeb</div>
+        <div class="sub">sketchweb.gl</div>
+      </div>
+    </div>
+    <ul class="navlist" id="navlist">
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#tags" data-c="html">Tags &amp; elements</a></li>
+      <li><a href="#dom-tree" data-c="html">Parent, child &amp; the DOM</a></li>
+      <li><a href="#class-id" data-c="html">class vs id</a></li>
+      <li><a href="#css-basics" data-c="css">CSS basics</a></li>
+      <li><a href="#js-basics" data-c="js">JavaScript basics</a></li>
+      <li><a href="#bridge" data-c="bridge">The full pipeline</a></li>
+      <li><a href="#cheatsheet">Cheatsheet</a></li>
+    </ul>
+    <div class="sidebar-foot">Every widget you drag in DragWeb becomes real HTML, CSS &amp; JS underneath. This guide walks through both sides at once.</div>
+  </aside>
+
+  <!-- ============ CONTENT ============ -->
+  <main class="content">
+
+    <!-- HERO -->
+    <header class="hero" id="overview">
+      <span class="chip bridge">field guide</span>
+      <h1>Every block you drag becomes three files.</h1>
+      <p class="lede">DragWeb lets you build an app by snapping puzzle pieces together — but underneath, MainActivity is quietly writing HTML, CSS and JavaScript. This guide explains those three languages from the ground up, and points out exactly where each idea shows up inside DragWeb's own editor.</p>
+
+      <div class="flip-wrap reveal">
+        <div class="flip-toggle">
+          <span>Block view</span>
+          <label class="switch">
+            <input type="checkbox" id="flipToggle">
+            <span class="track"></span>
+          </label>
+          <span>Code view</span>
+        </div>
+        <div class="flip-stage">
+          <div class="flip-card" id="flipCard">
+            <div class="flip-face face-block">
+              <div class="bh">Logic Block</div>
+              <div class="bb">when <span class="k">Button1</span> . <span class="k">onClick</span></div>
+              <div class="bb" style="margin-left:16px">→ set <span class="k">Label1</span> . text to <span class="k">"Hello!"</span></div>
+            </div>
+            <div class="flip-face face-code">
+              <pre><span class="prop">button1</span>.addEventListener(<span class="str">'click'</span>, () => {
+  <span class="prop">label1</span>.textContent = <span class="str">"Hello!"</span>;
+});</pre>
+            </div>
+          </div>
+        </div>
+        <div class="flip-caption">Flip the switch — this is what <code class="mono">LogicBlockActivity.generateJavaScript()</code> actually does to every block you place.</div>
+      </div>
+    </header>
+
+    <!-- ============ TAGS & ELEMENTS ============ -->
+    <section class="section reveal" id="tags">
+      <span class="chip html">HTML</span>
+      <h2>Tags &amp; elements</h2>
+      <p class="lede">HTML describes the <em>structure</em> of a page. You write it using <b>tags</b> — keywords wrapped in angle brackets. A tag usually comes in a pair: an opening tag and a closing tag, with content sitting in between. Together, an opening tag, its content, and its closing tag form one <b>element</b>.</p>
+
+      <div class="anatomy">
+        <div class="anatomy-code">&lt;<span class="part p-tag">button</span> <span class="part p-attr">class</span>=<span class="part p-val">"cta"</span> <span class="part p-attr">id</span>=<span class="part p-val">"mainBtn"</span>&gt;<span class="part p-content">Click me</span>&lt;/<span class="part p-tag">button</span>&gt;</div>
+        <div class="anatomy-legend">
+          <div class="item"><span class="sw s-tag"></span><span><b style="color:var(--html-color)">Tag name</b> — which kind of element this is (a button, a paragraph, a div…)</span></div>
+          <div class="item"><span class="sw s-attr"></span><span><b style="color:var(--js-color)">Attribute</b> — extra info attached to the tag, written as <code class="mono">name=</code></span></div>
+          <div class="item"><span class="sw s-val"></span><span><b style="color:#8FE28A">Attribute value</b> — always in quotes</span></div>
+          <div class="item"><span class="sw s-content"></span><span><b>Content</b> — what's shown between the tags</span></div>
+        </div>
+      </div>
+
+      <p>Some tags never wrap content and don't need a closing tag at all — <code class="mono">&lt;img&gt;</code>, <code class="mono">&lt;input&gt;</code> and <code class="mono">&lt;br&gt;</code> are the common ones. A few frequently-used tags:</p>
+
+      <table>
+        <thead><tr><th>Tag</th><th>What it's for</th><th>DragWeb equivalent</th></tr></thead>
+        <tbody>
+          <tr><td><code>div</code>, <code>section</code></td><td>Invisible containers that group other elements</td><td>A "Layout" widget from the palette</td></tr>
+          <tr><td><code>p</code>, <code>h1</code>–<code>h6</code></td><td>Paragraph text and headings</td><td>Text / Label widget</td></tr>
+          <tr><td><code>button</code>, <code>input</code></td><td>Things the user can click or type into</td><td>Button / Input widget</td></tr>
+          <tr><td><code>img</code></td><td>An image</td><td>Image widget</td></tr>
+          <tr><td><code>ul</code>, <code>li</code></td><td>A list, and each item in it</td><td>List widget</td></tr>
+        </tbody>
+      </table>
+
+      <div class="bridge-note">
+        <div class="ico">SW</div>
+        <p><b>In DragWeb:</b> every tag in this table is literally an entry in <code class="mono">widgets.json</code>. When <code class="mono">WidgetBuilderEngine.createWidget(String tag)</code> reads <code class="mono">"button"</code> from the widget tree, it's making exactly the same decision your browser makes when it hits a <code class="mono">&lt;button&gt;</code> tag — it just builds a native Android View instead of a DOM node.</p>
+      </div>
+    </section>
+
+    <!-- ============ PARENT/CHILD & DOM TREE ============ -->
+    <section class="section reveal" id="dom-tree">
+      <span class="chip html">HTML</span>
+      <h2>Parent, child &amp; the DOM tree</h2>
+      <p class="lede">Elements can sit inside other elements. Whatever tag an element is written between becomes its <b>parent</b>; the elements inside it are that parent's <b>children</b>. Elements that share the same direct parent are <b>siblings</b>. String enough of these nestings together and the whole page becomes a tree — the browser's internal copy of that tree is called the <b>DOM</b> (Document Object Model).</p>
+
+      <div class="card">
+        <div class="tree">
+          <ul>
+            <li><span class="node"><span class="tagname">body</span></span>
+              <ul>
+                <li><span class="node"><span class="tagname">section</span><span class="role">parent of the card</span></span>
+                  <ul>
+                    <li><span class="node"><span class="tagname">div</span> class="card"<span class="role">a child of section, parent of h2 + p</span></span>
+                      <ul>
+                        <li><span class="node"><span class="tagname">h2</span><span class="role">sibling of p below</span></span></li>
+                        <li><span class="node"><span class="tagname">p</span><span class="role">sibling of h2 above</span></span></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bridge-note">
+        <div class="ico">SW</div>
+        <p><b>In DragWeb:</b> this tree is exactly what MainActivity's <b>Hierarchy Panel</b> draws. Behind the scenes it's stored as an <code class="mono">ArrayList&lt;HashMap&lt;String, Object&gt;&gt;</code> where every widget entry keeps a reference to its parent — the same "who's inside whom" relationship, just in JSON instead of angle brackets. <code class="mono">HierarchyTreeAdapter</code> rebuilds that visual tree every time you edit the layout.</p>
+      </div>
+    </section>
+
+    <!-- ============ CLASS VS ID ============ -->
+    <section class="section reveal" id="class-id">
+      <span class="chip html">HTML</span>
+      <h2>class vs id</h2>
+      <p class="lede">Tags describe <em>what</em> an element is. <code class="mono">class</code> and <code class="mono">id</code> are attributes that let you label a <em>specific</em> element, so CSS and JavaScript can find and style it.</p>
+
+      <div class="duo">
+        <div class="card">
+          <h4><span class="tagchip id">id</span> one-of-a-kind</h4>
+          <p style="margin-bottom:10px">An <code class="mono">id</code> must be unique on the page — only one element can ever have it. Use it to target one exact thing.</p>
+          <pre class="code">&lt;button <span class="attr">id</span>=<span class="str">"submitBtn"</span>&gt;Save&lt;/button&gt;
+
+<span class="cmt">/* CSS */</span>
+<span class="kw">#</span>submitBtn { <span class="prop">background</span>: blue; }
+
+<span class="cmt">// JavaScript</span>
+document.getElementById(<span class="str">'submitBtn'</span>)</pre>
+        </div>
+        <div class="card">
+          <h4><span class="tagchip class">class</span> reusable label</h4>
+          <p style="margin-bottom:10px">A <code class="mono">class</code> can be reused on as many elements as you like, and one element can even carry several classes at once.</p>
+          <pre class="code">&lt;button <span class="attr">class</span>=<span class="str">"btn primary"</span>&gt;Save&lt;/button&gt;
+&lt;button <span class="attr">class</span>=<span class="str">"btn"</span>&gt;Cancel&lt;/button&gt;
+
+<span class="cmt">/* CSS — styles every .btn at once */</span>
+<span class="kw">.</span>btn { <span class="prop">border-radius</span>: 8px; }</pre>
+        </div>
+      </div>
+
+      <div class="bridge-note">
+        <div class="ico">SW</div>
+        <p><b>In DragWeb:</b> every widget you drag onto the canvas is auto-assigned an id like <code class="mono">button1</code>, <code class="mono">label2</code> — that's the same mechanism as HTML's <code class="mono">id</code>. <code class="mono">WidgetSelector</code> uses it to know which View is selected, and <code class="mono">LogicBlockActivity</code> writes that exact string into the generated <code class="mono">document.getElementById(...)</code> call, so the block "when Button1.onClick" and the id <code class="mono">button1</code> are the same thing on both sides.</p>
+      </div>
+    </section>
+
+    <!-- ============ CSS BASICS ============ -->
+    <section class="section reveal" id="css-basics">
+      <span class="chip css">CSS</span>
+      <h2>CSS basics</h2>
+      <p class="lede">CSS answers "how should it look?" — you select an element (usually by tag, class, or id) and hand it a list of <code class="mono">property: value</code> pairs. Every visible box on a page follows the same layout rule, called the <b>box model</b>: content, wrapped in padding, wrapped in a border, wrapped in margin.</p>
+
+      <div class="boxmodel-wrap card">
+        <div class="bm-margin bm-layer" id="bmMargin" style="--m:18px">
+          <span class="bm-tag">margin</span>
+          <div class="bm-border bm-layer" id="bmBorder">
+            <span class="bm-tag">border</span>
+            <div class="bm-padding bm-layer" id="bmPadding" style="--p:16px">
+              <span class="bm-tag" style="color:var(--html-color)">padding</span>
+              <div class="bm-content">content</div>
+            </div>
+          </div>
+        </div>
+        <div class="sliders">
+          <div class="slider-row">
+            <label>margin <span id="mVal" class="mono">18px</span></label>
+            <input type="range" id="mSlider" min="0" max="40" value="18">
+          </div>
+          <div class="slider-row">
+            <label>padding <span id="pVal" class="mono">16px</span></label>
+            <input type="range" id="pSlider" min="0" max="40" value="16">
+          </div>
+          <p style="font-size:12.3px">Drag the sliders — the box redraws live, the same way DragWeb's canvas redraws the second you change a slider in the Property Panel.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:34px; font-size:17px">Common properties</h3>
+      <p class="lede">DragWeb's Property Panel exposes 19 fields per widget — every one of them maps to a real CSS property that <code class="mono">WidgetBuilderEngine.applyStyles()</code> writes for you.</p>
+      <table>
+        <thead><tr><th>Property Panel field</th><th>CSS property</th><th>Example value</th></tr></thead>
+        <tbody>
+          <tr><td>background</td><td><code>background</code></td><td><code>#2196F3</code></td></tr>
+          <tr><td>color</td><td><code>color</code></td><td><code>#FFFFFF</code></td></tr>
+          <tr><td>fontSize</td><td><code>font-size</code></td><td><code>16px</code></td></tr>
+          <tr><td>padding / margin</td><td><code>padding</code> / <code>margin</code></td><td><code>12px</code></td></tr>
+          <tr><td>borderRadius</td><td><code>border-radius</code></td><td><code>8px</code></td></tr>
+          <tr><td>width / height</td><td><code>width</code> / <code>height</code></td><td><code>200px</code>, <code>100%</code></td></tr>
+          <tr><td>opacity</td><td><code>opacity</code></td><td><code>0.8</code></td></tr>
+          <tr><td>textAlign</td><td><code>text-align</code></td><td><code>center</code></td></tr>
+          <tr><td>zIndex</td><td><code>z-index</code></td><td><code>10</code></td></tr>
+        </tbody>
+      </table>
+
+      <div class="bridge-note">
+        <div class="ico">SW</div>
+        <p><b>In DragWeb:</b> when you drag the "borderRadius" slider in the Property Panel, <code class="mono">WidgetUpdater</code> writes the new number into the widget tree, and <code class="mono">PageCodeGenerator.generateCss()</code> turns it into a <code class="mono">border-radius</code> rule inside <code class="mono">styleClassMap</code> the moment you export.</p>
+      </div>
+    </section>
+
+    <!-- ============ JS BASICS ============ -->
+    <section class="section reveal" id="js-basics">
+      <span class="chip js">JS</span>
+      <h2>JavaScript basics</h2>
+      <p class="lede">CSS makes a page look right; JavaScript makes it <em>do</em> things. Three ideas cover most of what you need to start:</p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h4 style="font-size:13.5px">Variables</h4>
+          <pre class="code"><span class="kw">let</span> count = <span class="prop">0</span>;
+<span class="kw">const</span> name = <span class="str">"Saqib"</span>;</pre>
+          <p style="font-size:12.5px; margin-top:10px">A named box to store a value. <code class="mono">let</code> can change later; <code class="mono">const</code> can't.</p>
+        </div>
+        <div class="card">
+          <h4 style="font-size:13.5px">Functions</h4>
+          <pre class="code"><span class="kw">function</span> greet(name) {
+  <span class="kw">return</span> <span class="str">"Hi "</span> + name;
+}</pre>
+          <p style="font-size:12.5px; margin-top:10px">A reusable block of steps you can run by name, as many times as you like.</p>
+        </div>
+        <div class="card">
+          <h4 style="font-size:13.5px">Events</h4>
+          <pre class="code">btn.addEventListener(
+  <span class="str">'click'</span>,
+  () => { <span class="cmt">/* ... */</span> }
+);</pre>
+          <p style="font-size:12.5px; margin-top:10px">"When this happens, run this." The heart of interactivity.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:34px; font-size:17px">Stack a few blocks, get real code</h3>
+      <p class="lede">This is the same shape as a stack in <b>LogicBlockActivity</b>: an event on top, a condition, then an action.</p>
+
+      <div class="stack">
+        <div class="puzzle ev">▸ when <b>Button1</b> . <b>onClick</b></div>
+        <div class="puzzle cond">▸ if <b>counter</b> &lt; <b>10</b></div>
+        <div class="puzzle act">▸ set <b>Label1</b> . text to <b>counter</b></div>
+      </div>
+
+      <button class="gen-btn" id="genBtn">Generate code ↓</button>
+      <div class="gen-panel" id="genPanel">
+        <pre class="code">button1.addEventListener(<span class="str">'click'</span>, () => {
+  <span class="kw">if</span> (counter &lt; <span class="prop">10</span>) {
+    label1.textContent = counter;
+  }
+});</pre>
+      </div>
+
+      <div class="bridge-note">
+        <div class="ico">SW</div>
+        <p><b>In DragWeb:</b> that "Generate code" button is a small stand-in for <code class="mono">LogicBlockActivity.generateJavaScript()</code>, which walks your puzzle-block stack top to bottom and pipes each block through a code template — the same job <code class="mono">Jx.java</code> does in Sketchware Pro, just emitting JS instead of Java. The block categories you see in the palette — Events, CSS Actions, HTML Actions, Logic, Variables — line up one-to-one with <code class="mono">addEventListener</code>, style changes, DOM edits, <code class="mono">if</code>/loops, and <code class="mono">let</code>/<code class="mono">const</code>.</p>
+      </div>
+    </section>
+
+    <!-- ============ BRIDGE / PIPELINE ============ -->
+    <section class="section reveal" id="bridge">
+      <span class="chip bridge">the bridge</span>
+      <h2>How it all becomes one export</h2>
+      <p class="lede">Put HTML, CSS and JS together and you get the same pipeline DragWeb runs every time you tap "Export."</p>
+
+      <div class="pipeline">
+        <div class="pipe-step"><div class="n">01</div><h5>Widget tree</h5><p>Your layout, saved as nested JSON — tags, classes/ids, and properties.</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="n">02</div><h5>PageCodeGenerator</h5><p>Walks the tree once for HTML, once for CSS classes, once for JS blocks.</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="n">03</div><h5>HTML + CSS + JS</h5><p>Real, standards-compliant source files — exactly what this page is made of.</p></div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step"><div class="n">04</div><h5>ExportManager</h5><p>Bundled as one HTML file, split files, or a ZIP archive.</p></div>
+      </div>
+
+      <div class="bridge-note">
+        <div class="ico">SW</div>
+        <p><b>Worth remembering:</b> nothing in an exported DragWeb project is proprietary — it's plain HTML, CSS and JS that runs in any browser, with no DragWeb runtime required. Understanding the three languages in this guide is the same as reading <code class="mono">PageCodeGenerator</code>'s output directly.</p>
+      </div>
+    </section>
+
+    <!-- ============ CHEATSHEET ============ -->
+    <section class="section reveal" id="cheatsheet">
+      <h2>Cheatsheet</h2>
+      <div class="grid-2">
+        <div class="card cheat-card">
+          <h4><span class="chip html" style="margin:0">HTML</span></h4>
+          <ul>
+            <li>Elements = opening tag + content + closing tag</li>
+            <li>Nesting = parent/child; the whole page = the DOM tree</li>
+            <li><code class="mono">id</code> is unique, <code class="mono">class</code> is reusable</li>
+            <li>Self-closing: <code class="mono">img</code>, <code class="mono">input</code>, <code class="mono">br</code></li>
+          </ul>
+        </div>
+        <div class="card cheat-card">
+          <h4><span class="chip css" style="margin:0">CSS</span></h4>
+          <ul>
+            <li>Box model, outside in: margin → border → padding → content</li>
+            <li>Select by tag, <code class="mono">.class</code>, or <code class="mono">#id</code></li>
+            <li><code class="mono">display</code>, <code class="mono">color</code>, <code class="mono">background</code>, <code class="mono">padding</code> are the workhorses</li>
+            <li>Values need units: <code class="mono">px</code>, <code class="mono">%</code>, <code class="mono">em</code></li>
+          </ul>
+        </div>
+        <div class="card cheat-card">
+          <h4><span class="chip js" style="margin:0">JavaScript</span></h4>
+          <ul>
+            <li><code class="mono">let</code> / <code class="mono">const</code> store values</li>
+            <li><code class="mono">function</code> groups reusable steps</li>
+            <li><code class="mono">addEventListener('click', fn)</code> reacts to the user</li>
+            <li><code class="mono">document.getElementById(id)</code> grabs one element</li>
+          </ul>
+        </div>
+        <div class="card cheat-card">
+          <h4><span class="chip bridge" style="margin:0">DragWeb</span></h4>
+          <ul>
+            <li>Widget palette tag → HTML tag</li>
+            <li>Property Panel field → CSS property</li>
+            <li>Logic block stack → JS function body</li>
+            <li>Export → real, dependency-free HTML/CSS/JS files</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <footer>DragWeb field guide · generated for sketchweb.gl · this page is itself one HTML file, styled with plain CSS, animated with plain JS.</footer>
+  </main>
+</div>
+
+<script>
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- scrollspy ---- */
+  var links = Array.prototype.slice.call(document.querySelectorAll('#navlist a'));
+  var sections = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      var idx = sections.indexOf(entry.target);
+      if (idx === -1) return;
+      if (entry.isIntersecting){
+        links.forEach(function(l){ l.classList.remove('active'); });
+        links[idx].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+  sections.forEach(function(s){ if (s) io.observe(s); });
+
+  /* ---- reveal on scroll ---- */
+  var revealIo = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting){ entry.target.classList.add('in'); revealIo.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(function(el){ revealIo.observe(el); });
+
+  /* ---- hero flip ---- */
+  var flipToggle = document.getElementById('flipToggle');
+  var flipCard = document.getElementById('flipCard');
+  flipToggle.addEventListener('change', function(){
+    flipCard.classList.toggle('flipped', flipToggle.checked);
+  });
+
+  /* ---- box model sliders ---- */
+  var mSlider = document.getElementById('mSlider');
+  var pSlider = document.getElementById('pSlider');
+  var mVal = document.getElementById('mVal');
+  var pVal = document.getElementById('pVal');
+  var bmMargin = document.getElementById('bmMargin');
+  var bmPadding = document.getElementById('bmPadding');
+  mSlider.addEventListener('input', function(){
+    bmMargin.style.setProperty('--m', mSlider.value + 'px');
+    mVal.textContent = mSlider.value + 'px';
+  });
+  pSlider.addEventListener('input', function(){
+    bmPadding.style.setProperty('--p', pSlider.value + 'px');
+    pVal.textContent = pSlider.value + 'px';
+  });
+
+  /* ---- generate code accordion ---- */
+  var genBtn = document.getElementById('genBtn');
+  var genPanel = document.getElementById('genPanel');
+  var open = false;
+  genBtn.addEventListener('click', function(){
+    open = !open;
+    if (open){
+      genPanel.classList.add('open');
+      genPanel.style.height = genPanel.scrollHeight + 'px';
+      genBtn.textContent = 'Hide code ↑';
+    } else {
+      genPanel.style.height = genPanel.scrollHeight + 'px';
+      requestAnimationFrame(function(){ genPanel.style.height = '0px'; });
+      genPanel.classList.remove('open');
+      genBtn.textContent = 'Generate code ↓';
+    }
+  });
+  window.addEventListener('resize', function(){
+    if (open) genPanel.style.height = genPanel.scrollHeight + 'px';
+  });
+})();
+</script>
+</body>
+</html>
