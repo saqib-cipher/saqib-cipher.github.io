@@ -962,11 +962,11 @@ h3 {
   }
 
   .project-links {
-    gap: 8px;
+    gap: 10px;
   }
 
   .project-link {
-    padding: 6px 6px;
+    padding: 8px 12px;
     font-size: 13px;
     gap: 4px;
   }

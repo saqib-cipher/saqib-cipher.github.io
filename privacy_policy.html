@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - SketchX</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Material 3 Light Tokens */
+            --md-sys-color-primary: #006399;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-primary-container: #cbe6ff;
+            --md-sys-color-on-primary-container: #001e32;
+            --md-sys-color-surface: #f8f9ff;
+            --md-sys-color-on-surface: #191c1e;
+            --md-sys-color-surface-variant: #e0e2ec;
+            --md-sys-color-on-surface-variant: #43474e;
+            --md-sys-color-outline: #74777f;
+            --md-sys-color-outline-variant: #c4c6cf;
+            --md-sys-color-surface-container: #edeef6;
+            --md-sys-color-surface-container-high: #e7e8f0;
+            --md-sys-shape-corner-large: 24px;
+            --md-sys-shape-corner-medium: 16px;
+            --md-sys-shape-corner-small: 12px;
+            --font-family: 'Plus Jakarta Sans', sans-serif;
+            --font-family-mono: 'Roboto Mono', monospace;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                /* Material 3 Dark Tokens */
+                --md-sys-color-primary: #90cdff;
+                --md-sys-color-on-primary: #003353;
+                --md-sys-color-primary-container: #004b75;
+                --md-sys-color-on-primary-container: #cbe6ff;
+                --md-sys-color-surface: #101418;
+                --md-sys-color-on-surface: #e0e2ec;
+                --md-sys-color-surface-variant: #43474e;
+                --md-sys-color-on-surface-variant: #c4c6cf;
+                --md-sys-color-outline: #8e9099;
+                --md-sys-color-outline-variant: #43474e;
+                --md-sys-color-surface-container: #1b1f24;
+                --md-sys-color-surface-container-high: #262a30;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            line-height: 1.6;
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 840px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: var(--md-sys-color-surface-container);
+            border-radius: var(--md-sys-shape-corner-large);
+            padding: 36px 32px;
+            margin-bottom: 24px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background-color: var(--md-sys-color-primary);
+        }
+
+        .app-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        .card {
+            background-color: var(--md-sys-color-surface-container);
+            border-radius: var(--md-sys-shape-corner-medium);
+            padding: 28px 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--md-sys-color-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        p {
+            font-size: 0.95rem;
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 12px;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+
+        li {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 8px;
+            font-size: 0.93rem;
+            color: var(--md-sys-color-on-surface);
+        }
+
+        li::before {
+            content: '•';
+            position: absolute;
+            left: 8px;
+            top: 0;
+            color: var(--md-sys-color-primary);
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .highlight-box {
+            background-color: var(--md-sys-color-surface-container-high);
+            border-radius: var(--md-sys-shape-corner-small);
+            padding: 16px;
+            margin-top: 12px;
+            border-left: 4px solid var(--md-sys-color-primary);
+            font-size: 0.9rem;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 0.85rem;
+            color: var(--md-sys-color-outline);
+            border-top: 1px solid var(--md-sys-color-outline-variant);
+            margin-top: 32px;
+        }
+
+        footer a {
+            color: var(--md-sys-color-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="app-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8subscriptionz"/>
+            </svg>
+            SketchX Privacy Commitment
+        </div>
+        <h1>Privacy Policy</h1>
+        <div class="subtitle">Effective Date: July 29, 2026 &bull; App Version: 1.0.0</div>
+    </header>
+
+    <div class="card">
+        <h2>
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            1. Overview & Data Philosophy
+        </h2>
+        <p>Welcome to <strong>SketchX</strong>. We respect your privacy and are committed to protecting your personal data. SketchX is an Android development utility designed to aid developers in project management, vector graphics tinting, and version tracking.</p>
+        <div class="highlight-box">
+            <strong>Key Privacy Guarantee:</strong> SketchX does not collect, store, or transmit your private source code, GitHub tokens, or personal identifiers to any third-party private servers.
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>
+            <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+            2. Information We Collect
+        </h2>
+        <p>SketchX processes minimal data strictly necessary for app functionality:</p>
+        <ul>
+            <li><strong>Local Device Storage Data:</strong> Project files, local Git history, preference configurations, and cached SVG icons are stored locally on your device storage.</li>
+            <li><strong>GitHub Personal Access Tokens:</strong> If you connect GitHub, your authentication token is saved exclusively in encrypted private device preferences to enable repository sync and pull/push operations.</li>
+            <li><strong>Usage Limits & Timestamps:</strong> Local timestamps tracking your session time to manage free tier usage limits and rewarded extra access hours.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/></svg>
+            3. Third-Party Services
+        </h2>
+        <p>To support free features and subscription management, SketchX integrates the following verified Google SDKs:</p>
+        <ul>
+            <li><strong>Google Play Billing API:</strong> Handles secure in-app purchases and subscription verifications. Purchase tokens and transaction validation are processed through Google Play Services.</li>
+            <li><strong>Google AdMob:</strong> Displays banner ads, rewarded video ads, and interstitial ads for non-subscribed users. AdMob may collect anonymous device advertising identifiers (GAID) in compliance with Google Ad Policies.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>
+            <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+            4. Data Security
+        </h2>
+        <p>Your local code and repository credentials never leave your device unless you explicitly perform a GitHub Sync action directly to your specified repository URL. We use standard Android sandbox permissions and secure storage mechanisms to prevent unauthorized access.</p>
+    </div>
+
+    <div class="card">
+        <h2>
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+            5. Contact & Questions
+        </h2>
+        <p>If you have any questions or feedback regarding this Privacy Policy or data practices, please reach out to us:</p>
+        <div class="highlight-box">
+            <strong>Support Email:</strong> support@sketchx.app<br>
+            <strong>Developer Organization:</strong> Glab SketchX Team
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 SketchX. All rights reserved. &bull; Designed by saqib-cipher.
+    </footer>
+</div>
+
+</body>
+</html>
