@@ -1,6 +1,6 @@
 /**
  * SketchX Account Deletion Request Portal Logic
- * Handles Firebase Authentication, Profile Fetching, RTDB User Profile Deletion Updates (users/{uid}/profile), and Telegram Bot Dispatch.
+ * Matches the exact app schema for users/{uid}/profile and scheduled_deletions/{uid}.
  */
 
 /* ==========================================================
@@ -280,13 +280,13 @@ async function loadUserProfile(user) {
                     badgeElem.className = 'badge-chip badge-user';
                 }
             }
-            // Check if deletion is already scheduled on profile
+            // Check if deletion is scheduled on profile
             if (userProfileData.deletionScheduled) {
                 document.getElementById('alreadyPendingNotice').style.display = 'flex';
                 if (userProfileData.scheduledDeletionTimestamp) {
-                    const schedDate = new Date(userProfileData.scheduledDeletionTimestamp).toLocaleString();
+                    const deleteDate = new Date(userProfileData.scheduledDeletionTimestamp).toLocaleString();
                     const pendingTextElem = document.getElementById('pendingNoticeTime');
-                    if (pendingTextElem) pendingTextElem.textContent = `Scheduled on: ${schedDate}`;
+                    if (pendingTextElem) pendingTextElem.textContent = `Permanent deletion scheduled for: ${deleteDate}`;
                 }
             } else {
                 document.getElementById('alreadyPendingNotice').style.display = 'none';
@@ -325,46 +325,31 @@ function closeConfirmationModal() {
 }
 
 /* ==========================================================
-   9. EXECUTE DELETION & CANCEL (DIRECTLY ON users/{uid}/profile)
+   9. EXECUTE DELETION & CANCEL (EXACT APP SCHEMA)
    ========================================================== */
 async function executeDeletionRequest() {
     if (!currentUser) return;
 
     const finalBtn = document.getElementById('finalConfirmDeleteBtn');
     finalBtn.disabled = true;
-    finalBtn.innerHTML = `<div class="spinner"></div> Updating Profile...`;
+    finalBtn.innerHTML = `<div class="spinner"></div> Scheduling Deletion...`;
 
     const selectedRadio = document.querySelector('input[name="deleteReason"]:checked');
     const reasonText = selectedRadio ? selectedRadio.value : 'Not specified';
     const feedbackText = document.getElementById('additionalFeedback').value.trim();
-    const timestamp = Date.now();
-    const timestampIso = new Date(timestamp).toISOString();
-    const scheduledDateIso = new Date(timestamp + 30 * 24 * 60 * 60 * 1000).toISOString();
+    
+    // Timestamps: scheduledAt = now, deleteAt = 7 days later (604,800,000 ms)
+    const scheduledAt = Date.now();
+    const deleteAt = scheduledAt + (7 * 24 * 60 * 60 * 1000);
+    const username = (userProfileData && userProfileData.username) || (currentUser.email ? currentUser.email.split('@')[0] : 'user');
+    const email = currentUser.email || (userProfileData && userProfileData.email) || '';
 
-    const profileUpdate = {
-        deletionScheduled: true,
-        scheduledDeletionTimestamp: timestamp,
-        deletionReason: reasonText,
-        deletionFeedback: feedbackText || ''
-    };
-
-    const notificationPayload = {
-        uid: currentUser.uid,
-        email: currentUser.email || 'N/A',
-        displayName: (userProfileData && userProfileData.displayName) || currentUser.displayName || 'Unknown',
-        username: (userProfileData && userProfileData.username) || '',
-        badge: (userProfileData && userProfileData.badge) || 'user',
-        reason: reasonText,
-        additionalFeedback: feedbackText,
-        requestedAtTimestamp: timestamp,
-        requestedAtIso: timestampIso,
-        scheduledPurgeDate: scheduledDateIso,
-        authProviders: currentUser.providerData.map(p => p.providerId).join(', ')
-    };
-
-    // 1. Update user profile directly under `users/{uid}/profile` (how the app does it)
+    // 1. Update `users/{uid}/profile` (exact app fields)
     try {
-        await database.ref(`users/${currentUser.uid}/profile`).update(profileUpdate);
+        await database.ref(`users/${currentUser.uid}/profile`).update({
+            deletionScheduled: true,
+            scheduledDeletionTimestamp: deleteAt
+        });
         console.log(`users/${currentUser.uid}/profile updated: deletionScheduled = true`);
     } catch (dbError) {
         console.error('Failed to update users profile:', dbError);
@@ -374,39 +359,61 @@ async function executeDeletionRequest() {
         return;
     }
 
-    // 2. Dispatch Alert to Telegram Bot
+    // 2. Write to `scheduled_deletions/{uid}` (exact app schema)
+    const scheduledDeletionData = {
+        deleteAt: deleteAt,
+        email: email,
+        scheduledAt: scheduledAt,
+        uid: currentUser.uid,
+        username: username,
+        reason: reasonText,
+        feedback: feedbackText || ''
+    };
+
+    try {
+        await database.ref(`scheduled_deletions/${currentUser.uid}`).set(scheduledDeletionData);
+        console.log(`scheduled_deletions/${currentUser.uid} saved successfully`);
+    } catch (schedErr) {
+        console.warn('Note: scheduled_deletions update:', schedErr);
+    }
+
+    // 3. Dispatch Alert to Telegram Bot
     let telegramSent = false;
     try {
-        telegramSent = await sendTelegramDeletionNotification(notificationPayload);
+        telegramSent = await sendTelegramDeletionNotification(scheduledDeletionData);
     } catch (tgErr) {
         console.warn('Telegram notification failed:', tgErr);
     }
 
-    // 3. Update UI to Step 4 Success View
+    // 4. Update UI to Step 4 Success View
     closeConfirmationModal();
     
-    document.getElementById('receiptEmail').textContent = currentUser.email || 'N/A';
+    document.getElementById('receiptEmail').textContent = email;
     document.getElementById('receiptUid').textContent = currentUser.uid;
     document.getElementById('receiptReason').textContent = reasonText;
-    document.getElementById('receiptDate').textContent = new Date(timestamp).toLocaleString();
+    document.getElementById('receiptDate').textContent = new Date(scheduledAt).toLocaleString();
     document.getElementById('receiptTgStatus').textContent = telegramSent ? 'Dispatched to Telegram Bot' : 'Updated in Database';
 
     switchView(4);
     showSnackbar('Account deletion scheduled successfully.', 'success');
 }
 
-// Cancel Scheduled Deletion (Reset profile flags)
+// Cancel Scheduled Deletion (Reset profile flags & remove scheduled_deletions record)
 async function handleCancelScheduledDeletion() {
     if (!currentUser) return;
     if (!confirm('Do you want to cancel the scheduled account deletion and restore your account?')) return;
 
     try {
+        // Reset profile flags
         await database.ref(`users/${currentUser.uid}/profile`).update({
             deletionScheduled: false,
-            scheduledDeletionTimestamp: 0,
-            deletionReason: null,
-            deletionFeedback: null
+            scheduledDeletionTimestamp: 0
         });
+
+        // Remove from scheduled_deletions
+        try {
+            await database.ref(`scheduled_deletions/${currentUser.uid}`).remove();
+        } catch (e) {}
 
         // Send Telegram cancellation notice
         const cancelMsg = `✅ <b>SKETCHX ACCOUNT DELETION CANCELLED</b>\n` +
@@ -438,20 +445,18 @@ async function handleCancelScheduledDeletion() {
 async function sendTelegramDeletionNotification(data) {
     if (!TELEGRAM_BOT_TOKEN) return false;
 
-    const tgMessage = `🚨 <b>SKETCHX ACCOUNT DELETION REQUEST</b>\n` +
+    const tgMessage = `🚨 <b>SKETCHX ACCOUNT DELETION SCHEDULED</b>\n` +
         `━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `👤 <b>Display Name:</b> <code>${escapeHtml(data.displayName)}</code>\n` +
+        `👤 <b>Display Name:</b> <code>${escapeHtml((userProfileData && userProfileData.displayName) || currentUser.displayName || 'Developer')}</code>\n` +
         `🏷️ <b>Username:</b> <code>${data.username ? '@' + escapeHtml(data.username) : 'N/A'}</code>\n` +
         `📧 <b>Email:</b> <code>${escapeHtml(data.email)}</code>\n` +
         `🔑 <b>UID:</b> <code>${data.uid}</code>\n` +
-        `🎖️ <b>Badge:</b> ${escapeHtml(data.badge)}\n` +
-        `🔐 <b>Auth Method:</b> ${escapeHtml(data.authProviders)}\n` +
-        `⏰ <b>Requested At:</b> ${data.requestedAtIso}\n` +
-        `🗓️ <b>Purge Date:</b> ${data.scheduledPurgeDate}\n\n` +
+        `⏰ <b>Scheduled At:</b> ${new Date(data.scheduledAt).toISOString()}\n` +
+        `🗓️ <b>Delete At (7 days):</b> ${new Date(data.deleteAt).toISOString()}\n\n` +
         `❓ <b>Reason:</b>\n👉 <i>${escapeHtml(data.reason)}</i>\n\n` +
-        (data.additionalFeedback ? `📝 <b>User Feedback:</b>\n💬 <i>${escapeHtml(data.additionalFeedback)}</i>\n\n` : '') +
+        (data.feedback ? `📝 <b>User Feedback:</b>\n💬 <i>${escapeHtml(data.feedback)}</i>\n\n` : '') +
         `━━━━━━━━━━━━━━━━━━━━━━\n` +
-        `⚠️ <i>Status: Updated in Firebase node users/${data.uid}/profile (deletionScheduled: true)</i>`;
+        `⚠️ <i>Status: Updated in Firebase (deletionScheduled: true, scheduledDeletionTimestamp: ${data.deleteAt})</i>`;
 
     try {
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
