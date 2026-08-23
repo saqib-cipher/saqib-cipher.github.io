@@ -28,7 +28,7 @@ const database = firebase.database();
    ========================================================== */
 const TELEGRAM_BOT_TOKEN = "7040449048:AAFAqtwevsTiTmNwjzIi6b1oVTzQnh75l8w";
 // Group link: https://t.me/+jCNEWNFKYlxiNjdl
-let TELEGRAM_CHAT_ID = "-1002360521717";
+let TELEGRAM_CHAT_ID = "-1003674324954";
 
 /* ==========================================================
    3. APP STATE
