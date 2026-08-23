@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account Request - SketchX</title>
+    <meta name="description" content="Request permanent account deletion and data removal for SketchX Android App.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            /* Material 3 Expressive Light Tokens */
+            --md-sys-color-primary: #006399;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-primary-container: #cbe6ff;
+            --md-sys-color-on-primary-container: #001e32;
+            
+            --md-sys-color-secondary: #51606f;
+            --md-sys-color-on-secondary: #ffffff;
+            --md-sys-color-secondary-container: #d4e4f6;
+            --md-sys-color-on-secondary-container: #0d1d2a;
+            
+            --md-sys-color-tertiary: #67587a;
+            --md-sys-color-on-tertiary: #ffffff;
+            --md-sys-color-tertiary-container: #eedcff;
+            --md-sys-color-on-tertiary-container: #221533;
+
+            --md-sys-color-error: #ba1a1a;
+            --md-sys-color-on-error: #ffffff;
+            --md-sys-color-error-container: #ffdad6;
+            --md-sys-color-on-error-container: #410002;
+
+            --md-sys-color-surface: #f8f9ff;
+            --md-sys-color-on-surface: #191c20;
+            --md-sys-color-surface-variant: #dee3eb;
+            --md-sys-color-on-surface-variant: #42474e;
+            --md-sys-color-outline: #72777f;
+            --md-sys-color-outline-variant: #c2c7cf;
+            
+            --md-sys-color-surface-container-lowest: #ffffff;
+            --md-sys-color-surface-container-low: #f2f3fa;
+            --md-sys-color-surface-container: #eceef4;
+            --md-sys-color-surface-container-high: #e6e8ee;
+            --md-sys-color-surface-container-highest: #e0e2e8;
+
+            --md-sys-color-success: #198754;
+            --md-sys-color-success-container: #d1e7dd;
+            --md-sys-color-on-success-container: #0f5132;
+
+            --md-sys-color-warning: #b26a00;
+            --md-sys-color-warning-container: #ffdf99;
+            --md-sys-color-on-warning-container: #2e1700;
+
+            /* Expressive Shapes */
+            --shape-full: 9999px;
+            --shape-extra-large: 28px;
+            --shape-large: 20px;
+            --shape-medium: 14px;
+            --shape-small: 8px;
+
+            /* Typography */
+            --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --font-mono: 'Roboto Mono', monospace;
+
+            /* Expressive Elevations & Shadows */
+            --elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.12);
+            --elevation-2: 0 2px 6px 2px rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.12);
+            --elevation-3: 0 4px 12px 3px rgba(0, 0, 0, 0.08), 0 1px 3px 0 rgba(0, 0, 0, 0.15);
+            --elevation-4: 0 8px 24px 4px rgba(0, 0, 0, 0.1), 0 2px 6px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                /* Material 3 Expressive Dark Tokens */
+                --md-sys-color-primary: #8ecdff;
+                --md-sys-color-on-primary: #003453;
+                --md-sys-color-primary-container: #004b75;
+                --md-sys-color-on-primary-container: #cbe6ff;
+
+                --md-sys-color-secondary: #b8c8d9;
+                --md-sys-color-on-secondary: #23323f;
+                --md-sys-color-secondary-container: #3a4857;
+                --md-sys-color-on-secondary-container: #d4e4f6;
+
+                --md-sys-color-tertiary: #d2bfe7;
+                --md-sys-color-on-tertiary: #382a4a;
+                --md-sys-color-tertiary-container: #4f4061;
+                --md-sys-color-on-tertiary-container: #eedcff;
+
+                --md-sys-color-error: #ffb4ab;
+                --md-sys-color-on-error: #690005;
+                --md-sys-color-error-container: #93000a;
+                --md-sys-color-on-error-container: #ffdad6;
+
+                --md-sys-color-surface: #101418;
+                --md-sys-color-on-surface: #e0e2e8;
+                --md-sys-color-surface-variant: #42474e;
+                --md-sys-color-on-surface-variant: #c2c7cf;
+                --md-sys-color-outline: #8c9199;
+                --md-sys-color-outline-variant: #42474e;
+
+                --md-sys-color-surface-container-lowest: #0b0f12;
+                --md-sys-color-surface-container-low: #191c20;
+                --md-sys-color-surface-container: #1d2024;
+                --md-sys-color-surface-container-high: #272a2f;
+                --md-sys-color-surface-container-highest: #32353a;
+
+                --md-sys-color-success: #75dc9e;
+                --md-sys-color-success-container: #0a4d2c;
+                --md-sys-color-on-success-container: #b3f4cf;
+
+                --md-sys-color-warning: #ffb951;
+                --md-sys-color-warning-container: #5d3600;
+                --md-sys-color-on-warning-container: #ffddb3;
+
+                --elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+                --elevation-2: 0 2px 6px 2px rgba(0, 0, 0, 0.45), 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+                --elevation-3: 0 4px 12px 3px rgba(0, 0, 0, 0.5), 0 1px 3px 0 rgba(0, 0, 0, 0.35);
+                --elevation-4: 0 8px 24px 4px rgba(0, 0, 0, 0.55), 0 2px 6px 0 rgba(0, 0, 0, 0.4);
+            }
+        }
+
+        /* Explicit theme override classes */
+        [data-theme="light"] {
+            --md-sys-color-primary: #006399;
+            --md-sys-color-on-primary: #ffffff;
+            --md-sys-color-primary-container: #cbe6ff;
+            --md-sys-color-on-primary-container: #001e32;
+            --md-sys-color-surface: #f8f9ff;
+            --md-sys-color-on-surface: #191c20;
+            --md-sys-color-surface-variant: #dee3eb;
+            --md-sys-color-on-surface-variant: #42474e;
+            --md-sys-color-outline: #72777f;
+            --md-sys-color-outline-variant: #c2c7cf;
+            --md-sys-color-surface-container: #eceef4;
+            --md-sys-color-surface-container-high: #e6e8ee;
+            --md-sys-color-surface-container-highest: #e0e2e8;
+            --md-sys-color-error: #ba1a1a;
+            --md-sys-color-error-container: #ffdad6;
+            --md-sys-color-on-error-container: #410002;
+        }
+
+        [data-theme="dark"] {
+            --md-sys-color-primary: #8ecdff;
+            --md-sys-color-on-primary: #003453;
+            --md-sys-color-primary-container: #004b75;
+            --md-sys-color-on-primary-container: #cbe6ff;
+            --md-sys-color-surface: #101418;
+            --md-sys-color-on-surface: #e0e2e8;
+            --md-sys-color-surface-variant: #42474e;
+            --md-sys-color-on-surface-variant: #c2c7cf;
+            --md-sys-color-outline: #8c9199;
+            --md-sys-color-outline-variant: #42474e;
+            --md-sys-color-surface-container: #1d2024;
+            --md-sys-color-surface-container-high: #272a2f;
+            --md-sys-color-surface-container-highest: #32353a;
+            --md-sys-color-error: #ffb4ab;
+            --md-sys-color-error-container: #93000a;
+            --md-sys-color-on-error-container: #ffdad6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--md-sys-color-surface);
+            color: var(--md-sys-color-on-surface);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 16px 48px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .main-wrapper {
+            max-width: 680px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* Top Bar */
+        .top-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 4px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--md-sys-color-on-surface-variant);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: var(--shape-full);
+            background-color: var(--md-sys-color-surface-container);
+            border: 1px solid var(--md-sys-color-outline-variant);
+            transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .back-link:hover {
+            background-color: var(--md-sys-color-surface-container-high);
+            color: var(--md-sys-color-primary);
+            transform: translateX(-2px);
+        }
+
+        .theme-toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: var(--shape-full);
+            border: 1px solid var(--md-sys-color-outline-variant);
+            background-color: var(--md-sys-color-surface-container);
+            color: var(--md-sys-color-on-surface);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--md-sys-color-surface-container-high);
+            transform: rotate(15deg);
+        }
+
+        /* Expressive Hero Header */
+        .hero-header {
+            background: linear-gradient(135deg, var(--md-sys-color-surface-container) 0%, var(--md-sys-color-surface-container-high) 100%);
+            border-radius: var(--shape-extra-large);
+            padding: 32px 28px;
+            margin-bottom: 24px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--elevation-1);
+        }
+
+        .hero-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: var(--md-sys-color-error);
+            border-radius: var(--shape-full) 0 0 var(--shape-full);
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--md-sys-color-error-container);
+            color: var(--md-sys-color-on-error-container);
+            padding: 6px 14px;
+            border-radius: var(--shape-full);
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .hero-title {
+            font-size: 1.85rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 8px;
+        }
+
+        .hero-subtitle {
+            font-size: 0.95rem;
+            color: var(--md-sys-color-on-surface-variant);
+            line-height: 1.5;
+        }
+
+        /* Expressive Step Progress Tracker */
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--md-sys-color-surface-container);
+            border-radius: var(--shape-large);
+            padding: 12px 18px;
+            margin-bottom: 24px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--md-sys-color-outline);
+            transition: all 0.3s ease;
+        }
+
+        .step-item.active {
+            color: var(--md-sys-color-primary);
+        }
+
+        .step-item.completed {
+            color: var(--md-sys-color-success);
+        }
+
+        .step-num {
+            width: 24px;
+            height: 24px;
+            border-radius: var(--shape-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 700;
+            background-color: var(--md-sys-color-surface-variant);
+            color: var(--md-sys-color-on-surface-variant);
+            transition: all 0.3s ease;
+        }
+
+        .step-item.active .step-num {
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            transform: scale(1.1);
+        }
+
+        .step-item.completed .step-num {
+            background-color: var(--md-sys-color-success);
+            color: #ffffff;
+        }
+
+        .step-divider {
+            flex: 1;
+            height: 2px;
+            background-color: var(--md-sys-color-outline-variant);
+            margin: 0 8px;
+            border-radius: var(--shape-full);
+        }
+
+        /* Expressive Cards */
+        .m3-card {
+            background-color: var(--md-sys-color-surface-container);
+            border-radius: var(--shape-extra-large);
+            padding: 28px 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            box-shadow: var(--elevation-1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--md-sys-color-on-surface);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .card-title i {
+            color: var(--md-sys-color-primary);
+            font-size: 1.4rem;
+        }
+
+        .card-subtitle {
+            font-size: 0.88rem;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        /* Segmented Button / Tabs */
+        .segmented-tabs {
+            display: flex;
+            background-color: var(--md-sys-color-surface-container-high);
+            border-radius: var(--shape-full);
+            padding: 4px;
+            margin-bottom: 20px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .tab-btn {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border: none;
+            border-radius: var(--shape-full);
+            background: transparent;
+            color: var(--md-sys-color-on-surface-variant);
+            font-family: var(--font-family);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .tab-btn.active {
+            background-color: var(--md-sys-color-surface-container-lowest);
+            color: var(--md-sys-color-primary);
+            box-shadow: var(--elevation-1);
+        }
+
+        /* Google Sign In Button */
+        .google-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 14px 20px;
+            border-radius: var(--shape-full);
+            background-color: var(--md-sys-color-surface-container-lowest);
+            color: var(--md-sys-color-on-surface);
+            border: 1.5px solid var(--md-sys-color-outline-variant);
+            font-family: var(--font-family);
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: var(--elevation-1);
+            transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+            margin-bottom: 12px;
+        }
+
+        .google-btn:hover {
+            background-color: var(--md-sys-color-surface-container-high);
+            border-color: var(--md-sys-color-primary);
+            transform: translateY(-1px);
+            box-shadow: var(--elevation-2);
+        }
+
+        .google-icon {
+            width: 22px;
+            height: 22px;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 16px;
+            position: relative;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 6px;
+        }
+
+        .input-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            color: var(--md-sys-color-outline);
+            font-size: 1.15rem;
+            pointer-events: none;
+        }
+
+        .m3-input, .m3-textarea {
+            width: 100%;
+            padding: 13px 14px 13px 44px;
+            border-radius: var(--shape-medium);
+            border: 1.5px solid var(--md-sys-color-outline-variant);
+            background-color: var(--md-sys-color-surface-container-lowest);
+            color: var(--md-sys-color-on-surface);
+            font-family: var(--font-family);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .m3-textarea {
+            padding: 12px 14px;
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .m3-input:focus, .m3-textarea:focus {
+            outline: none;
+            border-color: var(--md-sys-color-primary);
+            box-shadow: 0 0 0 3px var(--md-sys-color-primary-container);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--md-sys-color-outline);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: var(--shape-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .password-toggle:hover {
+            color: var(--md-sys-color-on-surface);
+        }
+
+        .form-helper-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 4px;
+            font-size: 0.82rem;
+        }
+
+        .forgot-link {
+            color: var(--md-sys-color-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .m3-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 24px;
+            border-radius: var(--shape-full);
+            font-family: var(--font-family);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+            width: 100%;
+            text-decoration: none;
+        }
+
+        .m3-btn-primary {
+            background-color: var(--md-sys-color-primary);
+            color: var(--md-sys-color-on-primary);
+            box-shadow: var(--elevation-1);
+        }
+
+        .m3-btn-primary:hover {
+            background-color: var(--md-sys-color-on-primary-container);
+            color: var(--md-sys-color-primary-container);
+            box-shadow: var(--elevation-2);
+            transform: translateY(-1px);
+        }
+
+        .m3-btn-error {
+            background-color: var(--md-sys-color-error);
+            color: var(--md-sys-color-on-error);
+            box-shadow: var(--elevation-1);
+        }
+
+        .m3-btn-error:hover {
+            background-color: #8c0009;
+            box-shadow: var(--elevation-2);
+            transform: translateY(-1px);
+        }
+
+        .m3-btn-tonal {
+            background-color: var(--md-sys-color-surface-container-high);
+            color: var(--md-sys-color-on-surface);
+            border: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .m3-btn-tonal:hover {
+            background-color: var(--md-sys-color-surface-variant);
+        }
+
+        .m3-btn:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Banner & Alert Messages */
+        .m3-alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: var(--shape-large);
+            font-size: 0.88rem;
+            margin-bottom: 16px;
+            border: 1px solid transparent;
+        }
+
+        .m3-alert-error {
+            background-color: var(--md-sys-color-error-container);
+            color: var(--md-sys-color-on-error-container);
+            border-color: var(--md-sys-color-error);
+        }
+
+        .m3-alert-warning {
+            background-color: var(--md-sys-color-warning-container);
+            color: var(--md-sys-color-on-warning-container);
+            border-color: var(--md-sys-color-warning);
+        }
+
+        .m3-alert-success {
+            background-color: var(--md-sys-color-success-container);
+            color: var(--md-sys-color-on-success-container);
+            border-color: var(--md-sys-color-success);
+        }
+
+        .m3-alert-info {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+            border-color: var(--md-sys-color-primary);
+        }
+
+        .m3-alert i {
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* User Profile Display Card */
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .profile-hero {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background-color: var(--md-sys-color-surface-container-high);
+            padding: 16px;
+            border-radius: var(--shape-large);
+            border: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .avatar-wrap {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            border-radius: var(--shape-full);
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--md-sys-color-primary), var(--md-sys-color-tertiary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            flex-shrink: 0;
+            border: 2px solid var(--md-sys-color-outline-variant);
+        }
+
+        .avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .profile-name-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .profile-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--md-sys-color-on-surface);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .badge-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: var(--shape-full);
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .badge-admin {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge-vip {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-user {
+            background-color: var(--md-sys-color-primary-container);
+            color: var(--md-sys-color-on-primary-container);
+        }
+
+        .profile-meta {
+            font-size: 0.86rem;
+            color: var(--md-sys-color-on-surface-variant);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Profile Data Grid */
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 520px) {
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .data-card {
+            background-color: var(--md-sys-color-surface-container-lowest);
+            border-radius: var(--shape-medium);
+            padding: 12px 14px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .data-lbl {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--md-sys-color-outline);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 4px;
+        }
+
+        .data-val {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--md-sys-color-on-surface);
+            font-family: var(--font-mono);
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--md-sys-color-outline);
+            cursor: pointer;
+            padding: 2px;
+            font-size: 1rem;
+            border-radius: var(--shape-small);
+        }
+
+        .copy-btn:hover {
+            color: var(--md-sys-color-primary);
+        }
+
+        /* Reason Selector Grid */
+        .reasons-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .reason-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 14px 16px;
+            border-radius: var(--shape-large);
+            background-color: var(--md-sys-color-surface-container-lowest);
+            border: 1.5px solid var(--md-sys-color-outline-variant);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .reason-option:hover {
+            background-color: var(--md-sys-color-surface-container-high);
+            border-color: var(--md-sys-color-outline);
+        }
+
+        .reason-option.selected {
+            background-color: var(--md-sys-color-error-container);
+            border-color: var(--md-sys-color-error);
+        }
+
+        .reason-option.selected .reason-title {
+            color: var(--md-sys-color-on-error-container);
+            font-weight: 700;
+        }
+
+        .reason-option.selected .reason-desc {
+            color: var(--md-sys-color-on-error-container);
+            opacity: 0.9;
+        }
+
+        .reason-radio {
+            margin-top: 3px;
+            accent-color: var(--md-sys-color-error);
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .reason-content {
+            flex: 1;
+        }
+
+        .reason-title {
+            font-size: 0.94rem;
+            font-weight: 600;
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 2px;
+        }
+
+        .reason-desc {
+            font-size: 0.82rem;
+            color: var(--md-sys-color-on-surface-variant);
+        }
+
+        /* Data Impact Warning */
+        .impact-list {
+            list-style: none;
+            margin-top: 8px;
+        }
+
+        .impact-item {
+            position: relative;
+            padding-left: 24px;
+            margin-bottom: 8px;
+            font-size: 0.88rem;
+            color: var(--md-sys-color-on-surface);
+        }
+
+        .impact-item i {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--md-sys-color-error);
+            font-size: 1rem;
+        }
+
+        /* Safety Checkbox */
+        .agreement-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 16px;
+            background-color: var(--md-sys-color-surface-container-high);
+            border-radius: var(--shape-large);
+            margin-bottom: 20px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+        }
+
+        .m3-checkbox {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            accent-color: var(--md-sys-color-error);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .agreement-text {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--md-sys-color-on-surface);
+            line-height: 1.4;
+            cursor: pointer;
+        }
+
+        /* Action Buttons Row */
+        .btn-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .btn-row {
+                flex-direction: column-reverse;
+            }
+        }
+
+        /* Success View */
+        .success-box {
+            text-align: center;
+            padding: 32px 16px;
+        }
+
+        .success-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: var(--shape-full);
+            background-color: var(--md-sys-color-success-container);
+            color: var(--md-sys-color-on-success-container);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .success-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 8px;
+        }
+
+        .success-desc {
+            font-size: 0.95rem;
+            color: var(--md-sys-color-on-surface-variant);
+            max-width: 500px;
+            margin: 0 auto 24px;
+            line-height: 1.6;
+        }
+
+        .receipt-card {
+            background-color: var(--md-sys-color-surface-container-high);
+            border-radius: var(--shape-large);
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            text-align: left;
+        }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--md-sys-color-outline-variant);
+            font-size: 0.88rem;
+        }
+
+        .receipt-row:last-child {
+            border-bottom: none;
+        }
+
+        .receipt-label {
+            color: var(--md-sys-color-outline);
+            font-weight: 600;
+        }
+
+        .receipt-value {
+            color: var(--md-sys-color-on-surface);
+            font-weight: 700;
+            font-family: var(--font-mono);
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2.5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Toast / Snackbar */
+        .snackbar {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background-color: var(--md-sys-color-surface-container-highest);
+            color: var(--md-sys-color-on-surface);
+            padding: 12px 20px;
+            border-radius: var(--shape-full);
+            box-shadow: var(--elevation-3);
+            border: 1px solid var(--md-sys-color-outline-variant);
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+            pointer-events: none;
+        }
+
+        .snackbar.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        footer {
+            margin-top: 36px;
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--md-sys-color-outline);
+        }
+
+        footer a {
+            color: var(--md-sys-color-primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal Dialog */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.25s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-dialog {
+            background-color: var(--md-sys-color-surface-container);
+            border-radius: var(--shape-extra-large);
+            max-width: 480px;
+            width: 100%;
+            padding: 28px;
+            border: 1px solid var(--md-sys-color-outline-variant);
+            box-shadow: var(--elevation-4);
+            transform: scale(0.9);
+            transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+        }
+
+        .modal-overlay.show .modal-dialog {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--shape-full);
+            background-color: var(--md-sys-color-error-container);
+            color: var(--md-sys-color-on-error-container);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--md-sys-color-on-surface);
+            margin-bottom: 8px;
+        }
+
+        .modal-body {
+            font-size: 0.92rem;
+            color: var(--md-sys-color-on-surface-variant);
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <a href="privacy_policy.html" class="back-link">
+            <i class="ti ti-arrow-left"></i>
+            <span>Privacy Policy</span>
+        </a>
+        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode" title="Toggle theme">
+            <i class="ti ti-sun" id="themeIcon"></i>
+        </button>
+    </div>
+
+    <!-- Hero Header -->
+    <header class="hero-header">
+        <div class="hero-badge">
+            <i class="ti ti-shield-lock"></i> SketchX Account Security
+        </div>
+        <h1 class="hero-title">Request Account Deletion</h1>
+        <p class="hero-subtitle">
+            Permanently delete your SketchX developer account, cloud synchronization data, and associated user credentials according to Google Play Data Safety standards.
+        </p>
+    </header>
+
+    <!-- Step Progress Tracker -->
+    <div class="stepper" id="stepper">
+        <div class="step-item active" id="stepIndicator1">
+            <div class="step-num">1</div>
+            <span>Sign In</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item" id="stepIndicator2">
+            <div class="step-num">2</div>
+            <span>Account Details</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item" id="stepIndicator3">
+            <div class="step-num">3</div>
+            <span>Reason & Confirm</span>
+        </div>
+    </div>
+
+    <!-- Alert / Message Banner -->
+    <div id="globalAlert" style="display: none;"></div>
+
+    <!-- ========================================== -->
+    <!-- STEP 1: AUTHENTICATION VIEW -->
+    <!-- ========================================== -->
+    <div id="viewStep1" class="m3-card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class="ti ti-user-check"></i> 1. Verify Your Identity
+            </h2>
+            <p class="card-subtitle">Please log in to the SketchX account you wish to permanently delete.</p>
+        </div>
+
+        <!-- Google Sign In Quick Action -->
+        <button type="button" class="google-btn" id="googleSignInBtn">
+            <svg class="google-icon" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+            </svg>
+            <span>Continue with Google</span>
+        </button>
+
+        <div style="display: flex; align-items: center; margin: 16px 0; gap: 12px;">
+            <div style="flex:1; height:1px; background:var(--md-sys-color-outline-variant);"></div>
+            <span style="font-size:0.8rem; color:var(--md-sys-color-outline); font-weight:600; text-transform:uppercase;">or sign in with email</span>
+            <div style="flex:1; height:1px; background:var(--md-sys-color-outline-variant);"></div>
+        </div>
+
+        <!-- Email & Password Form -->
+        <form id="emailLoginForm" onsubmit="handleEmailPasswordLogin(event)">
+            <div class="form-group">
+                <label class="field-label" for="loginEmail">Email Address</label>
+                <div class="input-box">
+                    <i class="ti ti-mail input-icon"></i>
+                    <input type="email" id="loginEmail" class="m3-input" placeholder="name@example.com" required autocomplete="email">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="field-label" for="loginPassword">Password</label>
+                <div class="input-box">
+                    <i class="ti ti-lock input-icon"></i>
+                    <input type="password" id="loginPassword" class="m3-input" placeholder="••••••••" required autocomplete="current-password">
+                    <button type="button" class="password-toggle" id="togglePasswordBtn" aria-label="Toggle password visibility">
+                        <i class="ti ti-eye" id="passwordEyeIcon"></i>
+                    </button>
+                </div>
+                <div class="form-helper-row">
+                    <span></span>
+                    <a href="javascript:void(0)" class="forgot-link" onclick="handleForgotPassword()">Forgot password?</a>
+                </div>
+            </div>
+
+            <button type="submit" class="m3-btn m3-btn-primary" id="emailSignInBtn">
+                <i class="ti ti-login-2"></i>
+                <span id="signInBtnText">Sign In & Review Account</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- STEP 2 & 3: PROFILE VERIFIED & REASON VIEW -->
+    <!-- ========================================== -->
+    <div id="viewStep2" style="display: none;">
+        <!-- Profile Overview Card -->
+        <div class="m3-card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div>
+                    <h2 class="card-title">
+                        <i class="ti ti-id-badge-2"></i> 2. Verified Account Details
+                    </h2>
+                    <p class="card-subtitle">Review the profile and data associated with this account before proceeding.</p>
+                </div>
+                <button type="button" class="m3-btn m3-btn-tonal" onclick="handleSignOut()" style="width: auto; padding: 8px 14px; font-size: 0.82rem;">
+                    <i class="ti ti-logout"></i> Sign Out
+                </button>
+            </div>
+
+            <!-- Existing Scheduled Deletion Notice (if already pending) -->
+            <div id="alreadyPendingNotice" class="m3-alert m3-alert-warning" style="display: none;">
+                <i class="ti ti-clock-pause"></i>
+                <div>
+                    <strong>Deletion Request Already Queued:</strong> An account deletion request for this account is already pending processing. You can resubmit or update your reason below.
+                </div>
+            </div>
+
+            <div class="profile-container">
+                <div class="profile-hero">
+                    <div class="avatar-wrap" id="userAvatarWrap">
+                        <span id="avatarInitials">U</span>
+                        <img id="userAvatarImg" src="" alt="Avatar" style="display: none;">
+                    </div>
+                    <div class="profile-details">
+                        <div class="profile-name-row">
+                            <span class="profile-name" id="userDisplayName">Developer</span>
+                            <span class="badge-chip badge-user" id="userBadge">Member</span>
+                        </div>
+                        <div class="profile-meta">
+                            <i class="ti ti-at"></i>
+                            <span id="userUsername">saqibcipher</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-grid">
+                    <div class="data-card">
+                        <div class="data-lbl">Registered Email</div>
+                        <div class="data-val" id="userEmailDisplay">
+                            <span id="userEmailText">—</span>
+                            <span id="emailVerifiedBadge" title="Verified" style="color:var(--md-sys-color-success); font-size:1.1rem;">
+                                <i class="ti ti-circle-check-filled"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="data-card">
+                        <div class="data-lbl">Account UID</div>
+                        <div class="data-val">
+                            <span id="userUidText" style="font-size: 0.78rem;">—</span>
+                            <button type="button" class="copy-btn" onclick="copyUidToClipboard()" title="Copy UID">
+                                <i class="ti ti-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="data-card">
+                        <div class="data-lbl">Account Created</div>
+                        <div class="data-val" id="userCreatedDate">—</div>
+                    </div>
+
+                    <div class="data-card">
+                        <div class="data-lbl">Authentication Method</div>
+                        <div class="data-val" id="userAuthMethod">Google / Password</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deletion Reason & Agreement Card -->
+        <div class="m3-card">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="ti ti-help-hexagon"></i> 3. Reason for Deletion
+                </h2>
+                <p class="card-subtitle">Please let us know why you are deleting your account to help us improve SketchX.</p>
+            </div>
+
+            <div class="reasons-list" id="reasonsList">
+                <label class="reason-option selected" onclick="selectReason(this)">
+                    <input type="radio" name="deleteReason" value="No longer using Sketchware or SketchX" class="reason-radio" checked>
+                    <div class="reason-content">
+                        <div class="reason-title">No longer developing or using Sketchware</div>
+                        <div class="reason-desc">I have switched development tools or no longer need Android block utilities.</div>
+                    </div>
+                </label>
+
+                <label class="reason-option" onclick="selectReason(this)">
+                    <input type="radio" name="deleteReason" value="Privacy or data security concerns" class="reason-radio">
+                    <div class="reason-content">
+                        <div class="reason-title">Privacy or data security concerns</div>
+                        <div class="reason-desc">I wish to purge my profile, email, and synced preferences completely.</div>
+                    </div>
+                </label>
+
+                <label class="reason-option" onclick="selectReason(this)">
+                    <input type="radio" name="deleteReason" value="Technical issues or app crashes" class="reason-radio">
+                    <div class="reason-content">
+                        <div class="reason-title">Technical issues, bugs, or crashes</div>
+                        <div class="reason-desc">Experienced unexpected errors, blocks not loading, or compatibility problems.</div>
+                    </div>
+                </label>
+
+                <label class="reason-option" onclick="selectReason(this)">
+                    <input type="radio" name="deleteReason" value="Creating a new account" class="reason-radio">
+                    <div class="reason-content">
+                        <div class="reason-title">Creating a new account</div>
+                        <div class="reason-desc">I want to start fresh with a different username or email address.</div>
+                    </div>
+                </label>
+
+                <label class="reason-option" onclick="selectReason(this)">
+                    <input type="radio" name="deleteReason" value="Other reasons" class="reason-radio">
+                    <div class="reason-content">
+                        <div class="reason-title">Other reasons</div>
+                        <div class="reason-desc">My reason is not listed above.</div>
+                    </div>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label class="field-label" for="additionalFeedback">Additional Details or Feedback (Optional)</label>
+                <textarea id="additionalFeedback" class="m3-textarea" placeholder="Tell us how we could make SketchX better or specific reasons for leaving..."></textarea>
+            </div>
+
+            <!-- What will be deleted Notice -->
+            <div class="m3-alert m3-alert-error" style="margin-bottom: 20px;">
+                <i class="ti ti-alert-triangle-filled"></i>
+                <div>
+                    <strong>Data Deletion Scope:</strong>
+                    <ul class="impact-list">
+                        <li class="impact-item"><i class="ti ti-trash"></i> All profile records, username claim, and access passes will be permanently removed.</li>
+                        <li class="impact-item"><i class="ti ti-trash"></i> Firebase Authentication credentials will be disabled and queued for purge.</li>
+                        <li class="impact-item"><i class="ti ti-clock"></i> Deletion requests are stored separately and processed within 30 days.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Acknowledgment Checkbox -->
+            <div class="agreement-box">
+                <input type="checkbox" id="confirmCheckbox" class="m3-checkbox" onchange="toggleSubmitButton()">
+                <label for="confirmCheckbox" class="agreement-text">
+                    I understand that requesting account deletion is <strong>permanent and irreversible</strong>. I confirm that I own this account and request complete deletion of my data.
+                </label>
+            </div>
+
+            <div class="btn-row">
+                <button type="button" class="m3-btn m3-btn-error" id="submitDeleteBtn" disabled onclick="openConfirmationModal()">
+                    <i class="ti ti-user-x"></i>
+                    <span>Submit Deletion Request</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- STEP 4: SUCCESS VIEW -->
+    <!-- ========================================== -->
+    <div id="viewStep4" class="m3-card" style="display: none;">
+        <div class="success-box">
+            <div class="success-icon">
+                <i class="ti ti-check"></i>
+            </div>
+            <h2 class="success-title">Deletion Request Submitted</h2>
+            <p class="success-desc">
+                Your account deletion request has been received, logged securely in the system, and dispatched to our administrative team.
+            </p>
+
+            <div class="receipt-card">
+                <div class="receipt-row">
+                    <span class="receipt-label">Request ID</span>
+                    <span class="receipt-value" id="receiptRequestId">REQ-XXXXXX</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Account Email</span>
+                    <span class="receipt-value" id="receiptEmail">—</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Account UID</span>
+                    <span class="receipt-value" id="receiptUid">—</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Reason</span>
+                    <span class="receipt-value" id="receiptReason" style="font-family: var(--font-family); font-weight: 600;">—</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Submission Date</span>
+                    <span class="receipt-value" id="receiptDate">—</span>
+                </div>
+                <div class="receipt-row">
+                    <span class="receipt-label">Telegram Notification</span>
+                    <span class="receipt-value" id="receiptTgStatus" style="color:var(--md-sys-color-success);">Dispatched</span>
+                </div>
+            </div>
+
+            <div class="m3-alert m3-alert-info" style="text-align: left; margin-bottom: 24px;">
+                <i class="ti ti-info-circle"></i>
+                <div>
+                    <strong>Grace Period & Policy:</strong> If you change your mind, you may contact developer support at <a href="mailto:saqibcipher@gmail.com" style="color:inherit; font-weight:700;">saqibcipher@gmail.com</a> before your data is completely purged.
+                </div>
+            </div>
+
+            <button type="button" class="m3-btn m3-btn-primary" onclick="handleSignOutAndFinish()">
+                <i class="ti ti-check"></i>
+                <span>Sign Out & Done</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal Dialog -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-dialog">
+            <div class="modal-icon">
+                <i class="ti ti-alert-octagon"></i>
+            </div>
+            <h3 class="modal-title">Final Confirmation</h3>
+            <p class="modal-body">
+                Are you absolutely sure you want to delete account <strong id="modalUserEmail"></strong>? Once processed, all access keys, project code snippets, and sync records will be deleted forever.
+            </p>
+            <div class="btn-row">
+                <button type="button" class="m3-btn m3-btn-tonal" onclick="closeConfirmationModal()">
+                    Cancel
+                </button>
+                <button type="button" class="m3-btn m3-btn-error" id="finalConfirmDeleteBtn" onclick="executeDeletionRequest()">
+                    <i class="ti ti-trash"></i>
+                    <span>Yes, Permanently Delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Snackbar Notification -->
+    <div class="snackbar" id="snackbar">
+        <i class="ti ti-info-circle" id="snackIcon"></i>
+        <span id="snackText">Notification message</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; 2026 SketchX &bull; Glab SketchX Team &bull; <a href="privacy_policy.html">Privacy Policy</a>
+    </footer>
+</div>
+
+<script>
+    /* ==========================================================
+       1. FIREBASE CONFIGURATION & INITIALIZATION
+       (From sketchx/google-services.json)
+       ========================================================== */
+    const firebaseConfig = {
+        apiKey: "AIzaSyBiyDhOw6prURPXzUqONbW4JhCwEZqkXBE",
+        authDomain: "sketchx-88b8e.firebaseapp.com",
+        databaseURL: "https://sketchx-88b8e-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "sketchx-88b8e",
+        storageBucket: "sketchx-88b8e.firebasestorage.app",
+        messagingSenderId: "305217175374",
+        appId: "1:305217175374:android:85193f44ed3b39ea78a81f"
+    };
+
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    /* ==========================================================
+       2. TELEGRAM CONFIGURATION
+       ========================================================== */
+    const TELEGRAM_BOT_TOKEN = "7040449048:AAFAqtwevsTiTmNwjzIi6b1oVTzQnh75l8w";
+    // Group link: https://t.me/+jCNEWNFKYlxiNjdl
+    let TELEGRAM_CHAT_ID = "-1002360521717";
+
+    /* ==========================================================
+       3. APP STATE
+       ========================================================== */
+    let currentUser = null;
+    let userProfileData = null;
+
+    /* ==========================================================
+       4. THEME CONTROLLER
+       ========================================================== */
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+
+    function initTheme() {
+        const savedTheme = localStorage.getItem('sketchx_theme');
+        if (savedTheme) {
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        } else {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            updateThemeIcon(prefersDark ? 'dark' : 'light');
+        }
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme') || 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('sketchx_theme', newTheme);
+        updateThemeIcon(newTheme);
+    }
+
+    function updateThemeIcon(theme) {
+        if (theme === 'dark') {
+            themeIcon.className = 'ti ti-moon';
+        } else {
+            themeIcon.className = 'ti ti-sun';
+        }
+    }
+
+    themeToggleBtn.addEventListener('click', toggleTheme);
+    initTheme();
+
+    /* ==========================================================
+       5. PASSWORD TOGGLE
+       ========================================================== */
+    const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+    const loginPasswordInput = document.getElementById('loginPassword');
+    const passwordEyeIcon = document.getElementById('passwordEyeIcon');
+
+    togglePasswordBtn.addEventListener('click', () => {
+        const isPassword = loginPasswordInput.type === 'password';
+        loginPasswordInput.type = isPassword ? 'text' : 'password';
+        passwordEyeIcon.className = isPassword ? 'ti ti-eye-off' : 'ti ti-eye';
+    });
+
+    /* ==========================================================
+       6. AUTHENTICATION HANDLERS
+       ========================================================== */
+
+    // Auth State Listener
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            currentUser = user;
+            await loadUserProfile(user);
+            switchView(2);
+        } else {
+            currentUser = null;
+            userProfileData = null;
+            switchView(1);
+        }
+    });
+
+    // Google Sign In
+    document.getElementById('googleSignInBtn').addEventListener('click', async () => {
+        hideAlert();
+        const googleBtn = document.getElementById('googleSignInBtn');
+        const originalContent = googleBtn.innerHTML;
+        googleBtn.innerHTML = `<div class="spinner" style="border-top-color:var(--md-sys-color-primary); border-color:rgba(0,0,0,0.15)"></div><span>Connecting to Google...</span>`;
+        googleBtn.disabled = true;
+
+        const provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('email');
+        provider.addScope('profile');
+
+        try {
+            await auth.signInWithPopup(provider);
+            showSnackbar('Signed in with Google successfully!', 'success');
+        } catch (error) {
+            console.error('Google Sign In Error:', error);
+            googleBtn.innerHTML = originalContent;
+            googleBtn.disabled = false;
+            if (error.code !== 'auth/popup-closed-by-user') {
+                showAlert('Google Sign-In Failed: ' + (error.message || 'Please try again or use email login.'), 'error');
+            }
+        }
+    });
+
+    // Email & Password Sign In
+    async function handleEmailPasswordLogin(event) {
+        event.preventDefault();
+        hideAlert();
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const submitBtn = document.getElementById('emailSignInBtn');
+        const btnText = document.getElementById('signInBtnText');
+
+        if (!email || !password) {
+            showAlert('Please enter both your email address and password.', 'warning');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        btnText.innerHTML = `<div class="spinner"></div> Signing In...`;
+
+        try {
+            await auth.signInWithEmailAndPassword(email, password);
+            showSnackbar('Logged in successfully!', 'success');
+        } catch (error) {
+            console.error('Email Login Error:', error);
+            submitBtn.disabled = false;
+            btnText.innerHTML = `Sign In & Review Account`;
+
+            let errorMsg = 'Failed to sign in. Please verify your credentials.';
+            if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+                errorMsg = 'Invalid email or password. Please check your credentials or reset your password.';
+            } else if (error.code === 'auth/too-many-requests') {
+                errorMsg = 'Too many failed login attempts. Please wait a moment and try again or reset your password.';
+            } else if (error.code === 'auth/network-request-failed') {
+                errorMsg = 'Network error. Please check your internet connection.';
+            }
+            showAlert(errorMsg, 'error');
+        }
+    }
+
+    // Password Reset
+    async function handleForgotPassword() {
+        const email = document.getElementById('loginEmail').value.trim();
+        if (!email) {
+            showAlert('Please enter your email address in the field above first, then click "Forgot password?".', 'info');
+            document.getElementById('loginEmail').focus();
+            return;
+        }
+
+        try {
+            await auth.sendPasswordResetEmail(email);
+            showAlert(`Password reset email has been sent to ${email}. Check your inbox!`, 'success');
+            showSnackbar('Reset email sent!', 'success');
+        } catch (error) {
+            console.error('Reset password error:', error);
+            showAlert('Could not send reset email: ' + error.message, 'error');
+        }
+    }
+
+    // Sign Out
+    async function handleSignOut() {
+        try {
+            await auth.signOut();
+            showSnackbar('Signed out.', 'info');
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function handleSignOutAndFinish() {
+        auth.signOut().then(() => {
+            window.location.href = 'privacy_policy.html';
+        });
+    }
+
+    /* ==========================================================
+       7. LOAD USER PROFILE & REALTIME DATABASE DATA
+       ========================================================== */
+    async function loadUserProfile(user) {
+        // UI Defaults
+        const displayName = user.displayName || 'SketchX Developer';
+        const email = user.email || 'No email provided';
+        const photoURL = user.photoURL;
+        const uid = user.uid;
+        
+        document.getElementById('userDisplayName').textContent = displayName;
+        document.getElementById('userEmailText').textContent = email;
+        document.getElementById('userUidText').textContent = uid;
+        document.getElementById('modalUserEmail').textContent = email;
+
+        // Creation Date
+        const createdAt = user.metadata.creationTime ? new Date(user.metadata.creationTime).toLocaleDateString(undefined, {
+            year: 'numeric', month: 'short', day: 'numeric'
+        }) : 'Unknown';
+        document.getElementById('userCreatedDate').textContent = createdAt;
+
+        // Auth Providers
+        const providers = user.providerData.map(p => {
+            if (p.providerId === 'google.com') return 'Google';
+            if (p.providerId === 'password') return 'Email/Password';
+            return p.providerId;
+        }).join(', ') || 'Custom';
+        document.getElementById('userAuthMethod').textContent = providers;
+
+        // Avatar
+        const avatarWrap = document.getElementById('userAvatarWrap');
+        const avatarImg = document.getElementById('userAvatarImg');
+        const avatarInitials = document.getElementById('avatarInitials');
+
+        if (photoURL) {
+            avatarImg.src = photoURL;
+            avatarImg.style.display = 'block';
+            avatarInitials.style.display = 'none';
+        } else {
+            avatarImg.style.display = 'none';
+            avatarInitials.style.display = 'block';
+            avatarInitials.textContent = displayName.charAt(0).toUpperCase() || 'U';
+        }
+
+        // Email Verified Status
+        const emailVerifiedBadge = document.getElementById('emailVerifiedBadge');
+        if (user.emailVerified) {
+            emailVerifiedBadge.innerHTML = `<i class="ti ti-circle-check-filled" style="color:var(--md-sys-color-success);" title="Email Verified"></i>`;
+        } else {
+            emailVerifiedBadge.innerHTML = `<i class="ti ti-alert-circle-filled" style="color:var(--md-sys-color-warning);" title="Email Unverified"></i>`;
+        }
+
+        // Fetch RTDB profile at `users/{uid}/profile`
+        try {
+            const snapshot = await database.ref(`users/${uid}/profile`).once('value');
+            if (snapshot.exists()) {
+                userProfileData = snapshot.val();
+                if (userProfileData.username) {
+                    document.getElementById('userUsername').textContent = '@' + userProfileData.username;
+                }
+                if (userProfileData.displayName) {
+                    document.getElementById('userDisplayName').textContent = userProfileData.displayName;
+                }
+                if (userProfileData.badge) {
+                    const badgeElem = document.getElementById('userBadge');
+                    badgeElem.textContent = userProfileData.badge;
+                    if (userProfileData.badge.toLowerCase() === 'admin') {
+                        badgeElem.className = 'badge-chip badge-admin';
+                    } else if (userProfileData.badge.toLowerCase().includes('vip') || userProfileData.badge.toLowerCase().includes('pro')) {
+                        badgeElem.className = 'badge-chip badge-vip';
+                    } else {
+                        badgeElem.className = 'badge-chip badge-user';
+                    }
+                }
+                if (userProfileData.deletionScheduled) {
+                    document.getElementById('alreadyPendingNotice').style.display = 'flex';
+                } else {
+                    document.getElementById('alreadyPendingNotice').style.display = 'none';
+                }
+            } else {
+                document.getElementById('userUsername').textContent = '@' + (user.email ? user.email.split('@')[0] : 'user');
+            }
+        } catch (dbErr) {
+            console.warn('Could not read user profile from database:', dbErr);
+            document.getElementById('userUsername').textContent = '@' + (user.email ? user.email.split('@')[0] : 'user');
+        }
+    }
+
+    /* ==========================================================
+       8. REASON SELECTION & SAFETY CONFIRMATION
+       ========================================================== */
+    function selectReason(element) {
+        document.querySelectorAll('.reason-option').forEach(el => el.classList.remove('selected'));
+        element.classList.add('selected');
+        const radio = element.querySelector('input[type="radio"]');
+        if (radio) radio.checked = true;
+    }
+
+    function toggleSubmitButton() {
+        const checkbox = document.getElementById('confirmCheckbox');
+        const submitBtn = document.getElementById('submitDeleteBtn');
+        submitBtn.disabled = !checkbox.checked;
+    }
+
+    function openConfirmationModal() {
+        document.getElementById('confirmModal').classList.add('show');
+    }
+
+    function closeConfirmationModal() {
+        document.getElementById('confirmModal').classList.remove('show');
+    }
+
+    /* ==========================================================
+       9. EXECUTE DELETION REQUEST & TELEGRAM DISPATCH
+       ========================================================== */
+    async function executeDeletionRequest() {
+        if (!currentUser) return;
+
+        const finalBtn = document.getElementById('finalConfirmDeleteBtn');
+        finalBtn.disabled = true;
+        finalBtn.innerHTML = `<div class="spinner"></div> Submitting...`;
+
+        const selectedRadio = document.querySelector('input[name="deleteReason"]:checked');
+        const reasonText = selectedRadio ? selectedRadio.value : 'Not specified';
+        const feedbackText = document.getElementById('additionalFeedback').value.trim();
+        const requestId = 'DEL-' + Math.random().toString(36).substring(2, 9).toUpperCase();
+        const timestamp = Date.now();
+        const timestampIso = new Date(timestamp).toISOString();
+        const scheduledDateIso = new Date(timestamp + 30 * 24 * 60 * 60 * 1000).toISOString();
+
+        const deletionPayload = {
+            requestId: requestId,
+            uid: currentUser.uid,
+            email: currentUser.email || 'N/A',
+            displayName: (userProfileData && userProfileData.displayName) || currentUser.displayName || 'Unknown',
+            username: (userProfileData && userProfileData.username) || '',
+            badge: (userProfileData && userProfileData.badge) || 'user',
+            reason: reasonText,
+            additionalFeedback: feedbackText,
+            requestedAtTimestamp: timestamp,
+            requestedAtIso: timestampIso,
+            scheduledPurgeDate: scheduledDateIso,
+            status: 'pending_deletion',
+            authProviders: currentUser.providerData.map(p => p.providerId).join(', '),
+            userAgent: navigator.userAgent
+        };
+
+        // 1. Store Request Separately in Firebase Realtime Database
+        try {
+            await database.ref(`deletion_requests/${currentUser.uid}`).set(deletionPayload);
+            console.log('Deletion request stored in deletion_requests/' + currentUser.uid);
+
+            // Also update flag in user profile if accessible
+            try {
+                await database.ref(`users/${currentUser.uid}/profile`).update({
+                    deletionScheduled: true,
+                    scheduledDeletionTimestamp: timestamp,
+                    deletionRequestId: requestId
+                });
+            } catch (pErr) {
+                console.warn('Could not update profile node flag:', pErr);
+            }
+        } catch (dbError) {
+            console.error('Failed to write to Firebase Realtime Database:', dbError);
+            showAlert('Warning: Request saved locally, but database sync encountered an error: ' + dbError.message, 'warning');
+        }
+
+        // 2. Dispatch Alert to Telegram Bot
+        let telegramSent = false;
+        try {
+            telegramSent = await sendTelegramDeletionNotification(deletionPayload);
+        } catch (tgErr) {
+            console.warn('Telegram notification failed:', tgErr);
+        }
+
+        // 3. Update UI to Step 4 Success View
+        closeConfirmationModal();
+        
+        document.getElementById('receiptRequestId').textContent = requestId;
+        document.getElementById('receiptEmail').textContent = currentUser.email || 'N/A';
+        document.getElementById('receiptUid').textContent = currentUser.uid;
+        document.getElementById('receiptReason').textContent = reasonText;
+        document.getElementById('receiptDate').textContent = new Date(timestamp).toLocaleString();
+        document.getElementById('receiptTgStatus').textContent = telegramSent ? 'Dispatched to Admin Bot' : 'Logged in System';
+
+        switchView(4);
+        showSnackbar('Account deletion request submitted successfully.', 'success');
+    }
+
+    // Telegram Bot Notification Dispatcher
+    async function sendTelegramDeletionNotification(data) {
+        if (!TELEGRAM_BOT_TOKEN) return false;
+
+        const tgMessage = `🚨 <b>SKETCHX ACCOUNT DELETION REQUEST</b>\n` +
+            `━━━━━━━━━━━━━━━━━━━━━━\n` +
+            `🆔 <b>Request ID:</b> <code>${data.requestId}</code>\n` +
+            `👤 <b>Display Name:</b> <code>${escapeHtml(data.displayName)}</code>\n` +
+            `🏷️ <b>Username:</b> <code>${data.username ? '@' + escapeHtml(data.username) : 'N/A'}</code>\n` +
+            `📧 <b>Email:</b> <code>${escapeHtml(data.email)}</code>\n` +
+            `🔑 <b>UID:</b> <code>${data.uid}</code>\n` +
+            `🎖️ <b>Badge:</b> ${escapeHtml(data.badge)}\n` +
+            `🔐 <b>Auth Method:</b> ${escapeHtml(data.authProviders)}\n` +
+            `⏰ <b>Requested At:</b> ${data.requestedAtIso}\n` +
+            `🗓️ <b>Purge Date:</b> ${data.scheduledPurgeDate}\n\n` +
+            `❓ <b>Reason:</b>\n👉 <i>${escapeHtml(data.reason)}</i>\n\n` +
+            (data.additionalFeedback ? `📝 <b>User Feedback:</b>\n💬 <i>${escapeHtml(data.additionalFeedback)}</i>\n\n` : '') +
+            `━━━━━━━━━━━━━━━━━━━━━━\n` +
+            `⚠️ <i>Action: Stored in Firebase node: deletion_requests/${data.uid}</i>`;
+
+        try {
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            
+            // Try sending to the designated Telegram group
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: tgMessage,
+                    parse_mode: 'HTML'
+                })
+            });
+
+            const result = await response.json();
+            if (result.ok) {
+                console.log('Telegram notification sent successfully to group:', result);
+                return true;
+            } else {
+                console.warn('Telegram response not OK:', result);
+                return false;
+            }
+        } catch (e) {
+            console.error('Error dispatching telegram message:', e);
+            return false;
+        }
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    /* ==========================================================
+       10. VIEW & STEP NAVIGATION CONTROLLER
+       ========================================================== */
+    function switchView(step) {
+        const view1 = document.getElementById('viewStep1');
+        const view2 = document.getElementById('viewStep2');
+        const view4 = document.getElementById('viewStep4');
+        const stepper = document.getElementById('stepper');
+        const ind1 = document.getElementById('stepIndicator1');
+        const ind2 = document.getElementById('stepIndicator2');
+        const ind3 = document.getElementById('stepIndicator3');
+
+        if (step === 1) {
+            view1.style.display = 'block';
+            view2.style.display = 'none';
+            view4.style.display = 'none';
+            stepper.style.display = 'flex';
+
+            ind1.className = 'step-item active';
+            ind2.className = 'step-item';
+            ind3.className = 'step-item';
+        } else if (step === 2) {
+            view1.style.display = 'none';
+            view2.style.display = 'block';
+            view4.style.display = 'none';
+            stepper.style.display = 'flex';
+
+            ind1.className = 'step-item completed';
+            ind2.className = 'step-item active';
+            ind3.className = 'step-item active';
+        } else if (step === 4) {
+            view1.style.display = 'none';
+            view2.style.display = 'none';
+            view4.style.display = 'block';
+            stepper.style.display = 'none';
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ==========================================================
+       11. UTILITIES: SNACKBAR & ALERTS
+       ========================================================== */
+    function showAlert(message, type = 'error') {
+        const globalAlert = document.getElementById('globalAlert');
+        let iconClass = 'ti-alert-circle';
+        if (type === 'success') iconClass = 'ti-check';
+        if (type === 'warning') iconClass = 'ti-alert-triangle';
+        if (type === 'info') iconClass = 'ti-info-circle';
+
+        globalAlert.className = `m3-alert m3-alert-${type}`;
+        globalAlert.innerHTML = `<i class="ti ${iconClass}"></i><div>${message}</div>`;
+        globalAlert.style.display = 'flex';
+        globalAlert.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideAlert() {
+        const globalAlert = document.getElementById('globalAlert');
+        globalAlert.style.display = 'none';
+    }
+
+    let snackbarTimer = null;
+    function showSnackbar(text, type = 'info') {
+        const snackbar = document.getElementById('snackbar');
+        const snackText = document.getElementById('snackText');
+        const snackIcon = document.getElementById('snackIcon');
+
+        snackText.textContent = text;
+        if (type === 'success') snackIcon.className = 'ti ti-circle-check';
+        else if (type === 'error') snackIcon.className = 'ti ti-alert-circle';
+        else snackIcon.className = 'ti ti-info-circle';
+
+        snackbar.classList.add('show');
+        if (snackbarTimer) clearTimeout(snackbarTimer);
+        snackbarTimer = setTimeout(() => {
+            snackbar.classList.remove('show');
+        }, 4000);
+    }
+
+    function copyUidToClipboard() {
+        if (!currentUser) return;
+        navigator.clipboard.writeText(currentUser.uid).then(() => {
+            showSnackbar('Account UID copied to clipboard!', 'success');
+        }).catch(() => {
+            showSnackbar('Failed to copy UID.', 'error');
+        });
+    }
+</script>
+
+</body>
+</html>
