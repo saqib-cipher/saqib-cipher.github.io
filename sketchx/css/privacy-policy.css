@@ -1,0 +1,167 @@
+/**
+ * SketchX Privacy Policy Styles
+ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family, 'Plus Jakarta Sans', sans-serif);
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+    line-height: 1.6;
+    padding: 24px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 840px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+header {
+    background-color: var(--md-sys-color-surface-container);
+    border-radius: var(--shape-extra-large, 24px);
+    padding: 36px 32px;
+    margin-bottom: 24px;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    position: relative;
+    overflow: hidden;
+}
+
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 100%;
+    background-color: var(--md-sys-color-primary);
+}
+
+.app-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--md-sys-color-on-surface);
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    font-size: 0.95rem;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.card {
+    background-color: var(--md-sys-color-surface-container);
+    border-radius: var(--shape-large, 16px);
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
+}
+
+h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--md-sys-color-primary);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+h2 svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+
+p {
+    font-size: 0.95rem;
+    color: var(--md-sys-color-on-surface);
+    margin-bottom: 12px;
+}
+
+p:last-child {
+    margin-bottom: 0;
+}
+
+ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+
+li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 8px;
+    font-size: 0.93rem;
+    color: var(--md-sys-color-on-surface);
+}
+
+li::before {
+    content: '•';
+    position: absolute;
+    left: 8px;
+    top: 0;
+    color: var(--md-sys-color-primary);
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+.highlight-box {
+    background-color: var(--md-sys-color-surface-container-high);
+    border-radius: var(--shape-small, 12px);
+    padding: 16px;
+    margin-top: 12px;
+    border-left: 4px solid var(--md-sys-color-primary);
+    font-size: 0.9rem;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+footer {
+    text-align: center;
+    padding: 24px;
+    font-size: 0.85rem;
+    color: var(--md-sys-color-outline);
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+    margin-top: 32px;
+}
+
+footer a {
+    color: var(--md-sys-color-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
