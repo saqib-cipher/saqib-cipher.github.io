@@ -839,18 +839,54 @@ body {
     font-family: var(--font-mono);
 }
 
-/* Spinner */
-.spinner {
-    width: 20px;
-    height: 20px;
-    border: 2.5px solid rgba(255, 255, 255, 0.3);
-    border-top-color: #ffffff;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+/* M3 Expressive Circular Spinner */
+.m3-spinner-circular {
+    animation: m3-rotate 1.8s linear infinite;
+    transform-origin: center center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 14px;
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
+.m3-spinner-path {
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    animation: m3-dash 1.4s ease-in-out infinite;
+    stroke-linecap: round;
+    stroke: var(--md-sys-color-error);
+}
+
+@keyframes m3-rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes m3-dash {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 90, 200;
+        stroke-dashoffset: -35px;
+    }
+    100% {
+        stroke-dasharray: 90, 200;
+        stroke-dashoffset: -124px;
+    }
+}
+
+/* Button Inline Spinner */
+.spinner {
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255, 255, 255, 0.25);
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: m3-rotate 0.75s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    display: inline-block;
+    flex-shrink: 0;
 }
 
 /* Toast / Snackbar */
@@ -906,8 +942,8 @@ footer a:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
+    background-color: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(6px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -933,6 +969,8 @@ footer a:hover {
     box-shadow: var(--elevation-4);
     transform: scale(0.9);
     transition: transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+    position: relative;
+    overflow: hidden;
 }
 
 .modal-overlay.show .modal-dialog {
@@ -964,4 +1002,46 @@ footer a:hover {
     color: var(--md-sys-color-on-surface-variant);
     line-height: 1.5;
     margin-bottom: 24px;
+}
+
+/* Material 3 Expressive Modal Loading State Overlay */
+.modal-loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--md-sys-color-surface-container);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    border-radius: var(--shape-extra-large, 28px);
+    z-index: 10;
+    animation: fadeInModal 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.m3-expressive-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.m3-loader-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    margin-bottom: 4px;
+}
+
+.m3-loader-sub {
+    font-size: 0.84rem;
+    color: var(--md-sys-color-on-surface-variant);
 }

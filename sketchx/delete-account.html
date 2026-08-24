@@ -211,7 +211,7 @@
         </div>
 
         <!-- Deletion Reason & Agreement Card -->
-        <div class="m3-card">
+        <div class="m3-card" id="deletionReasonCard">
             <div class="card-header">
                 <h2 class="card-title">
                     <i class="ti ti-help-hexagon"></i> 3. Reason for Deletion
@@ -361,13 +361,24 @@
                 Are you absolutely sure you want to delete account <strong id="modalUserEmail"></strong>? Once processed, all access keys, project code snippets, and sync records will be deleted forever.
             </p>
             <div class="btn-row">
-                <button type="button" class="m3-btn m3-btn-tonal" onclick="closeConfirmationModal()">
+                <button type="button" class="m3-btn m3-btn-tonal" onclick="closeConfirmationModal()" id="modalCancelBtn">
                     Cancel
                 </button>
                 <button type="button" class="m3-btn m3-btn-error" id="finalConfirmDeleteBtn" onclick="executeDeletionRequest()">
                     <i class="ti ti-trash"></i>
                     <span>Yes, Permanently Delete</span>
                 </button>
+            </div>
+
+            <!-- Material 3 Expressive Dialog Loader Overlay -->
+            <div class="modal-loading-overlay" id="modalLoadingOverlay" style="display: none;">
+                <div class="m3-expressive-loader">
+                    <svg class="m3-spinner-circular" viewBox="25 25 50 50">
+                        <circle class="m3-spinner-path" cx="50" cy="50" r="20" fill="none" stroke-width="4" stroke-miterlimit="10"/>
+                    </svg>
+                    <div class="m3-loader-text">Scheduling Account Deletion...</div>
+                    <div class="m3-loader-sub">Updating profile & dispatching alerts</div>
+                </div>
             </div>
         </div>
     </div>

@@ -281,8 +281,12 @@ async function loadUserProfile(user) {
                 }
             }
             // Check if deletion is scheduled on profile
+            const reasonCard = document.getElementById('deletionReasonCard');
+            const step3Indicator = document.getElementById('stepIndicator3');
             if (userProfileData.deletionScheduled) {
                 document.getElementById('alreadyPendingNotice').style.display = 'flex';
+                if (reasonCard) reasonCard.style.display = 'none';
+                if (step3Indicator) step3Indicator.style.display = 'none';
                 if (userProfileData.scheduledDeletionTimestamp) {
                     const deleteDate = new Date(userProfileData.scheduledDeletionTimestamp).toLocaleString();
                     const pendingTextElem = document.getElementById('pendingNoticeTime');
@@ -290,13 +294,19 @@ async function loadUserProfile(user) {
                 }
             } else {
                 document.getElementById('alreadyPendingNotice').style.display = 'none';
+                if (reasonCard) reasonCard.style.display = 'block';
+                if (step3Indicator) step3Indicator.style.display = 'flex';
             }
         } else {
             document.getElementById('userUsername').textContent = '@' + (user.email ? user.email.split('@')[0] : 'user');
+            const reasonCard = document.getElementById('deletionReasonCard');
+            if (reasonCard) reasonCard.style.display = 'block';
         }
     } catch (dbErr) {
         console.warn('Could not read user profile from database:', dbErr);
         document.getElementById('userUsername').textContent = '@' + (user.email ? user.email.split('@')[0] : 'user');
+        const reasonCard = document.getElementById('deletionReasonCard');
+        if (reasonCard) reasonCard.style.display = 'block';
     }
 }
 
@@ -317,11 +327,27 @@ function toggleSubmitButton() {
 }
 
 function openConfirmationModal() {
-    document.getElementById('confirmModal').classList.add('show');
+    const modal = document.getElementById('confirmModal');
+    const loadingOverlay = document.getElementById('modalLoadingOverlay');
+    const cancelBtn = document.getElementById('modalCancelBtn');
+    const confirmBtn = document.getElementById('finalConfirmDeleteBtn');
+    
+    if (loadingOverlay) loadingOverlay.style.display = 'none';
+    if (cancelBtn) cancelBtn.disabled = false;
+    if (confirmBtn) confirmBtn.disabled = false;
+    if (modal) modal.classList.add('show');
 }
 
 function closeConfirmationModal() {
-    document.getElementById('confirmModal').classList.remove('show');
+    const modal = document.getElementById('confirmModal');
+    const loadingOverlay = document.getElementById('modalLoadingOverlay');
+    const cancelBtn = document.getElementById('modalCancelBtn');
+    const confirmBtn = document.getElementById('finalConfirmDeleteBtn');
+    
+    if (loadingOverlay) loadingOverlay.style.display = 'none';
+    if (cancelBtn) cancelBtn.disabled = false;
+    if (confirmBtn) confirmBtn.disabled = false;
+    if (modal) modal.classList.remove('show');
 }
 
 /* ==========================================================
@@ -330,9 +356,13 @@ function closeConfirmationModal() {
 async function executeDeletionRequest() {
     if (!currentUser) return;
 
+    const cancelBtn = document.getElementById('modalCancelBtn');
     const finalBtn = document.getElementById('finalConfirmDeleteBtn');
-    finalBtn.disabled = true;
-    finalBtn.innerHTML = `<div class="spinner"></div> Scheduling Deletion...`;
+    const loadingOverlay = document.getElementById('modalLoadingOverlay');
+
+    if (cancelBtn) cancelBtn.disabled = true;
+    if (finalBtn) finalBtn.disabled = true;
+    if (loadingOverlay) loadingOverlay.style.display = 'flex';
 
     const selectedRadio = document.querySelector('input[name="deleteReason"]:checked');
     const reasonText = selectedRadio ? selectedRadio.value : 'Not specified';
@@ -354,8 +384,9 @@ async function executeDeletionRequest() {
     } catch (dbError) {
         console.error('Failed to update users profile:', dbError);
         showAlert('Error updating profile in database: ' + dbError.message, 'error');
-        finalBtn.disabled = false;
-        finalBtn.innerHTML = `<i class="ti ti-trash"></i><span>Yes, Permanently Delete</span>`;
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        if (cancelBtn) cancelBtn.disabled = false;
+        if (finalBtn) finalBtn.disabled = false;
         return;
     }
 
@@ -433,6 +464,11 @@ async function handleCancelScheduledDeletion() {
         }).catch(e => console.warn('TG cancel notification error:', e));
 
         document.getElementById('alreadyPendingNotice').style.display = 'none';
+        const reasonCard = document.getElementById('deletionReasonCard');
+        if (reasonCard) reasonCard.style.display = 'block';
+        const step3Indicator = document.getElementById('stepIndicator3');
+        if (step3Indicator) step3Indicator.style.display = 'flex';
+
         showSnackbar('Account deletion has been cancelled. Your account remains active!', 'success');
         showAlert('Account deletion cancelled. Your account is active.', 'success');
     } catch (err) {
