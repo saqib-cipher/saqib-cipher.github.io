@@ -49,7 +49,9 @@ function initTheme() {
         updateThemeIcon(savedTheme);
     } else {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        updateThemeIcon(prefersDark ? 'dark' : 'light');
+        const initialTheme = prefersDark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', initialTheme);
+        updateThemeIcon(initialTheme);
     }
 }
 
