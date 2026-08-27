@@ -48,6 +48,11 @@ let sentLogs = [];
 let cachedOAuthToken = null;
 let oauthTokenExpiry = 0;
 
+// Modal State
+let activeModalUid = null;
+let activeModalName = '';
+let activeModalListener = null;
+
 /* ==========================================================
    4. THEME INITIALIZATION
    ========================================================== */
@@ -97,6 +102,50 @@ auth.onAuthStateChanged(async (user) => {
         showAuthView();
     }
 });
+
+async function handleGoogleSignIn() {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    provider.addScope('email');
+    provider.addScope('profile');
+    try {
+        showLoadingSpinner(true, "Signing in with Google...");
+        await auth.signInWithPopup(provider);
+    } catch (err) {
+        console.error("Google Sign-In failed:", err);
+        showToast(err.message || "Failed to sign in with Google.", 'error');
+    } finally {
+        showLoadingSpinner(false);
+    }
+}
+
+async function handleEmailSignIn(event) {
+    if (event) event.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass = document.getElementById('loginPassword').value;
+
+    if (!email || !pass) {
+        showToast("Please enter email and password.", 'error');
+        return;
+    }
+
+    try {
+        showLoadingSpinner(true, "Signing in...");
+        await auth.signInWithEmailAndPassword(email, pass);
+    } catch (err) {
+        showToast(err.message, 'error');
+    } finally {
+        showLoadingSpinner(false);
+    }
+}
+
+async function handleSignOut() {
+    try {
+        await auth.signOut();
+        showToast("Signed out successfully", "info");
+    } catch (err) {
+        showToast(err.message, 'error');
+    }
+}
 
 async function verifyUserAuthorization(user) {
     showLoadingSpinner(true, "Verifying Admin & Maintainer Authorization...");
@@ -158,65 +207,21 @@ function showAccessDeniedView(user, profile) {
     document.getElementById('viewAuth').style.display = 'none';
     document.getElementById('viewAccessDenied').style.display = 'block';
     document.getElementById('viewDashboard').style.display = 'none';
-    document.getElementById('userNavChip').style.display = 'none';
+    document.getElementById('userNavChip').style.display = 'inline-flex';
 
-    const deniedEmail = document.getElementById('deniedUserEmail');
-    const deniedBadge = document.getElementById('deniedUserBadge');
-    if (deniedEmail) deniedEmail.textContent = user.email || user.uid;
-    if (deniedBadge) {
-        const b = (profile.badge || 'None').toLowerCase();
-        deniedBadge.className = `role-badge ${b}`;
-        deniedBadge.textContent = profile.badge ? profile.badge.toUpperCase() : 'NO ROLE BADGE';
+    document.getElementById('deniedUserEmail').textContent = user.email || user.uid;
+    const badgeEl = document.getElementById('deniedUserBadge');
+    if (badgeEl) {
+        const b = (profile.badge || 'none').toLowerCase();
+        badgeEl.className = `role-badge ${b}`;
+        badgeEl.textContent = profile.badge ? profile.badge.toUpperCase() : 'STANDARD USER';
     }
 }
 
 function showDashboardView() {
     document.getElementById('viewAuth').style.display = 'none';
     document.getElementById('viewAccessDenied').style.display = 'none';
-    document.getElementById('viewDashboard').style.display = 'block';
-}
-
-/* Auth Actions */
-async function handleGoogleSignIn() {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    provider.addScope('email');
-    provider.addScope('profile');
-    try {
-        await auth.signInWithPopup(provider);
-    } catch (err) {
-        if (err.code !== 'auth/popup-closed-by-user') {
-            showToast(err.message, 'error');
-        }
-    }
-}
-
-async function handleEmailSignIn(event) {
-    event.preventDefault();
-    const email = document.getElementById('loginEmail').value.trim();
-    const pass = document.getElementById('loginPassword').value;
-
-    if (!email || !pass) {
-        showToast("Please enter email and password.", "error");
-        return;
-    }
-
-    try {
-        showLoadingSpinner(true, "Signing in...");
-        await auth.signInWithEmailAndPassword(email, pass);
-    } catch (err) {
-        showToast(err.message, 'error');
-    } finally {
-        showLoadingSpinner(false);
-    }
-}
-
-async function handleSignOut() {
-    try {
-        await auth.signOut();
-        showToast("Signed out successfully", "info");
-    } catch (err) {
-        showToast(err.message, 'error');
-    }
+    document.getElementById('viewDashboard').style.display = 'flex';
 }
 
 /* ==========================================================
@@ -254,7 +259,7 @@ function loadUsersDirectory() {
             });
         }
 
-        // Sort: newest first or users with tokens first
+        // Sort: users with tokens first, then newest
         allUsersList.sort((a, b) => {
             if (a.fcmToken && !b.fcmToken) return -1;
             if (!a.fcmToken && b.fcmToken) return 1;
@@ -368,17 +373,15 @@ function renderUsersTable() {
             </td>
             <td>${tokenBadgeHtml}</td>
             <td style="font-size:0.8rem; color:var(--md-sys-color-on-surface-variant);">${formattedDate}</td>
-            <td style="text-align:right;">
+            <td style="text-align:right; white-space:nowrap;">
+                <button class="table-btn-action" onclick="openUserNotificationsModal('${user.uid}', '${escapeHtml(user.displayName)}')" title="Inspect stored notifications in database">
+                    <i class="ti ti-bell"></i> Inbox
+                </button>
                 ${user.fcmToken ? `
-                    <button class="table-btn-action" onclick="selectUserForPush('${user.uid}')" title="Send notification to this user">
+                    <button class="table-btn-action" onclick="selectUserForPush('${user.uid}')" title="Send push notification to this user">
                         <i class="ti ti-send"></i> Push
                     </button>
-                    <button class="table-btn-action" onclick="copyToClipboard('${user.fcmToken}', 'FCM Token Copied!')" title="Copy FCM Token">
-                        <i class="ti ti-copy"></i>
-                    </button>
-                ` : `
-                    <span style="font-size:0.75rem; color:var(--md-sys-color-outline);">Unavailable</span>
-                `}
+                ` : ''}
             </td>
         `;
 
@@ -393,7 +396,6 @@ function selectUserForPush(uid) {
         return;
     }
 
-    // Switch to token mode
     setTargetMode('token');
     selectedRecipientUser = user;
 
@@ -407,7 +409,6 @@ function selectUserForPush(uid) {
         badge.classList.add('visible');
     }
 
-    // Smooth scroll to composer
     document.getElementById('composerSection').scrollIntoView({ behavior: 'smooth' });
     showToast(`Recipient selected: ${user.displayName}`, 'info');
 }
@@ -421,7 +422,7 @@ function clearSelectedUser() {
 
 /* ==========================================================
    7. NOTIFICATION COMPOSER & TARGET SWITCHER
-   ========================================================= */
+   ========================================================== */
 function setTargetMode(mode) {
     currentTargetMode = mode;
     document.querySelectorAll('.segment-btn').forEach(btn => {
@@ -461,7 +462,6 @@ function updatePreview() {
     document.getElementById('previewBody').textContent = body;
     document.getElementById('previewTypeBadge').textContent = `Type: ${notifType} • Channel: ${channel}`;
 
-    // Target badge in preview header
     const previewTargetBadge = document.getElementById('previewTargetBadge');
     if (previewTargetBadge) {
         if (currentTargetMode === 'topic') {
@@ -473,7 +473,6 @@ function updatePreview() {
         }
     }
 
-    // Update char counts
     document.getElementById('titleCharCount').textContent = `${document.getElementById('notifTitle').value.length}/80`;
     document.getElementById('bodyCharCount').textContent = `${document.getElementById('notifBody').value.length}/300`;
 }
@@ -542,6 +541,8 @@ async function handleSendNotification(event) {
     }
 
     let targetValue = '';
+    let targetUid = null;
+
     if (currentTargetMode === 'topic') {
         targetValue = document.getElementById('inputTopicName').value.trim() || 'all';
     } else {
@@ -550,15 +551,36 @@ async function handleSendNotification(event) {
             showToast("Please select a recipient user or paste a valid FCM registration token.", "error");
             return;
         }
+        if (selectedRecipientUser && selectedRecipientUser.uid) {
+            targetUid = selectedRecipientUser.uid;
+        } else {
+            const matchUser = allUsersList.find(u => u.fcmToken === targetValue);
+            if (matchUser) targetUid = matchUser.uid;
+        }
     }
 
-    // Build Custom Data Payload
+    // Build unique safe notification record
+    const notifId = `${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+    const notifRecord = {
+        id: notifId,
+        title: title,
+        body: body,
+        type: type,
+        postId: postId || null,
+        commentId: commentId || null,
+        timestamp: Date.now(),
+        isRead: false
+    };
+
+    // Build Custom Data Payload for FCM
     const customData = {
+        id: notifId,
         type: type,
         title: title,
         body: body,
         timestamp: String(Date.now())
     };
+    if (targetUid) customData.recipientUid = targetUid;
     if (postId) customData.postId = postId;
     if (commentId) customData.commentId = commentId;
 
@@ -574,19 +596,12 @@ async function handleSendNotification(event) {
         }
     }
 
-    const notifPayload = {
-        title,
-        body,
-        imageUrl,
-        channelId,
-        customData
-    };
-
     const sendBtn = document.getElementById('btnSubmitSend');
     sendBtn.disabled = true;
     sendBtn.innerHTML = `<i class="ti ti-loader ti-spin"></i> Dispatching Notification...`;
 
     try {
+        // 1. Dispatch Push to FCM API
         const accessToken = await getGoogleAccessToken();
         const fcmUrl = `https://fcm.googleapis.com/v1/projects/${SERVICE_ACCOUNT.project_id}/messages:send`;
 
@@ -632,9 +647,30 @@ async function handleSendNotification(event) {
             throw new Error(resData.error?.message || "Failed to dispatch message.");
         }
 
+        // 2. STORE NOTIFICATION IN DATABASE (Realtime Database with isRead = false)
+        try {
+            if (currentTargetMode === 'token' && targetUid) {
+                await database.ref(`users/${targetUid}/notifications/${notifId}`).set(notifRecord);
+            } else if (currentTargetMode === 'topic') {
+                const usersSnap = await database.ref('users').once('value');
+                const usersVal = usersSnap.val() || {};
+                const dbUpdates = {};
+                for (const uKey in usersVal) {
+                    const uItem = usersVal[uKey];
+                    if (targetValue === 'auth' && (!uItem.profile || uItem.profile.isAnonymous)) continue;
+                    dbUpdates[`users/${uKey}/notifications/${notifId}`] = notifRecord;
+                }
+                if (Object.keys(dbUpdates).length > 0) {
+                    await database.ref().update(dbUpdates);
+                }
+            }
+        } catch (dbErr) {
+            console.warn("Notification sent via FCM, but database sync encountered notice:", dbErr);
+        }
+
         // Success
         const messageId = resData.name || "Sent successfully";
-        showToast("Notification dispatched successfully! ID: " + messageId.split('/').pop(), "success");
+        showToast("Notification dispatched & stored in database successfully!", "success");
 
         addDeliveryLog({
             status: 'success',
@@ -676,7 +712,6 @@ async function sendTestToSelf() {
         return;
     }
 
-    // Set composer to test
     document.getElementById('notifTitle').value = "SketchX Admin Test Notification";
     document.getElementById('notifBody').value = "This is a real-time test notification sent directly to your registered device.";
     document.getElementById('notifType').value = "announcement";
@@ -716,7 +751,177 @@ function renderLogsList() {
 }
 
 /* ==========================================================
-   9. UTILITIES & TOAST ALERTS
+   9. USER NOTIFICATIONS DATABASE INSPECTOR MODAL
+   ========================================================== */
+function openUserNotificationsModal(uid, displayName) {
+    activeModalUid = uid;
+    activeModalName = displayName || 'User';
+
+    const modal = document.getElementById('modalUserNotifications');
+    if (!modal) return;
+
+    const initial = (activeModalName.replace('@', '').trim().charAt(0) || 'U').toUpperCase();
+    document.getElementById('modalUserAvatar').textContent = initial;
+    document.getElementById('modalUserName').textContent = `${activeModalName}'s Notifications`;
+    document.getElementById('modalUserUid').textContent = uid;
+
+    modal.style.display = 'flex';
+
+    // Attach Realtime listener to user's notifications in database
+    const notifsRef = database.ref(`users/${uid}/notifications`);
+    if (activeModalListener) {
+        notifsRef.off('value', activeModalListener);
+    }
+
+    activeModalListener = notifsRef.on('value', (snapshot) => {
+        const notifsObj = snapshot.val() || {};
+        renderModalNotifications(notifsObj);
+    }, (err) => {
+        showToast("Error loading notifications from database: " + err.message, "error");
+    });
+}
+
+function closeUserNotificationsModal() {
+    const modal = document.getElementById('modalUserNotifications');
+    if (modal) modal.style.display = 'none';
+
+    if (activeModalUid && activeModalListener) {
+        database.ref(`users/${activeModalUid}/notifications`).off('value', activeModalListener);
+        activeModalListener = null;
+    }
+    activeModalUid = null;
+}
+
+function renderModalNotifications(notifsObj) {
+    const container = document.getElementById('modalNotifsList');
+    if (!container) return;
+
+    const notifs = [];
+    let unreadCount = 0;
+
+    for (const key in notifsObj) {
+        const item = notifsObj[key];
+        if (item) {
+            item.id = item.id || key;
+            if (!item.isRead) unreadCount++;
+            notifs.push(item);
+        }
+    }
+
+    // Sort newest first
+    notifs.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+    document.getElementById('modalTotalNotifs').textContent = notifs.length;
+    document.getElementById('modalUnreadNotifs').textContent = unreadCount;
+
+    if (notifs.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center; padding:40px 20px; color:var(--md-sys-color-outline);">
+                <i class="ti ti-bell-off" style="font-size:2.5rem; display:block; margin-bottom:8px;"></i>
+                <span style="font-weight:600;">No notifications stored in database for this user.</span>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = notifs.map(item => {
+        const timeAgo = formatTimeAgo(item.timestamp || Date.now());
+        const isRead = !!item.isRead;
+        return `
+            <div class="modal-notif-item ${isRead ? 'read' : 'unread'}" id="notifItem_${escapeHtml(item.id)}">
+                <div class="modal-notif-header">
+                    <span class="modal-notif-title">${escapeHtml(item.title || 'Notification')}</span>
+                    <span class="modal-notif-time">${timeAgo}</span>
+                </div>
+                <div class="modal-notif-body">${escapeHtml(item.body || '')}</div>
+                <div class="modal-notif-footer">
+                    <span class="read-status-chip ${isRead ? 'read' : 'unread'}" onclick="toggleNotificationReadState('${escapeHtml(item.id)}', ${!isRead})" title="Click to toggle read/unread state in database">
+                        <i class="ti ${isRead ? 'ti-check' : 'ti-point-filled'}"></i> ${isRead ? 'READ' : 'UNREAD (Click to mark read)'}
+                    </span>
+                    <button type="button" class="table-btn-action" style="color:var(--md-sys-color-error);" onclick="deleteNotificationItem('${escapeHtml(item.id)}')">
+                        <i class="ti ti-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+async function toggleNotificationReadState(notifId, newReadState) {
+    if (!activeModalUid) return;
+    try {
+        await database.ref(`users/${activeModalUid}/notifications/${notifId}/isRead`).set(newReadState);
+        showToast(newReadState ? "Marked as read in database" : "Marked as unread in database", "info");
+    } catch (err) {
+        showToast("Failed to update status: " + err.message, "error");
+    }
+}
+
+async function deleteNotificationItem(notifId) {
+    if (!activeModalUid) return;
+    try {
+        await database.ref(`users/${activeModalUid}/notifications/${notifId}`).remove();
+        showToast("Notification removed from database.", "info");
+    } catch (err) {
+        showToast("Failed to delete notification: " + err.message, "error");
+    }
+}
+
+async function modalMarkAllRead() {
+    if (!activeModalUid) return;
+    try {
+        const snap = await database.ref(`users/${activeModalUid}/notifications`).once('value');
+        const notifs = snap.val() || {};
+        const updates = {};
+        for (const k in notifs) {
+            updates[`users/${activeModalUid}/notifications/${k}/isRead`] = true;
+        }
+        if (Object.keys(updates).length > 0) {
+            await database.ref().update(updates);
+            showToast("All notifications marked as read in database.", "success");
+        }
+    } catch (err) {
+        showToast("Failed to mark all as read: " + err.message, "error");
+    }
+}
+
+async function modalMarkAllUnread() {
+    if (!activeModalUid) return;
+    try {
+        const snap = await database.ref(`users/${activeModalUid}/notifications`).once('value');
+        const notifs = snap.val() || {};
+        const updates = {};
+        for (const k in notifs) {
+            updates[`users/${activeModalUid}/notifications/${k}/isRead`] = false;
+        }
+        if (Object.keys(updates).length > 0) {
+            await database.ref().update(updates);
+            showToast("All notifications marked as unread in database.", "info");
+        }
+    } catch (err) {
+        showToast("Failed to mark all as unread: " + err.message, "error");
+    }
+}
+
+async function modalClearAll() {
+    if (!activeModalUid) return;
+    if (!confirm("Are you sure you want to permanently delete all notifications stored for this user?")) return;
+    try {
+        await database.ref(`users/${activeModalUid}/notifications`).remove();
+        showToast("All notifications cleared from database.", "success");
+    } catch (err) {
+        showToast("Failed to clear notifications: " + err.message, "error");
+    }
+}
+
+function modalPushShortcut() {
+    if (!activeModalUid) return;
+    closeUserNotificationsModal();
+    selectUserForPush(activeModalUid);
+}
+
+/* ==========================================================
+   10. UTILITIES & TOAST ALERTS
    ========================================================== */
 function showToast(message, type = 'info') {
     const container = document.getElementById('toastContainer');
@@ -756,6 +961,16 @@ function copyToClipboard(text, successMsg = 'Copied to clipboard!') {
     }).catch(() => {
         showToast("Failed to copy.", 'error');
     });
+}
+
+function formatTimeAgo(timestamp) {
+    if (!timestamp || timestamp <= 0) return 'Just now';
+    const now = Date.now();
+    const diff = now - timestamp;
+    if (diff < 60000) return 'Just now';
+    if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+    if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+    return `${Math.floor(diff / 86400000)}d ago`;
 }
 
 function escapeHtml(str) {
