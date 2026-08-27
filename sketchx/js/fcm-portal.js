@@ -377,11 +377,9 @@ function renderUsersTable() {
                 <button class="table-btn-action" onclick="openUserNotificationsModal('${user.uid}', '${escapeHtml(user.displayName)}')" title="Inspect stored notifications in database">
                     <i class="ti ti-bell"></i> Inbox
                 </button>
-                ${user.fcmToken ? `
-                    <button class="table-btn-action" onclick="selectUserForPush('${user.uid}')" title="Send push notification to this user">
-                        <i class="ti ti-send"></i> Push
-                    </button>
-                ` : ''}
+                <button class="table-btn-action" onclick="selectUserForPush('${user.uid}')" title="Send notification to this user">
+                    <i class="ti ti-send"></i> Send
+                </button>
             </td>
         `;
 
@@ -390,20 +388,21 @@ function renderUsersTable() {
 }
 
 function selectUserForPush(uid) {
-    const user = allUsersList.find(u => u.uid === uid);
-    if (!user || !user.fcmToken) {
-        showToast("Selected user does not have a registered FCM token.", "error");
-        return;
-    }
-
+    const user = allUsersList.find(u => u.uid === uid) || { uid: uid, displayName: activeModalName || 'User' };
+    
     setTargetMode('token');
     selectedRecipientUser = user;
 
-    document.getElementById('inputRecipientToken').value = user.fcmToken;
+    if (user.fcmToken) {
+        document.getElementById('inputRecipientToken').value = user.fcmToken;
+    } else {
+        document.getElementById('inputRecipientToken').value = '';
+    }
+
     const badge = document.getElementById('selectedUserBadge');
     if (badge) {
         badge.innerHTML = `
-            <span><i class="ti ti-user-check"></i> Recipient: <strong>${escapeHtml(user.displayName)}</strong> (${user.username ? '@' + escapeHtml(user.username) : user.uid.substring(0, 8)})</span>
+            <span><i class="ti ti-user-check"></i> Recipient: <strong>${escapeHtml(user.displayName)}</strong> (${user.username ? '@' + escapeHtml(user.username) : user.uid.substring(0, 8)}) ${user.fcmToken ? '<span style="color:var(--md-sys-color-primary); font-size:0.75rem;">(Device Push Ready)</span>' : '<span style="color:var(--md-sys-color-tertiary); font-size:0.75rem;">(Inbox Database Only)</span>'}</span>
             <button type="button" class="btn-remove-recipient" onclick="clearSelectedUser()" title="Clear selection"><i class="ti ti-x"></i></button>
         `;
         badge.classList.add('visible');
@@ -469,7 +468,11 @@ function updatePreview() {
             previewTargetBadge.textContent = `Target: Topic /topics/${topic}`;
         } else {
             const token = document.getElementById('inputRecipientToken').value.trim();
-            previewTargetBadge.textContent = token ? `Target: Single Device (${token.substring(0, 10)}...)` : 'Target: Single Device (Unset)';
+            if (selectedRecipientUser) {
+                previewTargetBadge.textContent = `Target: User @${selectedRecipientUser.username || selectedRecipientUser.displayName}`;
+            } else {
+                previewTargetBadge.textContent = token ? `Target: Single Device (${token.substring(0, 10)}...)` : 'Target: Single Device (Unset)';
+            }
         }
     }
 
@@ -478,11 +481,11 @@ function updatePreview() {
 }
 
 /* ==========================================================
-   8. FCM HTTP V1 SIGNING & DISPATCH ENGINE
+   8. DISPATCH PUSH & SYNC TO DATABASE
    ========================================================== */
 async function getGoogleAccessToken() {
     const now = Math.floor(Date.now() / 1000);
-    if (cachedOAuthToken && now < oauthTokenExpiry - 60) {
+    if (cachedOAuthToken && oauthTokenExpiry > now + 60) {
         return cachedOAuthToken;
     }
 
@@ -547,15 +550,17 @@ async function handleSendNotification(event) {
         targetValue = document.getElementById('inputTopicName').value.trim() || 'all';
     } else {
         targetValue = document.getElementById('inputRecipientToken').value.trim();
-        if (!targetValue) {
-            showToast("Please select a recipient user or paste a valid FCM registration token.", "error");
-            return;
-        }
         if (selectedRecipientUser && selectedRecipientUser.uid) {
             targetUid = selectedRecipientUser.uid;
-        } else {
+            if (!targetValue && selectedRecipientUser.fcmToken) {
+                targetValue = selectedRecipientUser.fcmToken;
+            }
+        } else if (targetValue) {
             const matchUser = allUsersList.find(u => u.fcmToken === targetValue);
             if (matchUser) targetUid = matchUser.uid;
+        } else {
+            showToast("Please select a recipient user or paste a valid FCM registration token.", "error");
+            return;
         }
     }
 
@@ -572,7 +577,7 @@ async function handleSendNotification(event) {
         isRead: false
     };
 
-    // Build Custom Data Payload for FCM
+    // Build Custom Data Payload for FCM (data-only for strict foreground vs background control)
     const customData = {
         id: notifId,
         type: type,
@@ -601,50 +606,40 @@ async function handleSendNotification(event) {
     sendBtn.innerHTML = `<i class="ti ti-loader ti-spin"></i> Dispatching Notification...`;
 
     try {
-        // 1. Dispatch Push to FCM API
-        const accessToken = await getGoogleAccessToken();
-        const fcmUrl = `https://fcm.googleapis.com/v1/projects/${SERVICE_ACCOUNT.project_id}/messages:send`;
+        let messageId = null;
 
-        const message = {
-            notification: {
-                title: title,
-                body: body
-            },
-            data: customData,
-            android: {
-                priority: "high",
-                notification: {
-                    channel_id: channelId,
-                    notification_priority: "PRIORITY_HIGH",
-                    default_sound: true,
-                    default_vibrate_timings: true
+        // 1. Dispatch Push to FCM API (if target token or topic present)
+        if (targetValue) {
+            const accessToken = await getGoogleAccessToken();
+            const fcmUrl = `https://fcm.googleapis.com/v1/projects/${SERVICE_ACCOUNT.project_id}/messages:send`;
+
+            const message = {
+                data: customData,
+                android: {
+                    priority: "high"
                 }
+            };
+
+            if (currentTargetMode === 'topic') {
+                message.topic = targetValue.replace(/^\/topics\//, "");
+            } else {
+                message.token = targetValue;
             }
-        };
 
-        if (imageUrl) {
-            message.notification.image = imageUrl;
-            message.android.notification.image = imageUrl;
-        }
+            const response = await fetch(fcmUrl, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${accessToken}`,
+                    "Content-Type": "application/json; UTF-8"
+                },
+                body: JSON.stringify({ message })
+            });
 
-        if (currentTargetMode === 'topic') {
-            message.topic = targetValue.replace(/^\/topics\//, "");
-        } else {
-            message.token = targetValue;
-        }
-
-        const response = await fetch(fcmUrl, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${accessToken}`,
-                "Content-Type": "application/json; UTF-8"
-            },
-            body: JSON.stringify({ message })
-        });
-
-        const resData = await response.json();
-        if (!response.ok) {
-            throw new Error(resData.error?.message || "Failed to dispatch message.");
+            const resData = await response.json();
+            if (!response.ok) {
+                throw new Error(resData.error?.message || "Failed to dispatch message.");
+            }
+            messageId = resData.name;
         }
 
         // 2. STORE NOTIFICATION IN DATABASE (Realtime Database with isRead = false)
@@ -669,15 +664,18 @@ async function handleSendNotification(event) {
         }
 
         // Success
-        const messageId = resData.name || "Sent successfully";
-        showToast("Notification dispatched & stored in database successfully!", "success");
+        if (targetValue) {
+            showToast("Push notification dispatched & saved to user inbox!", "success");
+        } else {
+            showToast("Notification saved to user inbox! (Push skipped: user has no registered device token)", "success");
+        }
 
         addDeliveryLog({
             status: 'success',
             targetType: currentTargetMode,
             target: currentTargetMode === 'topic' ? `/topics/${targetValue}` : (selectedRecipientUser ? selectedRecipientUser.displayName : targetValue.substring(0, 16) + '...'),
             title: title,
-            messageId: messageId,
+            messageId: messageId || "Database Inbox Only",
             time: new Date().toLocaleTimeString()
         });
     } catch (err) {
