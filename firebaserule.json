@@ -1,0 +1,102 @@
+{
+  "rules": {
+    "admin": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+    },
+    "access_keys": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+    },
+    "access_key": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+    },
+    "purchases": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+    },
+    "usernames": {
+      ".read": true,
+      "$username": {
+        ".write": "auth != null && (!data.exists() || data.val() === auth.uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+      }
+    },
+    "users": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+      "$uid": {
+        "profile": {
+          ".read": "auth != null",
+          ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+        },
+        "uploads": {
+          ".read": "auth != null",
+          ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+        },
+        "entitlement": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+          ".write": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+        },
+        "activePurchaseToken": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+          ".write": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+        },
+        "fcmToken": {
+          ".read": "auth != null",
+          ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+        },
+        "notifications": {
+          ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+          ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+          "$notifId": {
+            ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+            ".write": "auth != null"
+          }
+        },
+        ".read": "auth != null",
+        ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+      }
+    },
+    "help_tickets": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+      "$ticketId": {
+        ".read": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+        ".write": true,
+        ".validate": "newData.hasChildren(['contactInfo', 'message'])"
+      }
+    },
+    "scheduled_deletions": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+      ".write": "auth != null && (root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')",
+        ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+      }
+    },
+    "community_posts": {
+      ".indexOn": ["authorUid", "timestamp"],
+      ".read": "auth != null",
+      "$postId": {
+        ".write": "auth != null && (!data.exists() || data.child('authorUid').val() === auth.uid || newData.child('authorUid').val() === auth.uid || newData.hasChildren(['likesCount']) || newData.hasChildren(['commentsCount']) || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+      }
+    },
+    "community_comments": {
+      "$postId": {
+        ".read": "auth != null",
+        "$commentId": {
+          ".write": "auth != null && (!data.exists() || data.child('authorUid').val() === auth.uid || root.child('community_posts').child($postId).child('authorUid').val() === auth.uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+        }
+      }
+    },
+    "community_likes": {
+      "$postId": {
+        ".read": "auth != null",
+        "$uid": {
+          ".write": "auth != null && (auth.uid === $uid || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'admin' || root.child('users').child(auth.uid).child('profile').child('badge').val() === 'maintainer')"
+        }
+      }
+    }
+  }
+}

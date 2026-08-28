@@ -56,7 +56,7 @@ function initTheme() {
 }
 
 function toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 
+    const currentTheme = document.documentElement.getAttribute('data-theme') ||
         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', newTheme);
@@ -218,7 +218,7 @@ async function loadUserProfile(user) {
     const email = user.email || 'No email provided';
     const photoURL = user.photoURL;
     const uid = user.uid;
-    
+
     document.getElementById('userDisplayName').textContent = displayName;
     document.getElementById('userEmailText').textContent = email;
     document.getElementById('userUidText').textContent = uid;
@@ -333,7 +333,7 @@ function openConfirmationModal() {
     const loadingOverlay = document.getElementById('modalLoadingOverlay');
     const cancelBtn = document.getElementById('modalCancelBtn');
     const confirmBtn = document.getElementById('finalConfirmDeleteBtn');
-    
+
     if (loadingOverlay) loadingOverlay.style.display = 'none';
     if (cancelBtn) cancelBtn.disabled = false;
     if (confirmBtn) confirmBtn.disabled = false;
@@ -345,7 +345,7 @@ function closeConfirmationModal() {
     const loadingOverlay = document.getElementById('modalLoadingOverlay');
     const cancelBtn = document.getElementById('modalCancelBtn');
     const confirmBtn = document.getElementById('finalConfirmDeleteBtn');
-    
+
     if (loadingOverlay) loadingOverlay.style.display = 'none';
     if (cancelBtn) cancelBtn.disabled = false;
     if (confirmBtn) confirmBtn.disabled = false;
@@ -369,7 +369,7 @@ async function executeDeletionRequest() {
     const selectedRadio = document.querySelector('input[name="deleteReason"]:checked');
     const reasonText = selectedRadio ? selectedRadio.value : 'Not specified';
     const feedbackText = document.getElementById('additionalFeedback').value.trim();
-    
+
     // Timestamps: scheduledAt = now, deleteAt = 7 days later (604,800,000 ms)
     const scheduledAt = Date.now();
     const deleteAt = scheduledAt + (7 * 24 * 60 * 60 * 1000);
@@ -380,9 +380,11 @@ async function executeDeletionRequest() {
     try {
         await database.ref(`users/${currentUser.uid}/profile`).update({
             deletionScheduled: true,
-            scheduledDeletionTimestamp: deleteAt
+            scheduledDeletionTimestamp: deleteAt,
+            restricted: true
         });
-        console.log(`users/${currentUser.uid}/profile updated: deletionScheduled = true`);
+
+        console.log(`users/${currentUser.uid}/profile updated: deletionScheduled = true, restricted = true`);
     } catch (dbError) {
         console.error('Failed to update users profile:', dbError);
         showAlert('Error updating profile in database: ' + dbError.message, 'error');
@@ -420,7 +422,7 @@ async function executeDeletionRequest() {
 
     // 4. Update UI to Step 4 Success View
     closeConfirmationModal();
-    
+
     document.getElementById('receiptEmail').textContent = email;
     document.getElementById('receiptUid').textContent = currentUser.uid;
     document.getElementById('receiptReason').textContent = reasonText;
@@ -440,13 +442,14 @@ async function handleCancelScheduledDeletion() {
         // Reset profile flags
         await database.ref(`users/${currentUser.uid}/profile`).update({
             deletionScheduled: false,
-            scheduledDeletionTimestamp: 0
+            scheduledDeletionTimestamp: 0,
+            restricted: false
         });
 
         // Remove from scheduled_deletions
         try {
             await database.ref(`scheduled_deletions/${currentUser.uid}`).remove();
-        } catch (e) {}
+        } catch (e) { }
 
         // Send Telegram cancellation notice
         const cancelMsg = `✅ <b>SKETCHX ACCOUNT DELETION CANCELLED</b>\n` +
@@ -498,7 +501,7 @@ async function sendTelegramDeletionNotification(data) {
 
     try {
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-        
+
         const response = await fetch(url, {
             method: 'POST',
             headers: {

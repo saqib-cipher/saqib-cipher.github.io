@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Post - SketchX</title>
+    <meta name="description" content="View custom Sketchware Pro blocks, Java snippets, and community resources on SketchX.">
+    
+    <!-- OpenGraph SEO for Social Previews -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="SketchX">
+    <meta property="og:title" content="SketchX Community Post">
+    <meta property="og:description" content="Download custom blocks and Java logic for Sketchware Pro on SketchX.">
+    <meta name="theme-color" content="#7C4DFF">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    
+    <!-- Post Stylesheet -->
+    <link rel="stylesheet" href="css/post.css">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <a href="https://saqib-cipher.github.io/sketchx/" class="nav-brand">
+            <img src="images/logo.png" alt="SketchX Logo" class="nav-brand-img">
+            <span>SketchX</span>
+        </a>
+
+        <div class="nav-actions">
+            <button type="button" class="btn-open-app" onclick="openInSketchXApp()">
+                <i class="ti ti-device-mobile"></i> Open in App
+            </button>
+            <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Theme" title="Toggle theme">
+                <i class="ti ti-sun" id="themeIcon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Loading State -->
+    <div id="postLoadingContainer" style="text-align: center; padding: 60px 20px;">
+        <div style="width: 44px; height: 44px; border: 4px solid var(--md-sys-color-surface-container-highest); border-top-color: var(--md-sys-color-primary); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px;"></div>
+        <span style="font-weight: 700; color: var(--md-sys-color-outline);">Loading SketchX Community Post...</span>
+    </div>
+
+    <!-- Error / Not Found / Hidden State -->
+    <div id="postErrorContainer" class="m3-card empty-error-state" style="display: none; text-align: center; padding: 48px 24px;">
+        <div class="error-icon-box" style="width: 72px; height: 72px; border-radius: 20px; background: rgba(255,82,82,0.12); color: var(--md-sys-color-error); display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 20px;">
+            <i class="ti ti-ghost" id="errorIcon"></i>
+        </div>
+        <h2 id="tvErrorTitle" style="font-size: 1.5rem; font-weight: 800; color: var(--md-sys-color-on-surface); margin-bottom: 10px;">Post Unavailable</h2>
+        <p id="tvErrorMessage" style="font-size: 0.95rem; color: var(--md-sys-color-on-surface-variant); max-width: 480px; margin: 0 auto 24px; line-height: 1.6;">
+            The requested community post could not be found or has been removed.
+        </p>
+        <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" class="btn-playstore-cta" style="display: inline-flex; align-items: center; gap: 8px; justify-content: center;">
+            <i class="ti ti-brand-google-play"></i> Get SketchX App on Play Store
+        </a>
+    </div>
+
+    <!-- Main Post Content Container -->
+    <div id="postContentContainer" style="display: none; flex-direction: column; gap: 20px;">
+        
+        <!-- Admin Moderation Control Bar -->
+        <div id="adminModerationBar" class="m3-card" style="display: none; background: rgba(33, 150, 243, 0.08); border: 1px solid rgba(33, 150, 243, 0.3); padding: 12px 18px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--md-sys-color-primary); font-size: 0.9rem;">
+                    <i class="ti ti-shield-check" style="font-size: 1.2rem;"></i> Admin Controls
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" id="btnAdminVerify" class="admin-control-btn" onclick="adminToggleVerify()">
+                        <i class="ti ti-discount-check"></i> <span id="lblAdminVerify">Verify</span>
+                    </button>
+                    <button type="button" id="btnAdminHide" class="admin-control-btn" onclick="adminToggleHide()">
+                        <i class="ti ti-eye-off"></i> <span id="lblAdminHide">Hide</span>
+                    </button>
+                    <button type="button" class="admin-control-btn danger" onclick="adminDeletePost()">
+                        <i class="ti ti-trash"></i> Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <article class="m3-card">
+            <!-- Header -->
+            <div class="post-header">
+                <div class="post-meta-row">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span id="chipPostType" class="post-type-pill code">
+                            <i class="ti ti-code"></i> Code Snippet
+                        </span>
+                        <span id="chipPostVerified" class="post-verified-badge" style="display: none;">
+                            <i class="ti ti-discount-check-filled"></i> Verified
+                        </span>
+                    </div>
+                    <span id="tvPostDate" class="post-time">Recently</span>
+                </div>
+
+                <h1 id="tvPostTitle" class="post-title">Loading title...</h1>
+            </div>
+
+            <!-- Author Header -->
+            <div class="author-profile-row">
+                <div class="author-left">
+                    <div class="author-avatar">
+                        <img id="imgAuthorAvatar" class="author-avatar" alt="Author avatar" style="display: none;">
+                        <span id="tvAuthorAvatarInitial">U</span>
+                    </div>
+                    <div class="author-info">
+                        <div class="author-name-group">
+                            <span id="tvAuthorName" class="author-name">Author</span>
+                            <span id="authorRoleBadge" class="role-badge admin" style="display: none;">ADMIN</span>
+                        </div>
+                        <span id="tvAuthorUsername" class="author-username">@username</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Locked Content Card -->
+            <div class="locked-content-card">
+                <div class="locked-card-icon">
+                    <i class="ti ti-lock"></i>
+                </div>
+                <h3 class="locked-card-title">Content Locked</h3>
+                <p class="locked-card-subtitle">
+                    Source code and custom Sketchware block definitions are protected. View full source, copy code, and import directly into Sketchware Pro inside the SketchX Android app.
+                </p>
+                <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" rel="noopener" class="btn-locked-cta">
+                    <i class="ti ti-brand-google-play"></i> Open in SketchX App
+                </a>
+            </div>
+
+            <!-- Tags -->
+            <div id="tagsContainer" class="tags-chip-group"></div>
+
+            <!-- Social Action Bar -->
+            <div class="post-social-bar">
+                <div class="social-stats-group">
+                    <span class="social-stat-item">
+                        <i class="ti ti-heart-filled" style="color: #FF5252;"></i>
+                        <span id="tvLikesCount">0</span> Likes
+                    </span>
+                </div>
+
+                <button type="button" class="btn-share" onclick="sharePost()">
+                    <i class="ti ti-share"></i> Share
+                </button>
+            </div>
+        </article>
+
+        <!-- Google Play Download Banner -->
+        <section class="playstore-banner-card">
+            <div class="banner-content-left">
+                <div class="banner-app-icon">
+                    <img src="images/logo.png" alt="SketchX App Icon" class="banner-logo-img">
+                </div>
+                <div class="banner-text-info">
+                    <h3>Get SketchX for Android</h3>
+                    <p>Import custom blocks directly into Sketchware Pro, test logic snippets, and collaborate with developers worldwide.</p>
+                </div>
+            </div>
+            <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" rel="noopener" class="btn-playstore-cta">
+                <i class="ti ti-brand-google-play"></i> Get on Play Store
+            </a>
+        </section>
+
+    </div>
+</div>
+
+<style>
+@keyframes spin { 100% { transform: rotate(360deg); } }
+</style>
+
+<!-- Controller Script -->
+<script src="js/post.js"></script>
+
+</body>
+</html>

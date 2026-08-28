@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,9 +8,11 @@
     <meta name="description" content="Request permanent account deletion and data removal for SketchX Android App.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
-    
+
     <!-- Unified Material 3 Theme Colors -->
     <link rel="stylesheet" href="../css/theme.css">
     <!-- Component Styles -->
@@ -20,382 +23,432 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 </head>
+
 <body>
 
-<div class="main-wrapper">
-    <!-- Top Navigation -->
-    <div class="top-nav">
-        <a href="privacy_policy.html" class="back-link">
-            <i class="ti ti-arrow-left"></i>
-            <span>Privacy Policy</span>
-        </a>
-        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode" title="Toggle theme">
-            <i class="ti ti-sun" id="themeIcon"></i>
-        </button>
-    </div>
-
-    <!-- Hero Header -->
-    <header class="hero-header">
-        <div class="hero-badge">
-            <i class="ti ti-shield-lock"></i> SketchX Account Security
-        </div>
-        <h1 class="hero-title">Request Account Deletion</h1>
-        <p class="hero-subtitle">
-            Permanently delete your SketchX developer account, cloud synchronization data, and associated user credentials according to Google Play Data Safety standards.
-        </p>
-    </header>
-
-    <!-- Step Progress Tracker -->
-    <div class="stepper" id="stepper">
-        <div class="step-item active" id="stepIndicator1">
-            <div class="step-num">1</div>
-            <span>Sign In</span>
-        </div>
-        <div class="step-divider"></div>
-        <div class="step-item" id="stepIndicator2">
-            <div class="step-num">2</div>
-            <span>Account Details</span>
-        </div>
-        <div class="step-divider"></div>
-        <div class="step-item" id="stepIndicator3">
-            <div class="step-num">3</div>
-            <span>Reason & Confirm</span>
-        </div>
-    </div>
-
-    <!-- Alert / Message Banner -->
-    <div id="globalAlert" style="display: none;"></div>
-
-    <!-- ========================================== -->
-    <!-- STEP 1: AUTHENTICATION VIEW -->
-    <!-- ========================================== -->
-    <div id="viewStep1" class="m3-card">
-        <div class="card-header">
-            <h2 class="card-title">
-                <i class="ti ti-user-check"></i> 1. Verify Your Identity
-            </h2>
-            <p class="card-subtitle">Please log in to the SketchX account you wish to permanently delete.</p>
-        </div>
-
-        <!-- Google Sign In Quick Action -->
-        <button type="button" class="google-btn" id="googleSignInBtn">
-            <svg class="google-icon" viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-            </svg>
-            <span>Continue with Google</span>
-        </button>
-
-        <div style="display: flex; align-items: center; margin: 16px 0; gap: 12px;">
-            <div style="flex:1; height:1px; background:var(--md-sys-color-outline-variant);"></div>
-            <span style="font-size:0.8rem; color:var(--md-sys-color-outline); font-weight:600; text-transform:uppercase;">or sign in with email</span>
-            <div style="flex:1; height:1px; background:var(--md-sys-color-outline-variant);"></div>
-        </div>
-
-        <!-- Email & Password Form -->
-        <form id="emailLoginForm" onsubmit="handleEmailPasswordLogin(event)">
-            <div class="form-group">
-                <label class="field-label" for="loginEmail">Email Address</label>
-                <div class="input-box">
-                    <i class="ti ti-mail input-icon"></i>
-                    <input type="email" id="loginEmail" class="m3-input" placeholder="name@example.com" required autocomplete="email">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="field-label" for="loginPassword">Password</label>
-                <div class="input-box">
-                    <i class="ti ti-lock input-icon"></i>
-                    <input type="password" id="loginPassword" class="m3-input" placeholder="••••••••" required autocomplete="current-password">
-                    <button type="button" class="password-toggle" id="togglePasswordBtn" aria-label="Toggle password visibility">
-                        <i class="ti ti-eye" id="passwordEyeIcon"></i>
-                    </button>
-                </div>
-                <div class="form-helper-row">
-                    <span></span>
-                    <a href="javascript:void(0)" class="forgot-link" onclick="handleForgotPassword()">Forgot password?</a>
-                </div>
-            </div>
-
-            <button type="submit" class="m3-btn m3-btn-primary" id="emailSignInBtn">
-                <i class="ti ti-login-2"></i>
-                <span id="signInBtnText">Sign In & Review Account</span>
+    <div class="main-wrapper">
+        <!-- Top Navigation -->
+        <div class="top-nav">
+            <a href="privacy_policy.html" class="back-link">
+                <i class="ti ti-arrow-left"></i>
+                <img src="images/logo.png" alt="SketchX Logo"
+                    style="width: 28px; height: 28px; border-radius: 8px; object-fit: cover; vertical-align: middle;">
+                <span>Privacy Policy</span>
+            </a>
+            <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode"
+                title="Toggle theme">
+                <i class="ti ti-sun" id="themeIcon"></i>
             </button>
-        </form>
-    </div>
+        </div>
 
-    <!-- ========================================== -->
-    <!-- STEP 2 & 3: PROFILE VERIFIED & REASON VIEW -->
-    <!-- ========================================== -->
-    <div id="viewStep2" style="display: none;">
-        <!-- Profile Overview Card -->
-        <div class="m3-card">
-            <div class="card-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <div>
-                    <h2 class="card-title">
-                        <i class="ti ti-id-badge-2"></i> 2. Verified Account Details
-                    </h2>
-                    <p class="card-subtitle">Review the profile and data associated with this account before proceeding.</p>
-                </div>
-                <button type="button" class="m3-btn m3-btn-tonal" onclick="handleSignOut()" style="width: auto; padding: 8px 14px; font-size: 0.82rem;">
-                    <i class="ti ti-logout"></i> Sign Out
-                </button>
+        <!-- Hero Header -->
+        <header class="hero-header">
+            <div class="hero-badge">
+                <i class="ti ti-shield-lock"></i> SketchX Account Security
             </div>
+            <h1 class="hero-title">Request Account Deletion</h1>
+            <p class="hero-subtitle">
+                Permanently delete your SketchX developer account, cloud synchronization data, and associated user
+                credentials according to Google Play Data Safety standards.
+            </p>
+        </header>
 
-            <!-- Existing Scheduled Deletion Notice (if already pending) -->
-            <div id="alreadyPendingNotice" class="m3-alert m3-alert-warning" style="display: none; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-                <div style="display: flex; align-items: flex-start; gap: 10px; flex: 1;">
-                    <i class="ti ti-clock-pause"></i>
-                    <div>
-                        <strong>Deletion Scheduled on Account:</strong> This profile is currently flagged for deletion (<code style="font-family:var(--font-mono); font-size:0.8rem;">deletionScheduled: true</code>).
-                        <div id="pendingNoticeTime" style="font-size:0.82rem; margin-top:2px; opacity:0.85;"></div>
-                    </div>
-                </div>
-                <button type="button" class="m3-btn m3-btn-tonal" onclick="handleCancelScheduledDeletion()" style="width: auto; padding: 6px 14px; font-size: 0.82rem;">
-                    <i class="ti ti-rotate-2"></i> Cancel Deletion
-                </button>
+        <!-- Step Progress Tracker -->
+        <div class="stepper" id="stepper">
+            <div class="step-item active" id="stepIndicator1">
+                <div class="step-num">1</div>
+                <span>Sign In</span>
             </div>
-
-            <div class="profile-container">
-                <div class="profile-hero">
-                    <div class="avatar-wrap" id="userAvatarWrap">
-                        <span id="avatarInitials">U</span>
-                        <img id="userAvatarImg" src="" alt="Avatar" style="display: none;">
-                    </div>
-                    <div class="profile-details">
-                        <div class="profile-name-row">
-                            <span class="profile-name" id="userDisplayName">Developer</span>
-                            <span class="badge-chip badge-user" id="userBadge">Member</span>
-                        </div>
-                        <div class="profile-meta">
-                            <span id="userUsername">saqibcipher</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="data-grid">
-                    <div class="data-card">
-                        <div class="data-lbl">Registered Email</div>
-                        <div class="data-val" id="userEmailDisplay">
-                            <span id="userEmailText">—</span>
-                            <span id="emailVerifiedBadge" title="Verified" style="color:var(--md-sys-color-success); font-size:1.1rem;">
-                                <i class="ti ti-circle-check-filled"></i>
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="data-card">
-                        <div class="data-lbl">Account UID</div>
-                        <div class="data-val">
-                            <span id="userUidText" style="font-size: 0.78rem;">—</span>
-                            <button type="button" class="copy-btn" onclick="copyUidToClipboard()" title="Copy UID">
-                                <i class="ti ti-copy"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="data-card">
-                        <div class="data-lbl">Account Created</div>
-                        <div class="data-val" id="userCreatedDate">—</div>
-                    </div>
-
-                    <div class="data-card">
-                        <div class="data-lbl">Authentication Method</div>
-                        <div class="data-val" id="userAuthMethod">Google / Password</div>
-                    </div>
-                </div>
+            <div class="step-divider"></div>
+            <div class="step-item" id="stepIndicator2">
+                <div class="step-num">2</div>
+                <span>Account Details</span>
+            </div>
+            <div class="step-divider"></div>
+            <div class="step-item" id="stepIndicator3">
+                <div class="step-num">3</div>
+                <span>Reason & Confirm</span>
             </div>
         </div>
 
-        <!-- Deletion Reason & Agreement Card -->
-        <div class="m3-card" id="deletionReasonCard">
+        <!-- Alert / Message Banner -->
+        <div id="globalAlert" style="display: none;"></div>
+
+        <!-- ========================================== -->
+        <!-- STEP 1: AUTHENTICATION VIEW -->
+        <!-- ========================================== -->
+        <div id="viewStep1" class="m3-card">
             <div class="card-header">
                 <h2 class="card-title">
-                    <i class="ti ti-help-hexagon"></i> 3. Reason for Deletion
+                    <i class="ti ti-user-check"></i> 1. Verify Your Identity
                 </h2>
-                <p class="card-subtitle">Please let us know why you are deleting your account to help us improve SketchX.</p>
+                <p class="card-subtitle">Please log in to the SketchX account you wish to permanently delete.</p>
             </div>
 
-            <div class="reasons-list" id="reasonsList">
-                <label class="reason-option selected" onclick="selectReason(this)">
-                    <input type="radio" name="deleteReason" value="No longer using Sketchware or SketchX" class="reason-radio" checked>
-                    <div class="reason-content">
-                        <div class="reason-title">No longer developing or using Sketchware</div>
-                        <div class="reason-desc">I have switched development tools or no longer need Android block utilities.</div>
-                    </div>
-                </label>
-
-                <label class="reason-option" onclick="selectReason(this)">
-                    <input type="radio" name="deleteReason" value="Privacy or data security concerns" class="reason-radio">
-                    <div class="reason-content">
-                        <div class="reason-title">Privacy or data security concerns</div>
-                        <div class="reason-desc">I wish to purge my profile, email, and synced preferences completely.</div>
-                    </div>
-                </label>
-
-                <label class="reason-option" onclick="selectReason(this)">
-                    <input type="radio" name="deleteReason" value="Technical issues or app crashes" class="reason-radio">
-                    <div class="reason-content">
-                        <div class="reason-title">Technical issues, bugs, or crashes</div>
-                        <div class="reason-desc">Experienced unexpected errors, blocks not loading, or compatibility problems.</div>
-                    </div>
-                </label>
-
-                <label class="reason-option" onclick="selectReason(this)">
-                    <input type="radio" name="deleteReason" value="Creating a new account" class="reason-radio">
-                    <div class="reason-content">
-                        <div class="reason-title">Creating a new account</div>
-                        <div class="reason-desc">I want to start fresh with a different username or email address.</div>
-                    </div>
-                </label>
-
-                <label class="reason-option" onclick="selectReason(this)">
-                    <input type="radio" name="deleteReason" value="Other reasons" class="reason-radio">
-                    <div class="reason-content">
-                        <div class="reason-title">Other reasons</div>
-                        <div class="reason-desc">My reason is not listed above.</div>
-                    </div>
-                </label>
-            </div>
-
-            <div class="form-group">
-                <label class="field-label" for="additionalFeedback">Additional Details or Feedback (Optional)</label>
-                <textarea id="additionalFeedback" class="m3-textarea" placeholder="Tell us how we could make SketchX better or specific reasons for leaving..."></textarea>
-            </div>
-
-            <!-- What will be deleted Notice -->
-            <div class="m3-alert m3-alert-error" style="margin-bottom: 20px;">
-                <i class="ti ti-alert-triangle-filled"></i>
-                <div>
-                    <strong>Data Deletion Scope:</strong>
-                    <ul class="impact-list">
-                        <li class="impact-item"><i class="ti ti-trash"></i> All profile records, username claim, and access passes will be permanently removed.</li>
-                        <li class="impact-item"><i class="ti ti-trash"></i> Firebase Authentication credentials will be disabled and queued for purge.</li>
-                        <li class="impact-item"><i class="ti ti-clock"></i> Deletion requests are stored separately and processed within 7 days.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Acknowledgment Checkbox -->
-            <div class="agreement-box">
-                <input type="checkbox" id="confirmCheckbox" class="m3-checkbox" onchange="toggleSubmitButton()">
-                <label for="confirmCheckbox" class="agreement-text">
-                    I understand that requesting account deletion is <strong>permanent and irreversible</strong>. I confirm that I own this account and request complete deletion of my data.
-                </label>
-            </div>
-
-            <div class="btn-row">
-                <button type="button" class="m3-btn m3-btn-error" id="submitDeleteBtn" disabled onclick="openConfirmationModal()">
-                    <i class="ti ti-user-x"></i>
-                    <span>Submit Deletion Request</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- STEP 4: SUCCESS VIEW -->
-    <!-- ========================================== -->
-    <div id="viewStep4" class="m3-card" style="display: none;">
-        <div class="success-box">
-            <div class="success-icon">
-                <i class="ti ti-check"></i>
-            </div>
-            <h2 class="success-title">Deletion Request Submitted</h2>
-            <p class="success-desc">
-                Your account deletion request has been received, logged securely in the system, and dispatched to our administrative team.
-            </p>
-
-            <div class="receipt-card">
-                <div class="receipt-row">
-                    <span class="receipt-label">Account Email</span>
-                    <span class="receipt-value" id="receiptEmail">—</span>
-                </div>
-                <div class="receipt-row">
-                    <span class="receipt-label">Account UID</span>
-                    <span class="receipt-value" id="receiptUid">—</span>
-                </div>
-                <div class="receipt-row">
-                    <span class="receipt-label">Profile Status</span>
-                    <span class="receipt-value" style="color:var(--md-sys-color-warning); font-size:0.85rem;">deletionScheduled: true</span>
-                </div>
-                <div class="receipt-row">
-                    <span class="receipt-label">Reason</span>
-                    <span class="receipt-value" id="receiptReason" style="font-family: var(--font-family); font-weight: 600;">—</span>
-                </div>
-                <div class="receipt-row">
-                    <span class="receipt-label">Submission Date</span>
-                    <span class="receipt-value" id="receiptDate">—</span>
-                </div>
-                <div class="receipt-row">
-                    <span class="receipt-label">Telegram Notification</span>
-                    <span class="receipt-value" id="receiptTgStatus" style="color:var(--md-sys-color-success);">Dispatched</span>
-                </div>
-            </div>
-
-            <div class="m3-alert m3-alert-info" style="text-align: left; margin-bottom: 24px;">
-                <i class="ti ti-info-circle"></i>
-                <div>
-                    <strong>Grace Period & Policy:</strong> If you change your mind, you may contact developer support at <a href="mailto:saqibcipher@gmail.com" style="color:inherit; font-weight:700;">saqibcipher@gmail.com</a> before your data is completely purged.
-                </div>
-            </div>
-
-            <button type="button" class="m3-btn m3-btn-primary" onclick="handleSignOutAndFinish()">
-                <i class="ti ti-check"></i>
-                <span>Sign Out & Done</span>
+            <!-- Google Sign In Quick Action -->
+            <button type="button" class="google-btn" id="googleSignInBtn">
+                <svg class="google-icon" viewBox="0 0 24 24">
+                    <path fill="#4285F4"
+                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                    <path fill="#34A853"
+                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                    <path fill="#FBBC05"
+                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" />
+                    <path fill="#EA4335"
+                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" />
+                </svg>
+                <span>Continue with Google</span>
             </button>
+
+            <div style="display: flex; align-items: center; margin: 16px 0; gap: 12px;">
+                <div style="flex:1; height:1px; background:var(--md-sys-color-outline-variant);"></div>
+                <span
+                    style="font-size:0.8rem; color:var(--md-sys-color-outline); font-weight:600; text-transform:uppercase;">or
+                    sign in with email</span>
+                <div style="flex:1; height:1px; background:var(--md-sys-color-outline-variant);"></div>
+            </div>
+
+            <!-- Email & Password Form -->
+            <form id="emailLoginForm" onsubmit="handleEmailPasswordLogin(event)">
+                <div class="form-group">
+                    <label class="field-label" for="loginEmail">Email Address</label>
+                    <div class="input-box">
+                        <i class="ti ti-mail input-icon"></i>
+                        <input type="email" id="loginEmail" class="m3-input" placeholder="name@example.com" required
+                            autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label" for="loginPassword">Password</label>
+                    <div class="input-box">
+                        <i class="ti ti-lock input-icon"></i>
+                        <input type="password" id="loginPassword" class="m3-input" placeholder="••••••••" required
+                            autocomplete="current-password">
+                        <button type="button" class="password-toggle" id="togglePasswordBtn"
+                            aria-label="Toggle password visibility">
+                            <i class="ti ti-eye" id="passwordEyeIcon"></i>
+                        </button>
+                    </div>
+                    <div class="form-helper-row">
+                        <span></span>
+                        <a href="javascript:void(0)" class="forgot-link" onclick="handleForgotPassword()">Forgot
+                            password?</a>
+                    </div>
+                </div>
+
+                <button type="submit" class="m3-btn m3-btn-primary" id="emailSignInBtn">
+                    <i class="ti ti-login-2"></i>
+                    <span id="signInBtnText">Sign In & Review Account</span>
+                </button>
+            </form>
         </div>
-    </div>
 
-    <!-- Confirmation Modal Dialog -->
-    <div class="modal-overlay" id="confirmModal">
-        <div class="modal-dialog">
-            <div class="modal-icon">
-                <i class="ti ti-alert-octagon"></i>
-            </div>
-            <h3 class="modal-title">Final Confirmation</h3>
-            <p class="modal-body">
-                Are you absolutely sure you want to delete account <strong id="modalUserEmail"></strong>? Once processed, all access keys, project code snippets, and sync records will be deleted forever.
-            </p>
-            <div class="btn-row">
-                <button type="button" class="m3-btn m3-btn-tonal" onclick="closeConfirmationModal()" id="modalCancelBtn">
-                    Cancel
-                </button>
-                <button type="button" class="m3-btn m3-btn-error" id="finalConfirmDeleteBtn" onclick="executeDeletionRequest()">
-                    <i class="ti ti-trash"></i>
-                    <span>Yes, Permanently Delete</span>
-                </button>
+        <!-- ========================================== -->
+        <!-- STEP 2 & 3: PROFILE VERIFIED & REASON VIEW -->
+        <!-- ========================================== -->
+        <div id="viewStep2" style="display: none;">
+            <!-- Profile Overview Card -->
+            <div class="m3-card">
+                <div class="card-header"
+                    style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div>
+                        <h2 class="card-title">
+                            <i class="ti ti-id-badge-2"></i> 2. Verified Account Details
+                        </h2>
+                        <p class="card-subtitle">Review the profile and data associated with this account before
+                            proceeding.</p>
+                    </div>
+                    <button type="button" class="m3-btn m3-btn-tonal" onclick="handleSignOut()"
+                        style="width: auto; padding: 8px 14px; font-size: 0.82rem;">
+                        <i class="ti ti-logout"></i> Sign Out
+                    </button>
+                </div>
+
+                <!-- Existing Scheduled Deletion Notice (if already pending) -->
+                <div id="alreadyPendingNotice" class="m3-alert m3-alert-warning"
+                    style="display: none; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: flex-start; gap: 10px; flex: 1;">
+                        <i class="ti ti-clock-pause"></i>
+                        <div>
+                            <strong>Deletion Scheduled on Account:</strong> This profile is currently flagged for
+                            deletion (<code
+                                style="font-family:var(--font-mono); font-size:0.8rem;">deletionScheduled: true</code>).
+                            <div id="pendingNoticeTime" style="font-size:0.82rem; margin-top:2px; opacity:0.85;"></div>
+                        </div>
+                    </div>
+                    <button type="button" class="m3-btn m3-btn-tonal" onclick="handleCancelScheduledDeletion()"
+                        style="width: auto; padding: 6px 14px; font-size: 0.82rem;">
+                        <i class="ti ti-rotate-2"></i> Cancel Deletion
+                    </button>
+                </div>
+
+                <div class="profile-container">
+                    <div class="profile-hero">
+                        <div class="avatar-wrap" id="userAvatarWrap">
+                            <span id="avatarInitials">U</span>
+                            <img id="userAvatarImg" src="" alt="Avatar" style="display: none;">
+                        </div>
+                        <div class="profile-details">
+                            <div class="profile-name-row">
+                                <span class="profile-name" id="userDisplayName">Developer</span>
+                                <span class="badge-chip badge-user" id="userBadge">Member</span>
+                            </div>
+                            <div class="profile-meta">
+                                <span id="userUsername">saqibcipher</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-grid">
+                        <div class="data-card">
+                            <div class="data-lbl">Registered Email</div>
+                            <div class="data-val" id="userEmailDisplay">
+                                <span id="userEmailText">—</span>
+                                <span id="emailVerifiedBadge" title="Verified"
+                                    style="color:var(--md-sys-color-success); font-size:1.1rem;">
+                                    <i class="ti ti-circle-check-filled"></i>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="data-card">
+                            <div class="data-lbl">Account UID</div>
+                            <div class="data-val">
+                                <span id="userUidText" style="font-size: 0.78rem;">—</span>
+                                <button type="button" class="copy-btn" onclick="copyUidToClipboard()" title="Copy UID">
+                                    <i class="ti ti-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="data-card">
+                            <div class="data-lbl">Account Created</div>
+                            <div class="data-val" id="userCreatedDate">—</div>
+                        </div>
+
+                        <div class="data-card">
+                            <div class="data-lbl">Authentication Method</div>
+                            <div class="data-val" id="userAuthMethod">Google / Password</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Material 3 Expressive Dialog Loader Overlay -->
-            <div class="modal-loading-overlay" id="modalLoadingOverlay" style="display: none;">
-                <div class="m3-expressive-loader">
-                    <svg class="m3-spinner-circular" viewBox="25 25 50 50">
-                        <circle class="m3-spinner-path" cx="50" cy="50" r="20" fill="none" stroke-width="4" stroke-miterlimit="10"/>
-                    </svg>
-                    <div class="m3-loader-text">Scheduling Account Deletion...</div>
-                    <div class="m3-loader-sub">Updating profile & dispatching alerts</div>
+            <!-- Deletion Reason & Agreement Card -->
+            <div class="m3-card" id="deletionReasonCard">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="ti ti-help-hexagon"></i> 3. Reason for Deletion
+                    </h2>
+                    <p class="card-subtitle">Please let us know why you are deleting your account to help us improve
+                        SketchX.</p>
+                </div>
+
+                <div class="reasons-list" id="reasonsList">
+                    <label class="reason-option selected" onclick="selectReason(this)">
+                        <input type="radio" name="deleteReason" value="No longer using Sketchware or SketchX"
+                            class="reason-radio" checked>
+                        <div class="reason-content">
+                            <div class="reason-title">No longer developing or using Sketchware</div>
+                            <div class="reason-desc">I have switched development tools or no longer need Android block
+                                utilities.</div>
+                        </div>
+                    </label>
+
+                    <label class="reason-option" onclick="selectReason(this)">
+                        <input type="radio" name="deleteReason" value="Privacy or data security concerns"
+                            class="reason-radio">
+                        <div class="reason-content">
+                            <div class="reason-title">Privacy or data security concerns</div>
+                            <div class="reason-desc">I wish to purge my profile, email, and synced preferences
+                                completely.</div>
+                        </div>
+                    </label>
+
+                    <label class="reason-option" onclick="selectReason(this)">
+                        <input type="radio" name="deleteReason" value="Technical issues or app crashes"
+                            class="reason-radio">
+                        <div class="reason-content">
+                            <div class="reason-title">Technical issues, bugs, or crashes</div>
+                            <div class="reason-desc">Experienced unexpected errors, blocks not loading, or compatibility
+                                problems.</div>
+                        </div>
+                    </label>
+
+                    <label class="reason-option" onclick="selectReason(this)">
+                        <input type="radio" name="deleteReason" value="Creating a new account" class="reason-radio">
+                        <div class="reason-content">
+                            <div class="reason-title">Creating a new account</div>
+                            <div class="reason-desc">I want to start fresh with a different username or email address.
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="reason-option" onclick="selectReason(this)">
+                        <input type="radio" name="deleteReason" value="Other reasons" class="reason-radio">
+                        <div class="reason-content">
+                            <div class="reason-title">Other reasons</div>
+                            <div class="reason-desc">My reason is not listed above.</div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="field-label" for="additionalFeedback">Additional Details or Feedback
+                        (Optional)</label>
+                    <textarea id="additionalFeedback" class="m3-textarea"
+                        placeholder="Tell us how we could make SketchX better or specific reasons for leaving..."></textarea>
+                </div>
+
+                <!-- What will be deleted Notice -->
+                <div class="m3-alert m3-alert-error" style="margin-bottom: 20px;">
+                    <i class="ti ti-alert-triangle-filled"></i>
+                    <div>
+                        <strong>Data Deletion Scope:</strong>
+                        <ul class="impact-list">
+                            <li class="impact-item"><i class="ti ti-trash"></i> All profile records, username claim, and
+                                access passes will be permanently removed.</li>
+                            <li class="impact-item"><i class="ti ti-trash"></i> Firebase Authentication credentials will
+                                be disabled and queued for purge.</li>
+                            <li class="impact-item"><i class="ti ti-clock"></i> Deletion requests are stored separately
+                                and processed within 7 days.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Acknowledgment Checkbox -->
+                <div class="agreement-box">
+                    <input type="checkbox" id="confirmCheckbox" class="m3-checkbox" onchange="toggleSubmitButton()">
+                    <label for="confirmCheckbox" class="agreement-text">
+                        I understand that requesting account deletion is <strong>permanent and irreversible</strong>. I
+                        confirm that I own this account and request complete deletion of my data.
+                    </label>
+                </div>
+
+                <div class="btn-row">
+                    <button type="button" class="m3-btn m3-btn-error" id="submitDeleteBtn" disabled
+                        onclick="openConfirmationModal()">
+                        <i class="ti ti-user-x"></i>
+                        <span>Submit Deletion Request</span>
+                    </button>
                 </div>
             </div>
         </div>
+
+        <!-- ========================================== -->
+        <!-- STEP 4: SUCCESS VIEW -->
+        <!-- ========================================== -->
+        <div id="viewStep4" class="m3-card" style="display: none;">
+            <div class="success-box">
+                <div class="success-icon">
+                    <i class="ti ti-check"></i>
+                </div>
+                <h2 class="success-title">Deletion Request Submitted</h2>
+                <p class="success-desc">
+                    Your account deletion request has been received, logged securely in the system, and dispatched to
+                    our administrative team.
+                </p>
+
+                <div class="receipt-card">
+                    <div class="receipt-row">
+                        <span class="receipt-label">Account Email</span>
+                        <span class="receipt-value" id="receiptEmail">—</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Account UID</span>
+                        <span class="receipt-value" id="receiptUid">—</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Profile Status</span>
+                        <span class="receipt-value"
+                            style="color:var(--md-sys-color-warning); font-size:0.85rem;">deletionScheduled: true</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Reason</span>
+                        <span class="receipt-value" id="receiptReason"
+                            style="font-family: var(--font-family); font-weight: 600;">—</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Submission Date</span>
+                        <span class="receipt-value" id="receiptDate">—</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span class="receipt-label">Telegram Notification</span>
+                        <span class="receipt-value" id="receiptTgStatus"
+                            style="color:var(--md-sys-color-success);">Dispatched</span>
+                    </div>
+                </div>
+
+                <div class="m3-alert m3-alert-info" style="text-align: left; margin-bottom: 24px;">
+                    <i class="ti ti-info-circle"></i>
+                    <div>
+                        <strong>Grace Period & Policy:</strong> If you change your mind, you may contact developer
+                        support at <a href="mailto:saqibcipher@gmail.com"
+                            style="color:inherit; font-weight:700;">saqibcipher@gmail.com</a> before your data is
+                        completely purged.
+                    </div>
+                </div>
+
+                <button type="button" class="m3-btn m3-btn-primary" onclick="handleSignOutAndFinish()">
+                    <i class="ti ti-check"></i>
+                    <span>Sign Out & Done</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Confirmation Modal Dialog -->
+        <div class="modal-overlay" id="confirmModal">
+            <div class="modal-dialog">
+                <div class="modal-icon">
+                    <i class="ti ti-alert-octagon"></i>
+                </div>
+                <h3 class="modal-title">Final Confirmation</h3>
+                <p class="modal-body">
+                    Are you absolutely sure you want to delete account <strong id="modalUserEmail"></strong>? Once
+                    processed, all access keys, project code snippets, and sync records will be deleted forever.
+                </p>
+                <div class="btn-row">
+                    <button type="button" class="m3-btn m3-btn-tonal" onclick="closeConfirmationModal()"
+                        id="modalCancelBtn">
+                        Cancel
+                    </button>
+                    <button type="button" class="m3-btn m3-btn-error" id="finalConfirmDeleteBtn"
+                        onclick="executeDeletionRequest()">
+                        <i class="ti ti-trash"></i>
+                        <span>Yes, Permanently Delete</span>
+                    </button>
+                </div>
+
+                <!-- Material 3 Expressive Dialog Loader Overlay -->
+                <div class="modal-loading-overlay" id="modalLoadingOverlay" style="display: none;">
+                    <div class="m3-expressive-loader">
+                        <svg class="m3-spinner-circular" viewBox="25 25 50 50">
+                            <circle class="m3-spinner-path" cx="50" cy="50" r="20" fill="none" stroke-width="4"
+                                stroke-miterlimit="10" />
+                        </svg>
+                        <div class="m3-loader-text">Scheduling Account Deletion...</div>
+                        <div class="m3-loader-sub">Updating profile & dispatching alerts</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Snackbar Notification -->
+        <div class="snackbar" id="snackbar">
+            <i class="ti ti-info-circle" id="snackIcon"></i>
+            <span id="snackText">Notification message</span>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            &copy; 2026 SketchX &bull; Glab SketchX Team &bull; <a href="privacy_policy.html">Privacy Policy</a>
+        </footer>
     </div>
 
-    <!-- Snackbar Notification -->
-    <div class="snackbar" id="snackbar">
-        <i class="ti ti-info-circle" id="snackIcon"></i>
-        <span id="snackText">Notification message</span>
-    </div>
-
-    <!-- Footer -->
-    <footer>
-        &copy; 2026 SketchX &bull; Glab SketchX Team &bull; <a href="privacy_policy.html">Privacy Policy</a>
-    </footer>
-</div>
-
-<!-- Separated Application Logic -->
-<script src="js/delete-account.js"></script>
+    <!-- Separated Application Logic -->
+    <script src="js/delete-account.js"></script>
 
 </body>
+
 </html>
