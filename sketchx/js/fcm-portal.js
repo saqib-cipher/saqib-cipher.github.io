@@ -54,7 +54,7 @@ let activeModalName = '';
 let activeModalListener = null;
 
 /* ==========================================================
-   4. THEME INITIALIZATION
+   4. UNIFIED THEME CONTROLLER
    ========================================================== */
 const themeToggleBtn = document.getElementById('themeToggleBtn');
 const themeIcon = document.getElementById('themeIcon');
@@ -65,7 +65,7 @@ function initTheme() {
         document.documentElement.setAttribute('data-theme', savedTheme);
         updateThemeIcon(savedTheme);
     } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         const initialTheme = prefersDark ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', initialTheme);
         updateThemeIcon(initialTheme);
@@ -75,7 +75,8 @@ function initTheme() {
 function toggleTheme() {
     const currentTheme = document.documentElement.getAttribute('data-theme') || 
         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    const newTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+    
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('sketchx_theme', newTheme);
     updateThemeIcon(newTheme);
@@ -89,7 +90,32 @@ function updateThemeIcon(theme) {
 if (themeToggleBtn) {
     themeToggleBtn.addEventListener('click', toggleTheme);
 }
+
+// Listen to system theme preference changes if user hasn't set explicit preference
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+        if (!localStorage.getItem('sketchx_theme')) {
+            const systemTheme = e.matches ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', systemTheme);
+            updateThemeIcon(systemTheme);
+        }
+    });
+}
+
 initTheme();
+
+// Update live clock in status bar
+function updateStatusBarClock() {
+    const clockEl = document.getElementById('previewClock');
+    if (clockEl) {
+        const now = new Date();
+        const hrs = String(now.getHours()).padStart(2, '0');
+        const mins = String(now.getMinutes()).padStart(2, '0');
+        clockEl.textContent = `${hrs}:${mins}`;
+    }
+}
+setInterval(updateStatusBarClock, 30000);
+updateStatusBarClock();
 
 /* ==========================================================
    5. AUTHENTICATION & ACCESS CONTROL GATE
@@ -320,6 +346,11 @@ function applyUserFilters() {
         return true;
     });
 
+    const userCountBadge = document.getElementById('userCountBadge');
+    if (userCountBadge) {
+        userCountBadge.textContent = `Showing ${filteredUsersList.length} of ${allUsersList.length} users`;
+    }
+
     renderUsersTable();
 }
 
@@ -347,7 +378,10 @@ function renderUsersTable() {
             : 'Unknown';
 
         const tokenBadgeHtml = user.fcmToken 
-            ? `<span class="token-badge active" title="${user.fcmToken}"><i class="ti ti-circle-check"></i> ${user.fcmToken.substring(0, 14)}...</span>`
+            ? `<div style="display:inline-flex; align-items:center; gap:6px;">
+                <span class="token-badge active" title="${user.fcmToken}"><i class="ti ti-circle-check"></i> ${user.fcmToken.substring(0, 12)}...</span>
+                <button class="table-btn-action" style="padding:3px 7px;" onclick="copyToClipboard('${user.fcmToken}', 'Token Copied!')" title="Copy full FCM Token"><i class="ti ti-copy"></i></button>
+               </div>`
             : `<span class="token-badge missing"><i class="ti ti-circle-x"></i> No Token</span>`;
 
         tr.innerHTML = `
@@ -402,7 +436,7 @@ function selectUserForPush(uid) {
     const badge = document.getElementById('selectedUserBadge');
     if (badge) {
         badge.innerHTML = `
-            <span><i class="ti ti-user-check"></i> Recipient: <strong>${escapeHtml(user.displayName)}</strong> (${user.username ? '@' + escapeHtml(user.username) : user.uid.substring(0, 8)}) ${user.fcmToken ? '<span style="color:var(--md-sys-color-primary); font-size:0.75rem;">(Device Push Ready)</span>' : '<span style="color:var(--md-sys-color-tertiary); font-size:0.75rem;">(Inbox Database Only)</span>'}</span>
+            <span><i class="ti ti-user-check"></i> Recipient: <strong>${escapeHtml(user.displayName)}</strong> (${user.username ? '@' + escapeHtml(user.username) : user.uid.substring(0, 8)}) ${user.fcmToken ? '<span style="color:var(--md-sys-color-primary); font-size:0.75rem; font-weight:700;">(Device Push Ready)</span>' : '<span style="color:var(--md-sys-color-tertiary); font-size:0.75rem; font-weight:700;">(Inbox Database Only)</span>'}</span>
             <button type="button" class="btn-remove-recipient" onclick="clearSelectedUser()" title="Clear selection"><i class="ti ti-x"></i></button>
         `;
         badge.classList.add('visible');
@@ -452,14 +486,32 @@ function toggleCollapsible(bodyId, iconId) {
 
 /* Live Android Notification Preview */
 function updatePreview() {
-    const title = document.getElementById('notifTitle').value || 'SketchX Notification';
-    const body = document.getElementById('notifBody').value || 'Notification content preview will appear here...';
+    const title = document.getElementById('notifTitle').value.trim() || 'SketchX Notification';
+    const body = document.getElementById('notifBody').value.trim() || 'Notification content preview will appear here...';
     const notifType = document.getElementById('notifType').value || 'general';
     const channel = document.getElementById('notifChannel').value || 'community_notifications';
+    const imageUrl = document.getElementById('notifImageUrl') ? document.getElementById('notifImageUrl').value.trim() : '';
 
     document.getElementById('previewTitle').textContent = title;
     document.getElementById('previewBody').textContent = body;
-    document.getElementById('previewTypeBadge').textContent = `Type: ${notifType} • Channel: ${channel}`;
+    document.getElementById('previewTypeBadge').textContent = `Type: ${notifType}`;
+    
+    const previewChannelBadge = document.getElementById('previewChannelBadge');
+    if (previewChannelBadge) {
+        previewChannelBadge.textContent = `Channel: ${channel}`;
+    }
+
+    // Dynamic Image Preview
+    const previewImage = document.getElementById('previewImage');
+    if (previewImage) {
+        if (imageUrl) {
+            previewImage.src = imageUrl;
+            previewImage.classList.add('visible');
+        } else {
+            previewImage.src = '';
+            previewImage.classList.remove('visible');
+        }
+    }
 
     const previewTargetBadge = document.getElementById('previewTargetBadge');
     if (previewTargetBadge) {
@@ -490,7 +542,7 @@ async function getGoogleAccessToken() {
     }
 
     if (typeof KJUR === 'undefined' || !KJUR.jws || !KJUR.jws.JWS) {
-        throw new Error("JWT Crypto library (jsrsasign) is loading. Please try again in 2 seconds.");
+        throw new Error("JWT Crypto library (jsrsasign) is loading. Please try again in a few seconds.");
     }
 
     const header = { alg: "RS256", typ: "JWT" };
@@ -585,6 +637,7 @@ async function handleSendNotification(event) {
         body: body,
         timestamp: String(Date.now())
     };
+    if (imageUrl) customData.imageUrl = imageUrl;
     if (targetUid) customData.recipientUid = targetUid;
     if (postId) customData.postId = postId;
     if (commentId) customData.commentId = commentId;
@@ -790,6 +843,22 @@ function closeUserNotificationsModal() {
     activeModalUid = null;
 }
 
+// Modal keyboard & backdrop dismiss
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeUserNotificationsModal();
+    }
+});
+
+const modalOverlay = document.getElementById('modalUserNotifications');
+if (modalOverlay) {
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+            closeUserNotificationsModal();
+        }
+    });
+}
+
 function renderModalNotifications(notifsObj) {
     const container = document.getElementById('modalNotifsList');
     if (!container) return;
@@ -937,8 +1006,8 @@ function showToast(message, type = 'info') {
 
     setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transform = 'translateY(10px)';
-        toast.style.transition = 'all 0.3s ease';
+        toast.style.transform = 'translateY(10px) scale(0.95)';
+        toast.style.transition = 'all 0.3s cubic-bezier(0.2, 0, 0, 1)';
         setTimeout(() => toast.remove(), 300);
     }, 4000);
 }

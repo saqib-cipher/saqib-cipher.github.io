@@ -27,9 +27,9 @@
 <body>
 
 <!-- Global Loading Overlay -->
-<div id="globalLoadingOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(4px); z-index:10000; align-items:center; justify-content:center; flex-direction:column; gap:16px;">
+<div id="globalLoadingOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(6px); z-index:10000; align-items:center; justify-content:center; flex-direction:column; gap:16px;">
     <div style="width:48px; height:48px; border:4px solid var(--md-sys-color-primary-container); border-top-color:var(--md-sys-color-primary); border-radius:50%; animation:spin 1s linear infinite;"></div>
-    <span id="globalLoadingText" style="color:#ffffff; font-weight:600; font-size:1rem;">Loading...</span>
+    <span id="globalLoadingText" style="color:#ffffff; font-weight:700; font-size:1rem; letter-spacing:0.02em;">Loading...</span>
 </div>
 
 <style>
@@ -68,7 +68,7 @@
 
     <!-- Hero Header -->
     <header class="hero-header">
-        <div class="portal-brand-badge" style="margin-bottom: 8px;">
+        <div class="hero-badge">
             <i class="ti ti-shield-lock"></i> Staff Access Only
         </div>
         <h1 class="hero-title">FCM Notification Portal</h1>
@@ -82,11 +82,11 @@
     <!-- ========================================== -->
     <div id="viewAuth" class="auth-container">
         <div class="m3-card">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <div style="width: 56px; height: 56px; border-radius: var(--shape-medium); background: var(--md-sys-color-primary-container); color: var(--md-sys-color-primary); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin: 0 auto 12px;">
+            <div style="text-align: center; margin-bottom: 22px;">
+                <div style="width: 60px; height: 60px; border-radius: var(--shape-large); background: var(--md-sys-color-primary-container); color: var(--md-sys-color-on-primary-container); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 14px; box-shadow: var(--elevation-1);">
                     <i class="ti ti-lock"></i>
                 </div>
-                <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--md-sys-color-on-surface); margin: 0 0 6px;">Sign In to Console</h2>
+                <h2 style="font-size: 1.45rem; font-weight: 800; color: var(--md-sys-color-on-surface); margin: 0 0 6px;">Sign In to Console</h2>
                 <p style="font-size: 0.88rem; color: var(--md-sys-color-on-surface-variant); margin: 0;">Restricted to users with Admin or Maintainer badge.</p>
             </div>
 
@@ -130,12 +130,12 @@
             <div class="access-denied-icon">
                 <i class="ti ti-shield-x"></i>
             </div>
-            <h2 style="font-size: 1.4rem; font-weight: 800; color: var(--md-sys-color-on-surface); margin: 0 0 8px;">Access Restricted</h2>
-            <p style="font-size: 0.9rem; color: var(--md-sys-color-on-surface-variant); line-height: 1.5; margin-bottom: 16px;">
+            <h2 style="font-size: 1.45rem; font-weight: 800; color: var(--md-sys-color-on-surface); margin: 0 0 8px;">Access Restricted</h2>
+            <p style="font-size: 0.92rem; color: var(--md-sys-color-on-surface-variant); line-height: 1.55; margin-bottom: 18px;">
                 Your account (<span id="deniedUserEmail" style="font-weight: 700; font-family: var(--font-mono);">user@email.com</span>) is not assigned an <strong>Admin</strong> or <strong>Maintainer</strong> role badge.
             </p>
-            <div style="margin-bottom: 20px;">
-                <span style="font-size: 0.8rem; color: var(--md-sys-color-outline); display: block; margin-bottom: 6px;">Your Current Role:</span>
+            <div style="margin-bottom: 22px;">
+                <span style="font-size: 0.8rem; color: var(--md-sys-color-outline); display: block; margin-bottom: 6px; font-weight: 600;">Your Current Role:</span>
                 <span id="deniedUserBadge" class="role-badge none">USER</span>
             </div>
             <button type="button" class="btn-secondary" style="width: 100%;" onclick="handleSignOut()">
@@ -147,7 +147,7 @@
     <!-- ========================================== -->
     <!-- 3. MAIN DASHBOARD VIEW (AUTHORIZED ONLY) -->
     <!-- ========================================== -->
-    <div id="viewDashboard" style="display: none; display: flex; flex-direction: column; gap: 24px;">
+    <div id="viewDashboard" style="display: none; flex-direction: column; gap: 24px;">
         
         <!-- Metrics Stats Row -->
         <section class="metrics-grid">
@@ -205,7 +205,7 @@
                     <h2 class="card-title">
                         <i class="ti ti-send"></i> Compose Notification
                     </h2>
-                    <button type="button" class="table-btn-action" onclick="sendTestToSelf()" title="Send test to your registered phone">
+                    <button type="button" class="table-btn-action" onclick="sendTestToSelf()" title="Send test push to your registered device">
                         <i class="ti ti-device-mobile"></i> Test on My Device
                     </button>
                 </div>
@@ -235,7 +235,7 @@
                                 <i class="ti ti-user-shield"></i> /topics/auth (Signed-in Users)
                             </button>
                         </div>
-                        <div class="input-hint">Messages to topics are broadcasted to devices and stored in user notification trees.</div>
+                        <div class="input-hint">Messages to topics are broadcasted to all subscribed devices and stored in user notification trees.</div>
                     </div>
 
                     <!-- 2. Direct Token Target Selector -->
@@ -244,7 +244,7 @@
                         <input type="text" id="inputRecipientToken" class="m3-input" oninput="updatePreview()" placeholder="Paste FCM registration token or select a user below...">
                         
                         <div id="selectedUserBadge" class="recipient-preview-badge"></div>
-                        <div class="input-hint">Click "Push" next to any user in the directory below to prefill their token.</div>
+                        <div class="input-hint">Click "Send" next to any user in the directory below to prefill their token.</div>
                     </div>
 
                     <!-- Notification Title -->
@@ -286,8 +286,8 @@
                     <div id="collapsibleAdvanced" class="collapsible-body">
                         <div class="form-group">
                             <label class="field-label" for="notifImageUrl">Image URL (Optional)</label>
-                            <input type="url" id="notifImageUrl" class="m3-input" placeholder="https://example.com/banner.png">
-                            <div class="input-hint">Displays as an expanded banner image in rich Android notifications.</div>
+                            <input type="url" id="notifImageUrl" class="m3-input" placeholder="https://example.com/banner.png" oninput="updatePreview()">
+                            <div class="input-hint">Displays as an expanded banner image in rich Android push notifications.</div>
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
@@ -313,11 +313,11 @@
 
                         <div class="form-group">
                             <label class="field-label" for="notifCustomJson">Custom Data JSON (Optional)</label>
-                            <textarea id="notifCustomJson" class="m3-textarea" placeholder='{"promoCode": "SKETCH2026", "badge": "pro"}' style="font-family: var(--font-mono); font-size: 0.8rem;"></textarea>
+                            <textarea id="notifCustomJson" class="m3-textarea" placeholder='{"promoCode": "SKETCH2026", "badge": "pro"}' style="font-family: var(--font-mono); font-size: 0.82rem;"></textarea>
                         </div>
                     </div>
 
-                    <button type="submit" id="btnSubmitSend" class="btn-primary" style="width: 100%; margin-top: 8px;">
+                    <button type="submit" id="btnSubmitSend" class="btn-primary" style="width: 100%; margin-top: 10px;">
                         <i class="ti ti-send"></i> Send Notification Now
                     </button>
                 </form>
@@ -326,33 +326,56 @@
             <!-- RIGHT: LIVE PREVIEW & DISPATCH LOG -->
             <div style="display: flex; flex-direction: column; gap: 24px;">
                 
-                <!-- Live Android 14 Notification Preview -->
+                <!-- Live Android 14 Notification Preview Frame -->
                 <section class="preview-container">
                     <div class="preview-bar-header">
                         <span><i class="ti ti-device-mobile"></i> Live Android Preview</span>
-                        <span id="previewTargetBadge" style="font-size: 0.7rem; color: var(--md-sys-color-primary);">Target: Topic /topics/all</span>
+                        <span id="previewTargetBadge" style="font-size: 0.74rem; font-weight: 700; color: var(--md-sys-color-primary);">Target: Topic /topics/all</span>
                     </div>
 
-                    <div class="android-notif-card">
-                        <div class="notif-top-row">
-                            <div class="notif-app-icon">
-                                <i class="ti ti-code"></i>
+                    <div class="preview-phone-frame">
+                        <div class="android-status-bar">
+                            <span id="previewClock">09:41</span>
+                            <div class="status-bar-icons">
+                                <i class="ti ti-bell" style="font-size: 0.75rem;"></i>
+                                <i class="ti ti-wifi" style="font-size: 0.75rem;"></i>
+                                <i class="ti ti-battery-4" style="font-size: 0.75rem;"></i>
                             </div>
-                            <span style="font-weight: 700; color: var(--md-sys-color-on-surface);">SketchX</span>
-                            <span>&bull;</span>
-                            <span>Just now</span>
                         </div>
 
-                        <div class="notif-title-text" id="previewTitle">SketchX Notification</div>
-                        <div class="notif-body-text" id="previewBody">Notification content preview will appear here...</div>
-                        <span class="notif-meta-badge" id="previewTypeBadge">Type: general • Channel: community_notifications</span>
+                        <div class="android-notif-card">
+                            <div class="notif-top-row">
+                                <div class="notif-app-icon">
+                                    <i class="ti ti-code"></i>
+                                </div>
+                                <span style="font-weight: 700; color: #ffffff;">SketchX</span>
+                                <span>&bull;</span>
+                                <span>Just now</span>
+                            </div>
+
+                            <div class="notif-title-text" id="previewTitle">SketchX Notification</div>
+                            <div class="notif-body-text" id="previewBody">Notification content preview will appear here...</div>
+                            
+                            <!-- Expandable Image Preview -->
+                            <img id="previewImage" class="notif-image-preview" alt="Push notification banner preview" src="" onerror="this.classList.remove('visible')">
+
+                            <div class="notif-meta-tags-row">
+                                <span class="notif-meta-badge" id="previewTypeBadge">Type: general</span>
+                                <span class="notif-meta-badge" id="previewChannelBadge">Channel: community_notifications</span>
+                            </div>
+
+                            <div class="notif-actions-mockup">
+                                <button type="button" class="notif-action-btn">Open in App</button>
+                                <button type="button" class="notif-action-btn">Dismiss</button>
+                            </div>
+                        </div>
                     </div>
                 </section>
 
                 <!-- Session Delivery Logs -->
                 <section class="m3-card" style="flex: 1;">
                     <div class="card-header-row">
-                        <h3 class="card-title" style="font-size: 1rem;">
+                        <h3 class="card-title" style="font-size: 1.05rem;">
                             <i class="ti ti-history"></i> Session Delivery Logs
                         </h3>
                         <button type="button" class="table-btn-action" onclick="sentLogs=[]; renderLogsList();" title="Clear session logs">
@@ -381,6 +404,7 @@
                         Live database of registered users, push tokens, and notification read/unread statuses.
                     </p>
                 </div>
+                <span id="userCountBadge" class="directory-count-badge">Loading users...</span>
             </div>
 
             <!-- Toolbar: Search & Filters -->
@@ -447,7 +471,7 @@
                     <span id="modalUserUid" style="font-family: var(--font-mono); font-size: 0.78rem; color: var(--md-sys-color-outline);">uid...</span>
                 </div>
             </div>
-            <button type="button" class="btn-close-modal" onclick="closeUserNotificationsModal()"><i class="ti ti-x"></i></button>
+            <button type="button" class="btn-close-modal" onclick="closeUserNotificationsModal()" aria-label="Close modal" title="Close"><i class="ti ti-x"></i></button>
         </div>
 
         <div class="modal-stats-bar">
