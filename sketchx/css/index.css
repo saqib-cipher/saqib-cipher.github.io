@@ -357,7 +357,7 @@ button, input, select, textarea { font-family: inherit; border: none; outline: n
 /* Inactive / Side Peek Items - Narrow vertical pill shapes */
 .m3-carousel-item {
     flex: 0 0 96px;
-    height: 520px;
+    height: 543px;
     border-radius: 9999px;
     overflow: hidden;
     position: relative;
@@ -381,8 +381,8 @@ button, input, select, textarea { font-family: inherit; border: none; outline: n
 
 /* Active / Hero Item - Expanded wide card with M3 rounded corners */
 .m3-carousel-item.active {
-    flex: 0 0 340px;
-    height: 520px;
+    flex: 0 0 305px;
+    height: 543px;
     border-radius: var(--shape-extra-large, 28px);
     opacity: 1;
     cursor: default;
@@ -759,11 +759,11 @@ button, input, select, textarea { font-family: inherit; border: none; outline: n
     .section-title { font-size: 1.75rem; }
     .m3-carousel-item {
         flex: 0 0 48px;
-        height: 390px;
+        height: 429px;
     }
     .m3-carousel-item.active {
-        flex: 0 0 240px;
-        height: 390px;
+        flex: 0 0 241px;
+        height: 429px;
     }
     .metrics-grid { grid-template-columns: 1fr 1fr; }
     .footer-grid-wrap { grid-template-columns: 1fr; }
