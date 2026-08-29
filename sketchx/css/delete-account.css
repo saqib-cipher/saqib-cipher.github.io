@@ -3,6 +3,8 @@
  * Material 3 Expressive Component Styles
  */
 
+@import url('theme.css');
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -12,15 +14,15 @@
 
 body {
     font-family: var(--font-family, 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif);
-    background-color: var(--md-sys-color-surface);
-    color: var(--md-sys-color-on-surface);
+    background-color: var(--md-sys-color-background, var(--md-sys-color-surface));
+    color: var(--md-sys-color-on-background, var(--md-sys-color-on-surface));
     line-height: 1.5;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 24px 16px 48px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 .main-wrapper {
@@ -561,13 +563,13 @@ body {
 }
 
 .badge-admin {
-    background-color: #fee2e2;
-    color: #991b1b;
+    background-color: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
 }
 
 .badge-vip {
-    background-color: #fef3c7;
-    color: #92400e;
+    background-color: var(--md-sys-color-warning-container);
+    color: var(--md-sys-color-on-warning-container);
 }
 
 .badge-user {

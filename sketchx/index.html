@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SketchX - Visual Block IDE &amp; Community for Android</title>
+    <meta name="description" content="SketchX is a visual block programming IDE, code snippet repository, and developer community for Android &amp; Sketchware Pro creators.">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="SketchX">
+    <meta property="og:title" content="SketchX - Visual Block IDE for Android">
+    <meta property="og:description" content="Build custom visual blocks, manage Git workflows, and share verified Java snippets.">
+    <meta property="og:image" content="images/logo.png">
+    <meta name="theme-color" content="#006399">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/index.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+<header class="site-navbar">
+    <div class="container nav-container">
+        <a href="index.html" class="nav-brand">
+            <img src="images/logo.png" alt="SketchX Logo" class="nav-logo-img">
+            <span>SketchX</span>
+            <span class="m3-badge" style="font-size: 0.7rem; padding: 2px 8px;">2.0</span>
+        </a>
+
+        <nav class="nav-menu-list">
+            <a href="#showcase" class="nav-link">Showcase</a>
+            <a href="community.html" class="nav-link">Community</a>
+            <a href="#features" class="nav-link">Features</a>
+        </nav>
+
+        <div class="nav-actions-cluster">
+            <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle Theme">
+                <i class="ti ti-sun" id="themeIcon"></i>
+            </button>
+            <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" class="btn btn-primary nav-cta-btn">
+                <i class="ti ti-brand-google-play"></i> Get App
+            </a>
+            <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Menu">
+                <i class="ti ti-menu-2"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div id="mobileMenu" class="mobile-drawer">
+    <a href="#showcase" class="nav-link" onclick="closeMobileMenu()">Showcase</a>
+    <a href="community.html" class="nav-link" onclick="closeMobileMenu()">Community</a>
+    <a href="#features" class="nav-link" onclick="closeMobileMenu()">Features</a>
+    <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" class="btn btn-primary" style="margin-top: 8px;">
+        <i class="ti ti-brand-google-play"></i> Download on Google Play
+    </a>
+</div>
+
+<!-- HERO -->
+<section class="hero-section">
+    <div class="container hero-inner">
+        <span class="m3-badge hero-pill">
+            <i class="ti ti-sparkles"></i> Material 3 Expressive &bull; 6,000+ Tabler Icons
+        </span>
+
+        <h1 class="hero-title">
+            Your ultimate Android<br><span class="highlight">developer companion.</span>
+        </h1>
+
+        <p class="hero-desc">
+            6,000+ vector icons, visual block engine, Java &amp; XML code generators, Git integration, and a live community of Sketchware Pro creators.
+        </p>
+
+        <div class="hero-buttons">
+            <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" class="btn btn-primary">
+                <i class="ti ti-brand-google-play"></i> Download for Android
+            </a>
+            <a href="community.html" class="btn btn-outlined">
+                <i class="ti ti-users"></i> Browse Community
+            </a>
+            <a href="https://t.me/SketchX_official" target="_blank" class="btn btn-tonal">
+                <i class="ti ti-brand-telegram"></i> Telegram
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- MATERIAL 3 HERO EXPAND CAROUSEL -->
+<section class="carousel-section" id="showcase">
+    <div class="container">
+        <!-- Android Showcase Container -->
+        <div class="device-showcase-frame">
+            <div class="m3-carousel-stage">
+                <div class="m3-carousel-track" id="carouselTrack">
+
+                    <div class="m3-carousel-item active" data-index="0">
+                        <img src="images/app-mockup-android-screenshot-1-default-1080x1920-1.png" alt="Custom Block Studio" class="carousel-img">
+                    </div>
+
+                    <div class="m3-carousel-item" data-index="1">
+                        <img src="images/app-mockup-android-screenshot-1-default-1080x1920-2.png" alt="Community Snippets" class="carousel-img">
+                    </div>
+
+                    <div class="m3-carousel-item" data-index="2">
+                        <img src="images/app-mockup-android-screenshot-1-default-1080x1920-3.png" alt="Git Version Control" class="carousel-img">
+                    </div>
+
+                    <div class="m3-carousel-item" data-index="3">
+                        <img src="images/app-mockup-android-screenshot-1-default-1080x1920-4.png" alt="Material 3 Palette" class="carousel-img">
+                    </div>
+
+                    <div class="m3-carousel-item" data-index="4">
+                        <img src="images/app-mockup-android-screenshot-1-default-1080x1920-5.png" alt="VIP Badges" class="carousel-img">
+                    </div>
+
+                    <div class="m3-carousel-item" data-index="5">
+                        <img src="images/app-mockup-android-screenshot-1-default-1080x1920-6.png" alt="Project Sync" class="carousel-img">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="carousel-frame-footer">
+                <div class="carousel-nav-arrows">
+                    <button class="nav-arrow-btn" id="carouselPrev" aria-label="Previous">
+                        <i class="ti ti-chevron-left"></i>
+                    </button>
+                    <div class="carousel-dots-cluster" id="carouselDots"></div>
+                    <button class="nav-arrow-btn" id="carouselNext" aria-label="Next">
+                        <i class="ti ti-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES - IMPROVED BENTO LAYOUT -->
+<section class="features-section" id="features">
+    <div class="container">
+        <div class="section-head">
+            <h2 class="section-title">Everything you need to build faster.</h2>
+            <p class="section-sub">SketchX—your ultimate companion for mobile development and Sketchware Pro. Featuring 6,000+ vector icons, automated code generators, and server-backed project sync.</p>
+        </div>
+
+        <!-- Bento Grid: First row - 2 large + 1 medium -->
+        <div class="bento-grid">
+            <div class="bento-card bento-large feature-box">
+                <div class="feature-icon-badge">
+                    <i class="ti ti-vector-triangle"></i>
+                </div>
+                <h3 class="feature-box-title">6,000+ Vector Icons</h3>
+                <p class="feature-box-desc">Full Tabler icon set embedded offline. Browse, search, and inject SVG vectors directly into your Sketchware Pro projects without any internet connection.</p>
+                <div class="feature-stat-row">
+                    <span class="feature-stat-pill"><i class="ti ti-offline"></i> Fully Offline</span>
+                    <span class="feature-stat-pill"><i class="ti ti-file-type-svg"></i> SVG &amp; XML</span>
+                </div>
+            </div>
+
+            <div class="bento-card bento-large feature-box secondary">
+                <div class="feature-icon-badge">
+                    <i class="ti ti-puzzle"></i>
+                </div>
+                <h3 class="feature-box-title">Custom Block Engine</h3>
+                <p class="feature-box-desc">Design custom visual logic blocks with typed argument sockets. Compile directly to Sketchware Pro JSON and export in one tap.</p>
+                <div class="feature-stat-row">
+                    <span class="feature-stat-pill"><i class="ti ti-braces"></i> JSON Compile</span>
+                    <span class="feature-stat-pill"><i class="ti ti-bolt"></i> 1-Tap Export</span>
+                </div>
+            </div>
+
+            <div class="bento-card bento-medium feature-box tertiary">
+                <div class="feature-icon-badge">
+                    <i class="ti ti-git-branch"></i>
+                </div>
+                <h3 class="feature-box-title">Git &amp; Commit Inspector</h3>
+                <p class="feature-box-desc">Inspect diffs, compare commits, track history.</p>
+            </div>
+
+            <!-- Second row: 3 smaller -->
+            <div class="bento-card bento-small feature-box">
+                <div class="feature-icon-badge">
+                    <i class="ti ti-palette"></i>
+                </div>
+                <h3 class="feature-box-title">M3 Color Studio</h3>
+                <p class="feature-box-desc">Generate tonal palettes &amp; export ARGB/HEX.</p>
+            </div>
+
+            <div class="bento-card bento-small feature-box secondary">
+                <div class="feature-icon-badge">
+                    <i class="ti ti-shield-check"></i>
+                </div>
+                <h3 class="feature-box-title">7-Day Grace Period</h3>
+                <p class="feature-box-desc">Safe account deletion with recovery window.</p>
+            </div>
+
+            <div class="bento-card bento-small feature-box tertiary">
+                <div class="feature-icon-badge">
+                    <i class="ti ti-bell-ringing"></i>
+                </div>
+                <h3 class="feature-box-title">Push Notifications</h3>
+                <p class="feature-box-desc">Real-time FCM alerts for replies &amp; releases.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- METRICS -->
+<section class="metrics-strip">
+    <div class="container">
+        <div class="metrics-grid">
+            <div>
+                <div class="metric-number-big" data-target="50000" data-suffix="+">50,000+</div>
+                <div class="metric-label-small">Active Developers</div>
+            </div>
+            <div>
+                <div class="metric-number-big" data-target="6000" data-suffix="+">6,000+</div>
+                <div class="metric-label-small">Vector Icons</div>
+            </div>
+            <div>
+                <div class="metric-number-big" data-target="15000" data-suffix="+">15,000+</div>
+                <div class="metric-label-small">Community Snippets</div>
+            </div>
+            <div>
+                <div class="metric-number-big" data-target="48" data-suffix=" ★">4.8 ★</div>
+                <div class="metric-label-small">Play Store Rating</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-box-card">
+            <h2 class="cta-headline">Start building with SketchX</h2>
+            <p class="cta-subline">Build smarter, design faster, create effortlessly. Join thousands of Android developers on the community.</p>
+            <div class="cta-buttons-row">
+                <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" class="btn btn-primary">
+                    <i class="ti ti-brand-google-play"></i> Get on Google Play
+                </a>
+                <a href="community.html" class="btn btn-outlined">
+                    <i class="ti ti-users"></i> Browse Community
+                </a>
+                <a href="https://t.me/SketchX_official" target="_blank" class="btn btn-tonal">
+                    <i class="ti ti-brand-telegram"></i> Telegram
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-grid-wrap">
+            <div class="footer-brand-side">
+                <a href="index.html" class="nav-brand">
+                    <img src="images/logo.png" alt="SketchX Logo" class="nav-logo-img">
+                    <span>SketchX</span>
+                </a>
+                <p class="footer-brand-desc">Material 3 Expressive visual IDE and developer community for Android &amp; Sketchware Pro creators.</p>
+            </div>
+
+            <div>
+                <div class="footer-col-title">App</div>
+                <ul class="footer-links-list">
+                    <li><a href="#showcase" class="footer-link-anchor">Screenshots</a></li>
+                    <li><a href="#features" class="footer-link-anchor">Features</a></li>
+                    <li><a href="community.html" class="footer-link-anchor">Community</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="footer-col-title">Portals</div>
+                <ul class="footer-links-list">
+                    <li><a href="admin-portal.html" class="footer-link-anchor">Admin Portal</a></li>
+                    <li><a href="post.html" class="footer-link-anchor">Post Viewer</a></li>
+                    <li><a href="delete-account.html" class="footer-link-anchor">Account Deletion</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <div class="footer-col-title">Connect</div>
+                <ul class="footer-links-list">
+                    <li><a href="https://t.me/SketchX_official" target="_blank" class="footer-link-anchor">Telegram</a></li>
+                    <li><a href="https://www.youtube.com/@grafix_lab" target="_blank" class="footer-link-anchor">YouTube</a></li>
+                    <li><a href="privacy_policy.html" class="footer-link-anchor">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+            <div>&copy; 2026 SketchX by Saqib-Cipher. All rights reserved.</div>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <a href="privacy_policy.html" class="footer-link-anchor">Privacy</a>
+                <a href="delete-account.html" class="footer-link-anchor">Account</a>
+                <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" class="footer-link-anchor" style="color: var(--md-sys-color-primary);">Google Play</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+function closeMobileMenu() {
+    document.getElementById('mobileMenu').style.display = 'none';
+    const icon = document.getElementById('mobileMenuBtn').querySelector('i');
+    if (icon) icon.className = 'ti ti-menu-2';
+}
+</script>
+<script src="js/index.js"></script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - SketchX Developer Hub</title>
+    <meta name="description" content="Browse community posts, custom blocks, and verified Java snippets from SketchX developers.">
+    <meta property="og:title" content="SketchX Community - Developer Snippets &amp; Blocks">
+    <meta property="og:image" content="images/logo.png">
+    <meta name="theme-color" content="#006399">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/community.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+</head>
+<body>
+
+<header class="site-navbar">
+    <div class="container nav-container">
+        <a href="index.html" class="nav-brand">
+            <img src="images/logo.png" alt="SketchX Logo" class="nav-logo-img">
+            <span>SketchX</span>
+            <span class="m3-badge" style="font-size: 0.7rem; padding: 2px 8px;">2.0</span>
+        </a>
+
+        <nav class="nav-menu-list">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="community.html" class="nav-link nav-link-active">Community</a>
+            <a href="index.html#features" class="nav-link">Features</a>
+        </nav>
+
+        <div class="nav-actions-cluster">
+            <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle Theme">
+                <i class="ti ti-sun" id="themeIcon"></i>
+            </button>
+            <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" class="btn btn-primary nav-cta-btn">
+                <i class="ti ti-brand-google-play"></i> Get App
+            </a>
+            <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Menu">
+                <i class="ti ti-menu-2"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<div id="mobileMenu" class="mobile-drawer">
+    <a href="index.html" class="nav-link" onclick="closeMobileMenu()">Home</a>
+    <a href="community.html" class="nav-link" onclick="closeMobileMenu()">Community</a>
+    <a href="index.html#features" class="nav-link" onclick="closeMobileMenu()">Features</a>
+    <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" class="btn btn-primary" style="margin-top: 8px;">
+        <i class="ti ti-brand-google-play"></i> Download on Google Play
+    </a>
+</div>
+
+<!-- SEARCH & FILTER TOOLBAR -->
+<div class="community-toolbar-sticky">
+    <div class="container">
+        <div class="community-toolbar">
+            <div class="filter-pills-row" id="filterPillsRow">
+                <button type="button" class="filter-pill active" data-filter="all">
+                    <i class="ti ti-stack-2"></i> All Posts
+                </button>
+                <button type="button" class="filter-pill" data-filter="block">
+                    <i class="ti ti-puzzle"></i> Custom Blocks
+                </button>
+                <button type="button" class="filter-pill" data-filter="code">
+                    <i class="ti ti-code"></i> Code Snippets
+                </button>
+                <button type="button" class="filter-pill" data-filter="verified">
+                    <i class="ti ti-discount-check"></i> Verified Only
+                </button>
+            </div>
+            <div class="search-input-box">
+                <i class="ti ti-search"></i>
+                <input type="text" id="postSearchInput" placeholder="Search posts, authors...">
+                <button class="search-clear-btn" id="searchClearBtn" aria-label="Clear search" style="display: none;">
+                    <i class="ti ti-x"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- POSTS GRID -->
+<section class="community-posts-section">
+    <div class="container">
+        <!-- Active Filter Label -->
+        <div class="active-filter-bar" id="activeFilterBar">
+            <span id="filterStatusLabel">Showing all posts</span>
+            <span class="posts-count-badge" id="postsCountBadge"></span>
+        </div>
+
+        <div class="posts-grid" id="postsGrid">
+            <div class="post-skeleton-card"></div>
+            <div class="post-skeleton-card"></div>
+            <div class="post-skeleton-card"></div>
+            <div class="post-skeleton-card"></div>
+            <div class="post-skeleton-card"></div>
+            <div class="post-skeleton-card"></div>
+        </div>
+
+        <div id="postsEmpty" class="posts-empty-state" style="display: none;">
+            <div class="empty-icon-circle">
+                <i class="ti ti-search-off"></i>
+            </div>
+            <h3>No posts found</h3>
+            <p>Try adjusting your filters or search term.</p>
+            <button class="btn-reset-filters" onclick="resetFilters()">
+                <i class="ti ti-refresh"></i> Reset Filters
+            </button>
+        </div>
+
+        <!-- Load More -->
+        <div class="load-more-wrap" id="loadMoreWrap" style="display: none;">
+            <button class="btn btn-outlined" id="loadMoreBtn" onclick="loadMorePosts()">
+                <i class="ti ti-refresh"></i> Load More Posts
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="container">
+        <div class="footer-grid-wrap">
+            <div class="footer-brand-side">
+                <a href="index.html" class="nav-brand">
+                    <img src="images/logo.png" alt="SketchX Logo" class="nav-logo-img">
+                    <span>SketchX</span>
+                </a>
+                <p class="footer-brand-desc">Material 3 Expressive visual IDE and developer community for Android &amp; Sketchware Pro creators.</p>
+            </div>
+            <div>
+                <div class="footer-col-title">App</div>
+                <ul class="footer-links-list">
+                    <li><a href="index.html#showcase" class="footer-link-anchor">Screenshots</a></li>
+                    <li><a href="index.html#features" class="footer-link-anchor">Features</a></li>
+                    <li><a href="community.html" class="footer-link-anchor">Community</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-col-title">Portals</div>
+                <ul class="footer-links-list">
+                    <li><a href="admin-portal.html" class="footer-link-anchor">Admin Portal</a></li>
+                    <li><a href="post.html" class="footer-link-anchor">Post Viewer</a></li>
+                    <li><a href="delete-account.html" class="footer-link-anchor">Account Deletion</a></li>
+                </ul>
+            </div>
+            <div>
+                <div class="footer-col-title">Connect</div>
+                <ul class="footer-links-list">
+                    <li><a href="https://t.me/SketchX_official" target="_blank" class="footer-link-anchor">Telegram</a></li>
+                    <li><a href="https://www.youtube.com/@grafix_lab" target="_blank" class="footer-link-anchor">YouTube</a></li>
+                    <li><a href="privacy_policy.html" class="footer-link-anchor">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom-bar">
+            <div>&copy; 2026 SketchX by Saqib-Cipher. All rights reserved.</div>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <a href="privacy_policy.html" class="footer-link-anchor">Privacy</a>
+                <a href="delete-account.html" class="footer-link-anchor">Account</a>
+                <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" class="footer-link-anchor" style="color: var(--md-sys-color-primary);">Google Play</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script>
+function closeMobileMenu() {
+    document.getElementById('mobileMenu').style.display = 'none';
+    const icon = document.getElementById('mobileMenuBtn').querySelector('i');
+    if (icon) icon.className = 'ti ti-menu-2';
+}
+function resetFilters() {
+    document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+    document.querySelector('.filter-pill[data-filter="all"]').classList.add('active');
+    const input = document.getElementById('postSearchInput');
+    if (input) input.value = '';
+    window.communityActiveFilter = 'all';
+    window.communitySearchQuery = '';
+    if (window.communityRenderPosts) window.communityRenderPosts();
+}
+function loadMorePosts() {
+    if (window.communityLoadMore) window.communityLoadMore();
+}
+</script>
+<script src="js/community.js"></script>
+</body>
+</html>

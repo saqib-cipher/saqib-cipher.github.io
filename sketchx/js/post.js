@@ -250,6 +250,17 @@ function renderPost(post) {
     }
 
     document.getElementById('tvLikesCount').textContent = post.likesCount || 0;
+    
+    const commentsElem = document.getElementById('tvCommentsCount');
+    if (commentsElem) {
+        commentsElem.textContent = post.commentsCount || 0;
+        if (post.id) {
+            db.ref('community_comments').child(post.id).on('value', cSnap => {
+                const count = cSnap.exists() ? cSnap.numChildren() : (post.commentsCount || 0);
+                commentsElem.textContent = count;
+            });
+        }
+    }
 }
 
 function loadAuthorProfile(uid) {
@@ -362,7 +373,7 @@ function showError(message, title = "Post Unavailable", icon = "ti-alert-circle"
     document.getElementById('postLoadingContainer').style.display = 'none';
     document.getElementById('postContentContainer').style.display = 'none';
     const err = document.getElementById('postErrorContainer');
-    err.style.display = 'block';
+    err.style.display = 'flex';
 
     const msgElem = document.getElementById('tvErrorMessage');
     const titleElem = document.getElementById('tvErrorTitle');

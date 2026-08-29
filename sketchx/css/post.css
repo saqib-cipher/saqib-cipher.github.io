@@ -714,15 +714,198 @@ body {
     box-shadow: 0 6px 20px rgba(255, 255, 255, 0.35);
 }
 
-.empty-error-state {
-    text-align: center;
-    padding: 60px 20px;
+/* Top Nav Back Link */
+.nav-back-link {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--shape-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--md-sys-color-surface-container-high);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    color: var(--md-sys-color-on-surface);
+    font-size: 1.1rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.nav-back-link:hover {
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
 }
 
-.empty-error-state i {
-    font-size: 3.5rem;
-    color: var(--md-sys-color-error);
+.nav-link-subtle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface-variant);
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: var(--shape-full);
+    transition: color 0.2s ease, background 0.2s ease;
+}
+.nav-link-subtle:hover {
+    color: var(--md-sys-color-primary);
+    background: var(--md-sys-color-surface-container-high);
+}
+
+/* Material 3 Expressive Post Error State Card */
+.post-error-card {
+    text-align: center;
+    padding: 56px 24px 48px;
+    background: linear-gradient(180deg, var(--md-sys-color-surface-container) 0%, var(--md-sys-color-surface-container-low) 100%);
+    border: 1.5px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--shape-extra-large);
+    box-shadow: var(--elevation-2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.error-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: var(--shape-full);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    background: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+    border: 1px solid var(--md-sys-color-error);
+    margin: 0 auto 20px auto;
+}
+
+.error-icon-box {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--shape-large);
+    background: var(--md-sys-color-error-container);
+    color: var(--md-sys-color-on-error-container);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.6rem;
+    margin: 0 auto 20px auto;
+    animation: gentlePulse 2.5s infinite ease-in-out;
+}
+
+@keyframes gentlePulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.06); opacity: 0.88; }
+}
+
+.error-title {
+    font-family: var(--font-family);
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--md-sys-color-on-surface);
+    letter-spacing: -0.4px;
     margin-bottom: 12px;
+}
+
+.error-desc {
+    font-size: 0.96rem;
+    color: var(--md-sys-color-on-surface-variant);
+    max-width: 520px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.error-actions-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.btn-primary-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--shape-full);
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: var(--elevation-1);
+}
+.btn-primary-action:hover {
+    background-color: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    transform: translateY(-2px);
+    box-shadow: var(--elevation-2);
+}
+
+.btn-secondary-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: var(--shape-full);
+    background-color: var(--md-sys-color-secondary-container);
+    color: var(--md-sys-color-on-secondary-container);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.btn-secondary-action:hover {
+    background-color: var(--md-sys-color-surface-container-highest);
+    transform: translateY(-2px);
+}
+
+.btn-tonal-action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border-radius: var(--shape-full);
+    background: transparent;
+    color: var(--md-sys-color-primary);
+    border: 1.5px solid var(--md-sys-color-outline);
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+.btn-tonal-action:hover {
+    background-color: var(--md-sys-color-surface-container-high);
+    border-color: var(--md-sys-color-primary);
+    transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+    .post-error-card {
+        padding: 40px 16px 36px;
+    }
+    .error-title {
+        font-size: 1.4rem;
+    }
+    .error-desc {
+        font-size: 0.9rem;
+        margin-bottom: 24px;
+    }
+    .error-actions-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+    .btn-primary-action,
+    .btn-secondary-action,
+    .btn-tonal-action {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 /* Admin Moderation Bar Controls */

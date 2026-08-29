@@ -43,16 +43,10 @@ const themeToggleBtn = document.getElementById('themeToggleBtn');
 const themeIcon = document.getElementById('themeIcon');
 
 function initTheme() {
-    const savedTheme = localStorage.getItem('sketchx_theme');
-    if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        updateThemeIcon(savedTheme);
-    } else {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const initialTheme = prefersDark ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', initialTheme);
-        updateThemeIcon(initialTheme);
-    }
+    const savedTheme = localStorage.getItem('sketchx_theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
 }
 
 function toggleTheme() {
@@ -66,11 +60,7 @@ function toggleTheme() {
 
 function updateThemeIcon(theme) {
     if (!themeIcon) return;
-    if (theme === 'dark') {
-        themeIcon.className = 'ti ti-moon';
-    } else {
-        themeIcon.className = 'ti ti-sun';
-    }
+    themeIcon.className = theme === 'dark' ? 'ti ti-sun' : 'ti ti-moon';
 }
 
 if (themeToggleBtn) {

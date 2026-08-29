@@ -14,9 +14,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
 
     <!-- Unified Material 3 Theme Colors -->
-    <link rel="stylesheet" href="../../../Documents/Projects/saqib-cipher.github.io/css/theme.css">
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="../css/theme.css">
     <!-- Component Styles -->
     <link rel="stylesheet" href="css/delete-account.css">
+
+    <script>
+        const savedTheme = localStorage.getItem('sketchx_theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    </script>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -29,16 +35,22 @@
     <div class="main-wrapper">
         <!-- Top Navigation -->
         <div class="top-nav">
-            <a href="privacy_policy.html" class="back-link">
+            <a href="index.html" class="back-link">
                 <i class="ti ti-arrow-left"></i>
                 <img src="images/logo.png" alt="SketchX Logo"
                      style="width: 28px; height: 28px; border-radius: 8px; object-fit: cover; vertical-align: middle;">
-                <span>Privacy Policy</span>
+                <span>Home</span>
             </a>
-            <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode"
-                title="Toggle theme">
-                <i class="ti ti-sun" id="themeIcon"></i>
-            </button>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <a href="privacy_policy.html" class="back-link" style="font-size: 0.85rem;">
+                    <i class="ti ti-shield-check"></i>
+                    <span>Privacy Policy</span>
+                </a>
+                <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Dark/Light Mode"
+                    title="Toggle theme">
+                    <i class="ti ti-sun" id="themeIcon"></i>
+                </button>
+            </div>
         </div>
 
         <!-- Hero Header -->
