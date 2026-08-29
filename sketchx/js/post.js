@@ -175,19 +175,24 @@ function loadPostData(postId) {
         // 1. Check if post itself is hidden
         if (currentPost.hidden === true || currentPost.hidden === 'true') {
             showLoading(false);
-            showError("This community post has been hidden by moderators or is currently undergoing review.", "Post Hidden", "ti-eye-off");
+            showError("This community post has been hidden by moderators or is currently undergoing review.", "Post Unavailable", "ti-eye-off");
             return;
         }
 
-        // 2. Check if author's account is restricted or under deletion
+        // 2. Check if author's account is restricted, banned, or under deletion
         if (currentPost.authorUid) {
             try {
                 const authorSnap = await db.ref('users').child(currentPost.authorUid).child('profile').once('value');
                 if (authorSnap.exists()) {
                     const authorProfile = authorSnap.val() || {};
-                    if (authorProfile.deletionScheduled === true || authorProfile.restricted === true) {
+                    if (authorProfile.restricted === true || authorProfile.banned === true) {
                         showLoading(false);
-                        showError("This community post is currently unavailable because the author's account is restricted or scheduled for deletion.", "Post Unavailable", "ti-user-x");
+                        showError("This community post is currently unavailable because the author's account is restricted.", "Account Restricted", "ti-lock");
+                        return;
+                    }
+                    if (authorProfile.deletionScheduled === true) {
+                        showLoading(false);
+                        showError("This community post is currently unavailable because the author's account is scheduled for deletion.", "Account Scheduled for Deletion", "ti-user-x");
                         return;
                     }
                 }

@@ -282,6 +282,23 @@ async function loadUserProfile(user) {
                     badgeElem.className = 'badge-chip badge-user';
                 }
             }
+            // Check if account is restricted or banned
+            const isRestricted = userProfileData.restricted === true || userProfileData.banned === true;
+            const restrictedNotice = document.getElementById('restrictedAccountNotice');
+            const restrictedReasonElem = document.getElementById('restrictedNoticeReason');
+            const btnCancelDel = document.getElementById('btnCancelDeletion');
+
+            if (isRestricted) {
+                if (restrictedNotice) restrictedNotice.style.display = 'flex';
+                if (restrictedReasonElem && userProfileData.restrictionReason) {
+                    restrictedReasonElem.textContent = `Reason: ${userProfileData.restrictionReason} — You cannot cancel or recover this account.`;
+                }
+                if (btnCancelDel) btnCancelDel.style.display = 'none';
+            } else {
+                if (restrictedNotice) restrictedNotice.style.display = 'none';
+                if (btnCancelDel) btnCancelDel.style.display = 'inline-flex';
+            }
+
             // Check if deletion is scheduled on profile
             const reasonCard = document.getElementById('deletionReasonCard');
             const step3Indicator = document.getElementById('stepIndicator3');
@@ -436,14 +453,27 @@ async function executeDeletionRequest() {
 // Cancel Scheduled Deletion (Reset profile flags & remove scheduled_deletions record)
 async function handleCancelScheduledDeletion() {
     if (!currentUser) return;
+
+    if (userProfileData && (userProfileData.restricted === true || userProfileData.banned === true)) {
+        showAlert("This account is restricted or banned by administrators and cannot be recovered.", "error");
+        return;
+    }
+
     if (!confirm('Do you want to cancel the scheduled account deletion and restore your account?')) return;
 
     try {
-        // Reset profile flags
+        // Verify latest profile status from RTDB
+        const snap = await database.ref(`users/${currentUser.uid}/profile`).once('value');
+        const latestProfile = snap.exists() ? snap.val() : {};
+        if (latestProfile.restricted === true || latestProfile.banned === true) {
+            showAlert("This account is restricted or banned by administrators and cannot be recovered.", "error");
+            return;
+        }
+
+        // Reset profile deletion flags (preserve restriction status)
         await database.ref(`users/${currentUser.uid}/profile`).update({
             deletionScheduled: false,
-            scheduledDeletionTimestamp: 0,
-            restricted: false
+            scheduledDeletionTimestamp: 0
         });
 
         // Remove from scheduled_deletions

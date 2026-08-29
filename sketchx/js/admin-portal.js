@@ -732,6 +732,7 @@ function renderUsersTable() {
         if (userFilter === 'with_token') return !!u.fcmToken;
         if (userFilter === 'staff') return badge === 'admin' || badge === 'maintainer';
         if (userFilter === 'pro') return badge === 'pro';
+        if (userFilter === 'restricted') return !!(p.restricted || p.banned);
         if (userFilter === 'deletion') return !!p.deletionScheduled;
         return true;
     });
@@ -757,6 +758,7 @@ function renderUsersTable() {
         const hasToken = !!u.fcmToken;
         const joinedDate = p.createdAt ? new Date(Number(p.createdAt)).toLocaleDateString() : 'Unknown';
         const photoUrl = p.photoUrl;
+        const isRestricted = !!(p.restricted || p.banned);
 
         // Detect Logged In By provider
         let providerHtml = '';
@@ -780,7 +782,11 @@ function renderUsersTable() {
                     <div class="user-table-profile-cell">
                         ${avatarHtml}
                         <div>
-                            <div style="font-weight: 700; color: var(--md-sys-color-on-surface);">${escapeHtml(name)} ${p.deletionScheduled ? '<span style="color:#FF8A80; font-size:0.75rem;">(Deletion Pending)</span>' : ''}</div>
+                            <div style="font-weight: 700; color: var(--md-sys-color-on-surface);">
+                                ${escapeHtml(name)} 
+                                ${p.deletionScheduled ? '<span style="color:#FF8A80; font-size:0.75rem;">(Deletion Pending)</span>' : ''}
+                                ${isRestricted ? '<span class="badge" style="background:rgba(255,82,82,0.2); color:#FF8A80; font-size:0.72rem; font-weight:700; padding:2px 6px; border-radius:4px; border:1px solid rgba(255,82,82,0.4); margin-left:6px;"><i class="ti ti-lock"></i> RESTRICTED</span>' : ''}
+                            </div>
                             <div style="font-size: 0.78rem; color: var(--md-sys-color-outline); font-family: var(--font-mono);">${escapeHtml(username)} &bull; ${escapeHtml(email)}</div>
                         </div>
                     </div>
@@ -846,6 +852,10 @@ function openEditUserModal(uid) {
     document.getElementById('editUserBio').value = p.bio || '';
     document.getElementById('editUserBadge').value = (p.badge || 'none').toLowerCase();
     document.getElementById('editUserEmailVerified').checked = !!p.isEmailVerified;
+    const restrictedCheckbox = document.getElementById('editUserRestricted');
+    if (restrictedCheckbox) restrictedCheckbox.checked = !!(p.restricted || p.banned);
+    const reasonInput = document.getElementById('editUserRestrictionReason');
+    if (reasonInput) reasonInput.value = p.restrictionReason || '';
 
     document.getElementById('modalEditUser').style.display = 'flex';
 }
@@ -863,6 +873,10 @@ async function handleSaveUserEdit(e) {
     const bio = document.getElementById('editUserBio').value.trim();
     const badge = document.getElementById('editUserBadge').value;
     const isEmailVerified = document.getElementById('editUserEmailVerified').checked;
+    const restrictedCheckbox = document.getElementById('editUserRestricted');
+    const isRestricted = restrictedCheckbox ? restrictedCheckbox.checked : false;
+    const reasonInput = document.getElementById('editUserRestrictionReason');
+    const restrictionReason = reasonInput ? reasonInput.value.trim() : '';
 
     showGlobalLoading(true, "Saving Profile Changes...");
 
@@ -871,11 +885,15 @@ async function handleSaveUserEdit(e) {
             displayName,
             bio,
             badge: badge === 'none' ? null : badge,
-            isEmailVerified
+            isEmailVerified,
+            restricted: isRestricted,
+            banned: isRestricted,
+            restrictionReason: isRestricted ? (restrictionReason || 'Administrative restriction') : null
         });
+
         showGlobalLoading(false);
         closeEditUserModal();
-        showToast("User profile updated successfully!");
+        showToast("User profile and restriction status updated successfully!");
     } catch (err) {
         showGlobalLoading(false);
         showToast("Update error: " + err.message, "error");
@@ -1383,10 +1401,15 @@ function renderPostsTable() {
         const matchQuery = !postSearchQuery || title.includes(postSearchQuery) || author.includes(postSearchQuery) || cat.includes(postSearchQuery) || id.includes(postSearchQuery);
         if (!matchQuery) return false;
 
+        const authorUser = allUsers.find(u => u.uid === p.authorUid);
+        const isAuthorRestricted = !!(authorUser && (authorUser.profile?.restricted || authorUser.profile?.banned));
+        const isAuthorDeletion = !!(authorUser && authorUser.profile?.deletionScheduled);
+
         if (postFilter === 'code') return p.type !== 'block';
         if (postFilter === 'block') return p.type === 'block';
         if (postFilter === 'verified') return !!p.verified;
         if (postFilter === 'hidden') return !!p.hidden;
+        if (postFilter === 'restricted') return isAuthorRestricted;
         return true;
     });
 
@@ -1402,11 +1425,18 @@ function renderPostsTable() {
         const isHidden = !!p.hidden;
         const isVerified = !!p.verified;
         const isLocked = !!p.commentsDisabled;
+        const authorUser = allUsers.find(u => u.uid === p.authorUid);
+        const isAuthorRestricted = !!(authorUser && (authorUser.profile?.restricted || authorUser.profile?.banned));
+        const isAuthorDeletion = !!(authorUser && authorUser.profile?.deletionScheduled);
 
         return `
             <tr>
                 <td>
-                    <div style="font-weight: 700; color: var(--md-sys-color-on-surface); font-size: 0.95rem;">${escapeHtml(p.title || 'Untitled')}</div>
+                    <div style="font-weight: 700; color: var(--md-sys-color-on-surface); font-size: 0.95rem;">
+                        ${escapeHtml(p.title || 'Untitled')}
+                        ${isAuthorRestricted ? '<span class="badge" style="background:rgba(255,82,82,0.2); color:#FF8A80; font-size:0.72rem; font-weight:700; padding:2px 6px; border-radius:4px; border:1px solid rgba(255,82,82,0.4); margin-left:6px;"><i class="ti ti-lock"></i> AUTHOR RESTRICTED</span>' : ''}
+                        ${isAuthorDeletion ? '<span class="badge" style="background:rgba(255,171,0,0.2); color:#FFD54F; font-size:0.72rem; font-weight:700; padding:2px 6px; border-radius:4px; border:1px solid rgba(255,171,0,0.4); margin-left:6px;"><i class="ti ti-trash"></i> DELETION PENDING</span>' : ''}
+                    </div>
                     <div style="font-size: 0.78rem; color: var(--md-sys-color-outline); margin-top: 2px;">
                         By ${escapeHtml(p.authorName || 'User')} &bull; ${new Date(p.timestamp || 0).toLocaleDateString()}
                     </div>

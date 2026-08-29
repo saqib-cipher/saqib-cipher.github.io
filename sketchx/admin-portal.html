@@ -339,6 +339,7 @@
                         <button type="button" class="filter-chip-btn" data-filter="with_token" onclick="setDirectoryFilter('with_token')"><i class="ti ti-device-mobile"></i> With FCM Token</button>
                         <button type="button" class="filter-chip-btn" data-filter="staff" onclick="setDirectoryFilter('staff')"><i class="ti ti-shield-check"></i> Staff</button>
                         <button type="button" class="filter-chip-btn" data-filter="pro" onclick="setDirectoryFilter('pro')"><i class="ti ti-diamond"></i> Pro</button>
+                        <button type="button" class="filter-chip-btn" data-filter="restricted" onclick="setDirectoryFilter('restricted')"><i class="ti ti-lock"></i> Restricted</button>
                         <button type="button" class="filter-chip-btn" data-filter="deletion" onclick="setDirectoryFilter('deletion')"><i class="ti ti-trash"></i> Deletions</button>
                     </div>
                 </div>
@@ -484,6 +485,7 @@
                         <button type="button" class="filter-chip-btn" data-filter="block" onclick="setPostFilter('block')">Blocks</button>
                         <button type="button" class="filter-chip-btn" data-filter="verified" onclick="setPostFilter('verified')">Verified</button>
                         <button type="button" class="filter-chip-btn" data-filter="hidden" onclick="setPostFilter('hidden')">Hidden</button>
+                        <button type="button" class="filter-chip-btn" data-filter="restricted" onclick="setPostFilter('restricted')"><i class="ti ti-lock"></i> Restricted</button>
                     </div>
                 </div>
 
@@ -588,6 +590,17 @@
                         <input type="checkbox" id="editUserEmailVerified">
                         <span style="font-size: 0.88rem; font-weight: 700;">Mark Email as Verified</span>
                     </label>
+                </div>
+
+                <div class="form-group" style="padding: 12px; background: rgba(255, 82, 82, 0.08); border-radius: 8px; border: 1px solid rgba(255, 82, 82, 0.2);">
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #FF8A80;">
+                        <input type="checkbox" id="editUserRestricted">
+                        <span style="font-size: 0.88rem; font-weight: 700;"><i class="ti ti-lock"></i> Restrict Account (Hides posts/comments & shows ban dialog)</span>
+                    </label>
+                    <div style="margin-top: 8px;">
+                        <label class="field-label" for="editUserRestrictionReason" style="color: var(--md-sys-color-on-surface-variant); font-size: 0.8rem;">Restriction Reason</label>
+                        <input type="text" id="editUserRestrictionReason" class="m3-input" placeholder="e.g. Terms of Service violation...">
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
