@@ -1,6 +1,7 @@
 /**
  * SketchX Privacy Policy Styles
  */
+@import url('theme.css');
 
 * {
     box-sizing: border-box;

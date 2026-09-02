@@ -582,14 +582,15 @@ async function handleSendNotification(e) {
 
         const messagePayload = {
             data: {
+                id: notifItem.id,
+                notification_id: notifItem.id,
                 title: title,
                 body: body,
                 type: type,
                 postId: postId || "",
                 commentId: commentId || "",
                 imageUrl: imgUrl || "",
-                timestamp: String(Date.now()),
-                notification_id: notifItem.id
+                timestamp: String(notifItem.timestamp)
             },
             android: {
                 priority: "high"
@@ -614,18 +615,17 @@ async function handleSendNotification(e) {
                 throw new Error(fcmData.error?.message || "FCM Delivery Failed");
             }
 
-            // Sync to RTDB for matching topic users
-            allUsers.forEach(u => {
-                if (topic === 'all' || (topic === 'auth' && !u.profile.isAnonymous)) {
-                    db.ref('users').child(u.uid).child('notifications').child(notifItem.id).set(notifItem);
-                }
-            });
-
             addLogItem("success", `Broadcast to /topics/${topic}: "${title}"`);
             showToast(`Broadcast notification sent to /topics/${topic}!`);
         } else {
-            const token = document.getElementById('inputRecipientToken').value.trim();
-            const targetUid = document.getElementById('inputRecipientToken').getAttribute('data-target-uid');
+            const tokenInput = document.getElementById('inputRecipientToken');
+            const token = tokenInput ? tokenInput.value.trim() : '';
+            let targetUid = tokenInput ? tokenInput.getAttribute('data-target-uid') : null;
+
+            if (!targetUid && token) {
+                const match = allUsers.find(u => u.fcmToken === token);
+                if (match) targetUid = match.uid;
+            }
 
             if (!token && !targetUid) {
                 throw new Error("Please enter or select a recipient device token.");
@@ -1196,7 +1196,10 @@ function replyToTicketUser(uid, hintName = 'User') {
     setTargetMode('token');
 
     const tokenInput = document.getElementById('inputRecipientToken');
-    if (tokenInput) tokenInput.value = fcmToken || '';
+    if (tokenInput) {
+        tokenInput.value = fcmToken || '';
+        tokenInput.setAttribute('data-target-uid', uid || '');
+    }
 
     const titleInput = document.getElementById('notifTitle');
     if (titleInput) titleInput.value = `Response regarding your support ticket`;
@@ -1225,7 +1228,10 @@ function targetUserPush(uid, token, name = 'User') {
     setTargetMode('token');
 
     const tokenInput = document.getElementById('inputRecipientToken');
-    if (tokenInput) tokenInput.value = fcmToken || '';
+    if (tokenInput) {
+        tokenInput.value = fcmToken || '';
+        tokenInput.setAttribute('data-target-uid', uid || '');
+    }
 
     if (fcmToken) {
         showToast(`Selected FCM token for ${userName}`);

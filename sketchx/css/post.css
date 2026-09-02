@@ -2,66 +2,13 @@
  * SketchX Web Post Viewer Styles
  * Material 3 Expressive Unified Design System
  */
+@import url('theme.css');
+
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
     -webkit-tap-highlight-color: transparent;
-}
-
-:root {
-    --font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    --font-mono: 'Roboto Mono', monospace;
-    
-    /* Dark Theme (Default) */
-    --md-sys-color-background: #0F1318;
-    --md-sys-color-on-background: #E1E2E8;
-    --md-sys-color-surface: #12161B;
-    --md-sys-color-surface-container: #1D2024;
-    --md-sys-color-surface-container-high: #272A2E;
-    --md-sys-color-surface-container-highest: #32353A;
-    --md-sys-color-on-surface: #E1E2E8;
-    --md-sys-color-on-surface-variant: #C3C7D0;
-    --md-sys-color-outline: #8D9199;
-    --md-sys-color-outline-variant: #43474E;
-    --md-sys-color-primary: #A8C7FA;
-    --md-sys-color-on-primary: #003062;
-    --md-sys-color-primary-container: #004A77;
-    --md-sys-color-on-primary-container: #C2E7FF;
-    --md-sys-color-secondary: #BAC7DE;
-    --md-sys-color-on-secondary: #243140;
-    --md-sys-color-error: #FFB4AB;
-    --md-sys-color-error-container: #93000A;
-    --md-sys-color-on-error: #690005;
-    
-    --shape-small: 8px;
-    --shape-medium: 16px;
-    --shape-large: 24px;
-    --shape-extra-large: 28px;
-    --shape-full: 9999px;
-    --elevation-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-}
-
-[data-theme="light"] {
-    --md-sys-color-background: #F8FAFD;
-    --md-sys-color-on-background: #191C20;
-    --md-sys-color-surface: #FFFFFF;
-    --md-sys-color-surface-container: #EEF2F8;
-    --md-sys-color-surface-container-high: #E4EBF4;
-    --md-sys-color-surface-container-highest: #D8E2EE;
-    --md-sys-color-on-surface: #191C20;
-    --md-sys-color-on-surface-variant: #43474E;
-    --md-sys-color-outline: #72777F;
-    --md-sys-color-outline-variant: #C2C8D2;
-    --md-sys-color-primary: #005FAF;
-    --md-sys-color-on-primary: #FFFFFF;
-    --md-sys-color-primary-container: #D2E4FF;
-    --md-sys-color-on-primary-container: #001C3B;
-    --md-sys-color-secondary: #535F70;
-    --md-sys-color-on-secondary: #FFFFFF;
-    --md-sys-color-error: #BA1A1A;
-    --md-sys-color-error-container: #FFDAD6;
-    --md-sys-color-on-error: #FFFFFF;
 }
 
 body {
@@ -819,24 +766,34 @@ body {
 
 .error-actions-group {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     gap: 12px;
-    flex-wrap: wrap;
+    width: 100%;
+    max-width: 320px;
+    margin: 16px auto;
 }
 
-.btn-primary-action {
+.btn-primary-action,
+.btn-secondary-action,
+.btn-tonal-action {
+    width: 100%;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 10px;
     padding: 12px 24px;
     border-radius: var(--shape-full);
-    background-color: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary);
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     font-weight: 700;
     text-decoration: none;
     transition: all 0.2s ease;
+}
+
+.btn-primary-action {
+    background-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
     box-shadow: var(--elevation-1);
 }
 .btn-primary-action:hover {
@@ -847,42 +804,27 @@ body {
 }
 
 .btn-secondary-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 22px;
-    border-radius: var(--shape-full);
     background-color: var(--md-sys-color-secondary-container);
     color: var(--md-sys-color-on-secondary-container);
-    font-size: 0.92rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: all 0.2s ease;
+    border: 1px solid var(--md-sys-color-outline-variant, rgba(255,255,255,0.1));
 }
 .btn-secondary-action:hover {
     background-color: var(--md-sys-color-surface-container-highest);
+    color: var(--md-sys-color-on-surface);
     transform: translateY(-2px);
 }
 
 .btn-tonal-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 20px;
-    border-radius: var(--shape-full);
     background: transparent;
     color: var(--md-sys-color-primary);
     border: 1.5px solid var(--md-sys-color-outline);
-    font-size: 0.92rem;
-    font-weight: 700;
-    text-decoration: none;
-    transition: all 0.2s ease;
 }
 .btn-tonal-action:hover {
     background-color: var(--md-sys-color-surface-container-high);
     border-color: var(--md-sys-color-primary);
     transform: translateY(-2px);
 }
+
 
 @media (max-width: 600px) {
     .post-error-card {

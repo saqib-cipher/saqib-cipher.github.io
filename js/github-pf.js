@@ -1,5 +1,3 @@
-let cachedDays = null;
-
 /* ── Tooltip ────────────────────────────────── */
 const tip = document.getElementById('tip');
 const tipN = document.getElementById('tip-n');
@@ -36,9 +34,8 @@ function getLevel(count, max) {
    Month labels are positioned absolutely by measuring column offsets.
 ──────────────────────────────────────────── */
 function buildGraph(days) {
-  const isMobile = window.innerWidth <= 520;
-  const CELL = isMobile ? 10 : 12;
-  const GAP  = isMobile ? 2 : 3;
+  const CELL = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--cell')) || 12;
+  const GAP  = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap'))  || 3;
   const COL_W = CELL + GAP;
 
   const max = Math.max(...days.map(d => d.count));
@@ -161,11 +158,20 @@ function buildGraph(days) {
     c.style.transition = `opacity .3s ${i * 2}ms, transform .3s ${i * 2}ms`;
     requestAnimationFrame(() => {
       c.style.opacity = '1';
-      c.style.transform = c.dataset.l >= 4 ? '' : '';
+      c.style.transform = '';
     });
   });
 
   document.getElementById('legendRow').style.display = 'flex';
+
+  // ── Auto-scroll to most contributed / recent weeks ──
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      if (scrollDiv && scrollDiv.scrollWidth > scrollDiv.clientWidth) {
+        scrollDiv.scrollTo({ left: scrollDiv.scrollWidth, behavior: 'smooth' });
+      }
+    }, 150);
+  });
 }
 
 /* ── Streak ─────────────────────────────────── */
@@ -183,11 +189,9 @@ function streak(days) {
   // If the user hasn't contributed today, check if they contributed yesterday
   let startIdx = lastIndex;
   if (days[lastIndex].count === 0) {
-    // If they also didn't contribute yesterday, then streak is 0
     if (lastIndex > 0 && days[lastIndex - 1].count === 0) {
       return 0;
     }
-    // Otherwise, start checking the streak from yesterday
     startIdx = lastIndex - 1;
   }
   
@@ -232,7 +236,6 @@ async function load() {
   try {
     const [data, profile] = await Promise.all([fetchData(username), fetchProfile(username)]);
     const days = data.contributions;
-    cachedDays = days;
     const total = days.reduce((s,d) => s + d.count, 0);
     const best  = Math.max(...days.map(d => d.count));
     const s     = streak(days);
@@ -261,16 +264,5 @@ async function load() {
   }
 }
 
-// Auto-load a demo
+// Auto-load
 load();
-
-// Rebuild graph on window resize to ensure correct mobile/desktop alignment
-let resizeTimeout;
-window.addEventListener('resize', () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    if (cachedDays) {
-      buildGraph(cachedDays);
-    }
-  }, 100);
-});

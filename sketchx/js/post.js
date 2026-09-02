@@ -82,6 +82,11 @@ function initPostViewer() {
         return;
     }
 
+    const btnPro = document.getElementById('btnProWebAccess');
+    if (btnPro) {
+        btnPro.href = `pro-post.html?id=${encodeURIComponent(currentPostId)}`;
+    }
+
     // Auto-launch on Android devices if not requested web view explicitly
     tryAutoLaunchApp(currentPostId);
 
@@ -216,7 +221,30 @@ function renderPost(post) {
     document.getElementById('postErrorContainer').style.display = 'none';
     document.getElementById('postContentContainer').style.display = 'flex';
 
-    document.title = `${post.title || 'Community Post'} - SketchX`;
+    const title = post.title || 'Community Post';
+    const author = post.authorName ? ` by ${post.authorName}` : '';
+    const cleanDesc = (post.description || 'View custom blocks and Java logic for Sketchware Pro on SketchX.')
+        .replace(/[#*_`]/g, '')
+        .trim();
+    const shortDesc = cleanDesc.length > 150 ? cleanDesc.substring(0, 147) + '...' : cleanDesc;
+
+    document.title = `${title}${author} - SketchX`;
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) metaDesc.setAttribute('content', shortDesc);
+
+    const ogTitle = document.getElementById('ogTitle') || document.querySelector('meta[property="og:title"]');
+    if (ogTitle) ogTitle.setAttribute('content', `${title} - SketchX`);
+
+    const ogDesc = document.getElementById('ogDesc') || document.querySelector('meta[property="og:description"]');
+    if (ogDesc) ogDesc.setAttribute('content', shortDesc);
+
+    const twTitle = document.getElementById('twTitle') || document.querySelector('meta[name="twitter:title"]');
+    if (twTitle) twTitle.setAttribute('content', `${title} - SketchX`);
+
+    const twDesc = document.getElementById('twDesc') || document.querySelector('meta[name="twitter:description"]');
+    if (twDesc) twDesc.setAttribute('content', shortDesc);
+
     document.getElementById('tvPostTitle').textContent = post.title || 'Untitled Post';
 
     const typePill = document.getElementById('chipPostType');
@@ -244,7 +272,7 @@ function renderPost(post) {
         tags.forEach(tag => {
             const span = document.createElement('span');
             span.className = 'tag-chip';
-            span.innerHTML = `<i class="ti ti-tag"></i> ${escapeHtml(tag)}`;
+            span.textContent = `#${tag}`;
             tagsContainer.appendChild(span);
         });
     }
@@ -483,7 +511,7 @@ async function adminDeletePost() {
         }
 
         alert("Post deleted successfully.");
-        window.location.href = "admin-portal.html";
+        window.location.href = "community.html";
     } catch (e) {
         alert("Failed to delete post: " + e.message);
     }

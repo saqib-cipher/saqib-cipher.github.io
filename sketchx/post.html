@@ -6,11 +6,22 @@
     <title>Community Post - SketchX</title>
     <meta name="description" content="View custom Sketchware Pro blocks, Java snippets, and community resources on SketchX.">
     
-    <!-- OpenGraph SEO for Social Previews -->
+    <!-- OpenGraph SEO for Social Previews (WhatsApp, Telegram, Discord, Facebook) -->
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="SketchX">
-    <meta property="og:title" content="SketchX Community Post">
-    <meta property="og:description" content="Download custom blocks and Java logic for Sketchware Pro on SketchX.">
+    <meta property="og:title" id="ogTitle" content="SketchX Community Post">
+    <meta property="og:description" id="ogDesc" content="View and import custom blocks, Java codes, and resources for Sketchware Pro on SketchX.">
+    <meta property="og:image" id="ogImage" content="https://sketchx.pages.dev/images/logo.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="SketchX Logo">
+    
+    <!-- Twitter / Telegram Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@SketchX">
+    <meta name="twitter:title" id="twTitle" content="SketchX Community Post">
+    <meta name="twitter:description" id="twDesc" content="View and import custom blocks, Java codes, and resources for Sketchware Pro on SketchX.">
+    <meta name="twitter:image" id="twImage" content="https://sketchx.pages.dev/images/logo.png">
     <meta name="theme-color" content="#7C4DFF">
 
     <!-- Fonts & Icons -->
@@ -19,7 +30,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
     
-    <!-- Post Stylesheet -->
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/post.css">
 
     <!-- Firebase SDKs -->
@@ -44,7 +56,7 @@
 
         <div class="nav-actions">
             <button type="button" class="btn-open-app" onclick="openInSketchXApp()">
-                <i class="ti ti-device-mobile"></i> Open in App
+                <span class="btn-app-icon-img" aria-hidden="true"></span> Open in App
             </button>
             <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle Theme" title="Toggle theme">
                 <i class="ti ti-sun" id="themeIcon"></i>
@@ -75,7 +87,7 @@
                 <i class="ti ti-compass"></i> Browse Community Posts
             </a>
             <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" class="btn-secondary-action">
-                <i class="ti ti-brand-google-play"></i> Get SketchX App
+                <span class="btn-app-icon-img" aria-hidden="true"></span> Open in SketchX App
             </a>
             <a href="index.html" class="btn-tonal-action">
                 <i class="ti ti-home"></i> Home
@@ -150,9 +162,14 @@
                 <p class="locked-card-subtitle">
                     Source code and custom Sketchware block definitions are protected. View full source, copy code, and import directly into Sketchware Pro inside the SketchX Android app.
                 </p>
-                <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" rel="noopener" class="btn-locked-cta">
-                    <i class="ti ti-brand-google-play"></i> Open in SketchX App
-                </a>
+                <div style="display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 320px; margin: 0 auto;">
+                    <a href="https://play.google.com/store/apps/details?id=glab.sketchx" target="_blank" rel="noopener" class="btn-locked-cta">
+                        <span class="btn-app-icon-img" aria-hidden="true"></span> Open in SketchX App
+                    </a>
+                    <a id="btnProWebAccess" href="pro-post.html" class="btn-tonal-action" style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; text-decoration: none; padding: 12px 20px; border-radius: var(--shape-full);">
+                        <i class="ti ti-shield-lock"></i> Pro Member View on Web
+                    </a>
+                </div>
             </div>
 
             <!-- Tags -->
@@ -162,11 +179,11 @@
             <div class="post-social-bar">
                 <div class="social-stats-group">
                     <span class="social-stat-item">
-                        <i class="ti ti-heart-filled" style="color: #FF5252;"></i>
+                        <i class="ti ti-heart"></i>
                         <span id="tvLikesCount">0</span> Likes
                     </span>
                     <span class="social-stat-item">
-                        <i class="ti ti-message-circle-filled" style="color: var(--md-sys-color-primary);"></i>
+                        <i class="ti ti-message-circle"></i>
                         <span id="tvCommentsCount">0</span> Comments
                     </span>
                 </div>

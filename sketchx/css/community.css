@@ -2,6 +2,8 @@
    community.css - SketchX Community Page Specific Styles
    ========================================================================== */
 
+@import url('theme.css');
+
 /* STICKY TOOLBAR */
 .community-toolbar-sticky {
     position: sticky;

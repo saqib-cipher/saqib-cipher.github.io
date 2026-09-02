@@ -185,7 +185,7 @@ function stopAutoSlide() {
 }
 
 /* ================================================================
-   STATS ANIMATION
+   STATS COUNTER ANIMATION
    ================================================================ */
 function initStatsObserver() {
     const stats = document.querySelectorAll('.metric-number-big[data-target]');
@@ -197,24 +197,47 @@ function initStatsObserver() {
             if (e.isIntersecting && !done) {
                 done = true;
                 stats.forEach(el => {
-                    const target = parseInt(el.getAttribute('data-target'), 10);
+                    const target = el.getAttribute('data-target');
                     const suffix = el.getAttribute('data-suffix') || '';
-                    animateNumber(el, target, suffix);
+                    const isDecimal = el.getAttribute('data-decimal') === 'true';
+                    animateNumber(el, target, suffix, isDecimal);
                 });
             }
         });
-    }, { threshold: 0.5 });
+    }, { threshold: 0.3 });
 
     const strip = document.querySelector('.metrics-strip');
     if (strip) obs.observe(strip);
 }
 
-function animateNumber(el, target, suffix) {
+function animateNumber(el, target, suffix, isDecimal) {
+    if (!el) return;
+
+    if (isDecimal) {
+        let current = 0.0;
+        const targetNum = parseFloat(target) || 4.8;
+        const inc = targetNum / 25;
+        const timer = setInterval(() => {
+            current += inc;
+            if (current >= targetNum) {
+                current = targetNum;
+                clearInterval(timer);
+            }
+            el.textContent = current.toFixed(1) + suffix;
+        }, 35);
+        return;
+    }
+
     let current = 0;
-    const inc   = Math.ceil(target / 50);
+    const targetInt = parseInt(target, 10) || 0;
+    if (targetInt <= 0) return;
+    const inc = Math.max(1, Math.ceil(targetInt / 40));
     const timer = setInterval(() => {
         current += inc;
-        if (current >= target) { current = target; clearInterval(timer); }
+        if (current >= targetInt) {
+            current = targetInt;
+            clearInterval(timer);
+        }
         el.textContent = current.toLocaleString() + suffix;
     }, 22);
 }

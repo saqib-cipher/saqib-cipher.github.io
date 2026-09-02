@@ -96,7 +96,7 @@
 
     --md-sys-color-secondary: #b8c8d9;
     --md-sys-color-on-secondary: #23323f;
-    --md-sys-color-secondary-container: #3a4857;
+    --md-sys-color-secondary-container: #263545;
     --md-sys-color-on-secondary-container: #d4e4f6;
 
     --md-sys-color-tertiary: #d2bfe7;
@@ -206,7 +206,7 @@
 
   --md-sys-color-secondary: #b8c8d9;
   --md-sys-color-on-secondary: #23323f;
-  --md-sys-color-secondary-container: #3a4857;
+  --md-sys-color-secondary-container: #263545;
   --md-sys-color-on-secondary-container: #d4e4f6;
 
   --md-sys-color-tertiary: #d2bfe7;
@@ -241,4 +241,20 @@
   --md-sys-color-warning: #ffb951;
   --md-sys-color-warning-container: #5d3600;
   --md-sys-color-on-warning-container: #ffddb3;
+}
+
+/* App Icon with dynamic currentColor tint matching button text */
+.btn-app-icon-img {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    vertical-align: middle;
+    background-color: currentColor;
+    -webkit-mask: url('../images/ic_app_logo.svg') no-repeat center / contain;
+    mask: url('../images/ic_app_logo.svg') no-repeat center / contain;
+    flex-shrink: 0;
+}
+
+img.btn-app-icon-img {
+    content: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1' height='1'%3E%3C/svg%3E");
 }

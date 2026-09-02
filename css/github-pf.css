@@ -198,6 +198,7 @@
   overflow-y: visible;
   -webkit-overflow-scrolling: touch;
   padding-bottom: 4px;
+  scroll-behavior: smooth;
 }
 .graph-scroll::-webkit-scrollbar { height: 3px; }
 .graph-scroll::-webkit-scrollbar-track { background: transparent; }
